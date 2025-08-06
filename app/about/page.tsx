@@ -109,62 +109,6 @@ export default function About() {
           </div>
         </section>
 
-        {/* Team Section */}
-        {/*<section className="py-20 bg-black/20">*/}
-        {/*  <div className="max-w-6xl mx-auto px-6">*/}
-        {/*    <div className="text-center mb-16">*/}
-        {/*      <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Meet Our Team</h2>*/}
-        {/*      <p className="text-xl text-gray-300">*/}
-        {/*        The creative minds behind Lv.B Games*/}
-        {/*      </p>*/}
-        {/*    </div>*/}
-            
-        {/*    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">*/}
-        {/*      <div className="text-center bg-purple-900/20 p-8 rounded-2xl border border-purple-500/20">*/}
-        {/*        <img */}
-        {/*          src="https://readdy.ai/api/search-image?query=Professional%20game%20developer%20portrait%2C%20creative%20individual%20in%20modern%20gaming%20studio%20environment%2C%20confident%20expression%2C%20contemporary%20workspace%20background%20with%20purple%20lighting%2C%20clean%20professional%20headshot%20style%2C%20minimalist%20aesthetic&width=300&height=300&seq=team-lead&orientation=squarish"*/}
-        {/*          alt="Alex Chen - Game Director"*/}
-        {/*          className="w-24 h-24 rounded-full mx-auto mb-4 object-top"*/}
-        {/*        />*/}
-        {/*        <h3 className="text-xl font-bold text-white mb-2">Alex Chen</h3>*/}
-        {/*        <p className="text-purple-400 mb-3">Game Director & Founder</p>*/}
-        {/*        <p className="text-gray-300 text-sm">*/}
-        {/*          10+ years in game development, previously worked at major studios. */}
-        {/*          Passionate about multiplayer game design and community building.*/}
-        {/*        </p>*/}
-        {/*      </div>*/}
-              
-        {/*      <div className="text-center bg-purple-900/20 p-8 rounded-2xl border border-purple-500/20">*/}
-        {/*        <img */}
-        {/*          src="https://readdy.ai/api/search-image?query=Female%20game%20programmer%20portrait%2C%20skilled%20developer%20working%20on%20code%2C%20modern%20tech%20workspace%20background%20with%20blue%20and%20purple%20lighting%2C%20professional%20appearance%2C%20confident%20expression%2C%20minimalist%20studio%20environment&width=300&height=300&seq=team-programmer&orientation=squarish"*/}
-        {/*          alt="Sarah Kim - Lead Programmer"*/}
-        {/*          className="w-24 h-24 rounded-full mx-auto mb-4 object-top"*/}
-        {/*        />*/}
-        {/*        <h3 className="text-xl font-bold text-white mb-2">Sarah Kim</h3>*/}
-        {/*        <p className="text-green-400 mb-3">Lead Programmer</p>*/}
-        {/*        <p className="text-gray-300 text-sm">*/}
-        {/*          Expert in multiplayer networking and game optimization. */}
-        {/*          Ensures our games run smoothly across all platforms.*/}
-        {/*        </p>*/}
-        {/*      </div>*/}
-              
-        {/*      <div className="text-center bg-purple-900/20 p-8 rounded-2xl border border-purple-500/20">*/}
-        {/*        <img */}
-        {/*          src="https://readdy.ai/api/search-image?query=Creative%20game%20artist%20portrait%2C%20talented%20designer%20working%20on%20character%20concepts%2C%20artistic%20workspace%20with%20colorful%20design%20elements%2C%20modern%20studio%20environment%2C%20professional%20creative%20individual%2C%20inspiring%20aesthetic&width=300&height=300&seq=team-artist&orientation=squarish"*/}
-        {/*          alt="Mike Rodriguez - Art Director"*/}
-        {/*          className="w-24 h-24 rounded-full mx-auto mb-4 object-top"*/}
-        {/*        />*/}
-        {/*        <h3 className="text-xl font-bold text-white mb-2">Mike Rodriguez</h3>*/}
-        {/*        <p className="text-blue-400 mb-3">Art Director</p>*/}
-        {/*        <p className="text-gray-300 text-sm">*/}
-        {/*          Creates the vibrant, engaging visual experiences that make our games */}
-        {/*          memorable and instantly recognizable.*/}
-        {/*        </p>*/}
-        {/*      </div>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*</section>*/}
-
         {/* Company Values */}
         <section className="py-20">
           <div className="max-w-6xl mx-auto px-6">
