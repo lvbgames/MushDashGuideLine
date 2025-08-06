@@ -125,11 +125,11 @@ export default function Projects() {
                 <p className="text-gray-300">
                   Community testing, feedback integration, and continuous post-launch support.
                 </p>
-                </div>
               </div>
             </div>
           </div>
         </section>
+       </div>
       <Footer />
     </div>
   );
