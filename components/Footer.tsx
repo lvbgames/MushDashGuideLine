@@ -37,18 +37,8 @@ export default function Footer() {
             <div className="space-y-2">
               <Link href="/about" className="block text-gray-300 hover:text-white transition-colors cursor-pointer">About Us</Link>
               <Link href="/projects" className="block text-gray-300 hover:text-white transition-colors cursor-pointer">Our Games</Link>
-{/*              <Link href="/contact" className="block text-gray-300 hover:text-white transition-colors cursor-pointer">Contact</Link>*/}
             </div>
           </div>
-          
-          {/*<div>*/}
-          {/*  <h4 className="font-semibold mb-4">Support</h4>*/}
-          {/*  <div className="space-y-2">*/}
-          {/*    <a href="#" className="block text-gray-300 hover:text-white transition-colors cursor-pointer">Help Center</a>*/}
-          {/*    <a href="#" className="block text-gray-300 hover:text-white transition-colors cursor-pointer">Bug Reports</a>*/}
-          {/*    <a href="#" className="block text-gray-300 hover:text-white transition-colors cursor-pointer">Community</a>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
         </div>
         
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
