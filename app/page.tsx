@@ -90,10 +90,6 @@ export default function Home() {
                   <span>Competitive Rankings</span>
                 </div>
               </div>
-              
-              {/*<Link href="/projects/mushdash" className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white px-6 py-3 rounded-full font-semibold transition-all transform hover:scale-105 cursor-pointer whitespace-nowrap">*/}
-              {/*  Learn More About MushDash*/}
-              {/*</Link>*/}
             </div>
           </div>
         </div>
@@ -136,9 +132,6 @@ export default function Home() {
             <Link href="/projects" className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 rounded-full font-semibold text-lg transition-all transform hover:scale-105 cursor-pointer whitespace-nowrap">
               View All Games
             </Link>
-            {/*<Link href="/contact" className="border-2 border-white text-white hover:bg-white hover:text-purple-600 px-8 py-4 rounded-full font-semibold text-lg transition-all cursor-pointer whitespace-nowrap">*/}
-            {/*  Contact Us*/}
-            {/*</Link>*/}
           </div>
         </div>
       </section>
