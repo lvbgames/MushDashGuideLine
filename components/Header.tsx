@@ -22,7 +22,6 @@ export default function Header() {
             <Link href="/" className="text-white hover:text-purple-400 transition-colors cursor-pointer whitespace-nowrap">Home</Link>
             <Link href="/about" className="text-white hover:text-purple-400 transition-colors cursor-pointer whitespace-nowrap">About</Link>
             <Link href="/projects" className="text-white hover:text-purple-400 transition-colors cursor-pointer whitespace-nowrap">Projects</Link>
-{/*            <Link href="/contact" className="text-white hover:text-purple-400 transition-colors cursor-pointer whitespace-nowrap">Contact</Link>*/}
           </div>
 
           <button 
@@ -39,7 +38,6 @@ export default function Header() {
               <Link href="/" className="text-white hover:text-purple-400 transition-colors cursor-pointer">Home</Link>
               <Link href="/about" className="text-white hover:text-purple-400 transition-colors cursor-pointer">About</Link>
               <Link href="/projects" className="text-white hover:text-purple-400 transition-colors cursor-pointer">Projects</Link>
-{/*              <Link href="/contact" className="text-white hover:text-purple-400 transition-colors cursor-pointer">Contact</Link>*/}
             </div>
           </div>
         )}
