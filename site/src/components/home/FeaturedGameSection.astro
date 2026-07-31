@@ -1,0 +1,39 @@
+---
+import type { Game } from '../../types/game';
+import type { Translation } from '../../i18n/translations/en';
+import ButtonLink from '../ui/ButtonLink.astro';
+import Container from '../ui/Container.astro';
+import HeadlineText from '../ui/HeadlineText.astro';
+import GameFeatureList from './GameFeatureList.astro';
+import GameScreenshotGallery from './GameScreenshotGallery.astro';
+
+interface Props {
+  game: Game;
+  translation: Translation;
+}
+
+const { game, translation } = Astro.props;
+---
+
+<section class="featured-game page-section" id="mushhero-overview" aria-labelledby="featured-game-title">
+  <Container>
+    <div class="featured-game__intro">
+      <div>
+        <p class="eyebrow">{translation.home.featuredEyebrow}</p>
+        <h2 id="featured-game-title">
+          <HeadlineText text={translation.home.featuredTitle} lines={translation.home.featuredTitleLines} />
+        </h2>
+      </div>
+      <div>
+        <p>{translation.home.featuredDescription}</p>
+        {game.steamStoreUrl && (
+          <ButtonLink href={game.steamStoreUrl} variant="quiet" external externalLabel={translation.common.opensNewTab}>
+            {translation.common.viewSteam}
+          </ButtonLink>
+        )}
+      </div>
+    </div>
+    <GameFeatureList features={translation.home.features} />
+    <GameScreenshotGallery images={game.screenshots} label={translation.home.screenshotsLabel} gameTitle={game.title} />
+  </Container>
+</section>

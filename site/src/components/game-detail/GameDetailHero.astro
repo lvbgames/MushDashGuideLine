@@ -1,0 +1,60 @@
+---
+import { company } from '../../data/company';
+import type { Locale } from '../../i18n/config';
+import type { GameDetailTranslation, Translation } from '../../i18n/translations/en';
+import type { Game } from '../../types/game';
+import GameMedia from '../game/GameMedia.astro';
+import GameStatusBadge from '../game/GameStatusBadge.astro';
+import GameStoreButtons from '../game/GameStoreButtons.astro';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  game: Game;
+  locale: Locale;
+  content: GameDetailTranslation;
+  common: Translation['common'];
+}
+
+const { game, locale, content, common } = Astro.props;
+const image = game.screenshots[0] ?? game.heroImage;
+const tags = game.detailTags[locale] ?? game.detailTags.en ?? game.genres;
+const statusLabels = {
+  upcoming: common.coming2027,
+  'early-access': common.earlyAccess,
+  available: common.available
+};
+---
+
+<section class="game-detail-hero" aria-labelledby="game-detail-title">
+  <Container className="game-detail-hero__inner">
+    <div class="game-detail-hero__content">
+      <div class="game-detail-hero__meta">
+        <p class="eyebrow">{content.heroEyebrow}</p>
+        <GameStatusBadge game={game} labels={statusLabels} />
+      </div>
+      <h1 id="game-detail-title">{game.title}</h1>
+      <p class="game-detail-hero__description">{content.heroDescription}</p>
+      <ul class="game-detail-hero__genres" aria-label={content.genreLabel}>
+        {tags.map((tag) => <li>{tag}</li>)}
+      </ul>
+      <p class="game-detail-hero__creator">
+        <span>{content.creatorLabel}</span>
+        <strong>{company.name}</strong>
+      </p>
+      <GameStoreButtons
+        game={game}
+        labels={common}
+        steamPrimary
+        steamLabel={game.releaseStatus === 'upcoming' ? common.wishlistSteam : common.viewSteam}
+        epicLabel={common.viewEpic}
+      />
+    </div>
+    <GameMedia
+      image={image}
+      alt={content.screenshotAlts[0]}
+      loading="eager"
+      fallbackText={common.mediaUnavailable}
+      className="game-detail-hero__media"
+    />
+  </Container>
+</section>

@@ -1,0 +1,13 @@
+---
+interface Props {
+  href: string;
+  externalLabel?: string;
+}
+
+const { href, externalLabel = 'opens in a new tab' } = Astro.props;
+---
+
+<a class="external-link" href={href} target="_blank" rel="noopener noreferrer">
+  <slot />
+  <span class="screen-reader"> ({externalLabel})</span>
+</a>

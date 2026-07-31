@@ -1,0 +1,14 @@
+---
+interface Props {
+  text: string;
+  lines?: readonly string[];
+}
+
+const { text, lines } = Astro.props;
+---
+
+{
+  lines?.length
+    ? <span class="headline-lines">{lines.map((line) => <span class="headline-line">{line}</span>)}</span>
+    : text
+}

@@ -1,0 +1,59 @@
+---
+import type { Game } from '../../types/game';
+import type { Translation } from '../../i18n/translations/en';
+import ButtonLink from '../ui/ButtonLink.astro';
+import Container from '../ui/Container.astro';
+import GameMedia from '../game/GameMedia.astro';
+import GameStatusBadge from '../game/GameStatusBadge.astro';
+import GameStoreButtons from '../game/GameStoreButtons.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+
+interface Props {
+  featured: Game;
+  secondary: Game;
+  translation: Translation;
+}
+
+const { featured, secondary, translation } = Astro.props;
+const statusLabels = {
+  upcoming: translation.common.coming2027,
+  'early-access': translation.common.earlyAccess,
+  available: translation.common.available
+};
+---
+
+<section class="games-overview page-section" id="games" aria-labelledby="games-overview-title">
+  <Container>
+    <SectionHeading eyebrow={translation.home.gamesEyebrow} title={translation.home.gamesTitle}>
+      <p>{translation.home.gamesDescription}</p>
+    </SectionHeading>
+    <div class="games-overview__grid">
+      <article class="game-overview game-overview--primary">
+        <GameMedia image={featured.heroImage} alt={featured.title} fallbackText={translation.common.mediaUnavailable} />
+        <div class="game-overview__body">
+          <p class="eyebrow">{translation.home.primaryGame}</p>
+          <GameStatusBadge game={featured} labels={statusLabels} />
+          <h3>{featured.title}</h3>
+          <p>{translation.home.heroDescription}</p>
+          <div class="game-overview__actions">
+            <GameStoreButtons game={featured} labels={translation.common} />
+            <ButtonLink href="#mushhero-overview" variant="quiet">{translation.common.exploreGame}</ButtonLink>
+          </div>
+        </div>
+      </article>
+      <article class="game-overview game-overview--secondary">
+        <GameMedia image={secondary.heroImage} alt={secondary.title} fallbackText={translation.common.mediaUnavailable} />
+        <div class="game-overview__body">
+          <p class="eyebrow">{translation.home.releasedGame}</p>
+          <GameStatusBadge game={secondary} labels={statusLabels} />
+          <h3>{secondary.title}</h3>
+          <p>{translation.home.dashDescription}</p>
+          <div class="game-overview__actions">
+            <GameStoreButtons game={secondary} labels={translation.common} />
+            <ButtonLink href="#mushdash" variant="quiet">{translation.common.exploreGame}</ButtonLink>
+          </div>
+        </div>
+      </article>
+    </div>
+  </Container>
+</section>

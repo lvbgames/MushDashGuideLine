@@ -1,0 +1,50 @@
+---
+import type { Game } from '../../types/game';
+import type { Translation } from '../../i18n/translations/en';
+import ButtonLink from '../ui/ButtonLink.astro';
+import Container from '../ui/Container.astro';
+import GameMedia from '../game/GameMedia.astro';
+import GameStatusBadge from '../game/GameStatusBadge.astro';
+import GameStoreButtons from '../game/GameStoreButtons.astro';
+
+interface Props {
+  game: Game;
+  detailPath: string;
+  translation: Translation;
+}
+
+const { game, detailPath, translation } = Astro.props;
+const statusLabels = {
+  upcoming: translation.common.coming2027,
+  'early-access': translation.common.earlyAccess,
+  available: translation.common.available
+};
+const image = game.screenshots[0] ?? game.heroImage;
+---
+
+<section class="games-released page-section" data-game={game.slug} aria-labelledby="games-released-title">
+  <Container className="games-released__inner">
+    <GameMedia
+      image={image}
+      alt={translation.gamesPage.gameImageAlts.mushdash}
+      fallbackText={translation.common.mediaUnavailable}
+      className="games-released__media"
+    />
+    <div class="games-released__content">
+      <p class="eyebrow">{translation.gamesPage.releasedEyebrow}</p>
+      <GameStatusBadge game={game} labels={statusLabels} />
+      <h2 id="games-released-title">{game.title}</h2>
+      <p>{translation.gamesPage.releasedDescription}</p>
+      <div class="games-page__actions">
+        <ButtonLink href={detailPath} variant="quiet">{translation.gamesPage.detailCta}</ButtonLink>
+        <GameStoreButtons
+          game={game}
+          labels={translation.common}
+          steamPrimary
+          steamLabel={translation.common.viewSteam}
+          epicLabel={translation.common.viewEpic}
+        />
+      </div>
+    </div>
+  </Container>
+</section>

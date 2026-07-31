@@ -1,0 +1,31 @@
+---
+import type { GameDetailTranslation, Translation } from '../../i18n/translations/en';
+import type { Game } from '../../types/game';
+import GameStoreButtons from '../game/GameStoreButtons.astro';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  game: Game;
+  content: GameDetailTranslation;
+  common: Translation['common'];
+}
+
+const { game, content, common } = Astro.props;
+---
+
+<section class="game-purchase-cta page-section" aria-labelledby="game-purchase-title">
+  <Container className="game-purchase-cta__inner">
+    <div class="game-purchase-cta__copy">
+      <p class="eyebrow">{content.purchaseEyebrow}</p>
+      <h2 id="game-purchase-title">{content.purchaseTitle}</h2>
+      <p>{content.purchaseDescription}</p>
+    </div>
+    <GameStoreButtons
+      game={game}
+      labels={common}
+      steamPrimary
+      steamLabel={game.releaseStatus === 'upcoming' ? common.wishlistSteam : common.viewSteam}
+      epicLabel={common.viewEpic}
+    />
+  </Container>
+</section>

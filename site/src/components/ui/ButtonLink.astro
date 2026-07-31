@@ -1,0 +1,15 @@
+---
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary' | 'quiet';
+  external?: boolean;
+  externalLabel?: string;
+}
+
+const { href, variant = 'primary', external = false, externalLabel = 'opens in a new tab' } = Astro.props;
+---
+
+<a class:list={['button-link', `button-link--${variant}`]} href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+  <slot />
+  {external && <span class="screen-reader"> ({externalLabel})</span>}
+</a>

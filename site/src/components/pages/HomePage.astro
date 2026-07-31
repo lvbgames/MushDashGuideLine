@@ -1,0 +1,54 @@
+---
+import { games } from '../../data/games';
+import { socialLinks } from '../../data/socialLinks';
+import { getLocalePath, type Locale } from '../../i18n/config';
+import { getTranslation } from '../../i18n/translations';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AboutPreview from '../home/AboutPreview.astro';
+import CommunityPreview from '../home/CommunityPreview.astro';
+import ContactPreview from '../home/ContactPreview.astro';
+import FeaturedGameSection from '../home/FeaturedGameSection.astro';
+import GamesOverview from '../home/GamesOverview.astro';
+import HomeHero from '../home/HomeHero.astro';
+import MushDashSection from '../home/MushDashSection.astro';
+import SiteFooter from '../layout/SiteFooter.astro';
+import SiteHeader from '../layout/SiteHeader.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const translation = getTranslation(locale);
+const mushHero = games.find((game) => game.slug === 'mushhero');
+const mushDash = games.find((game) => game.slug === 'mushdash');
+
+if (!mushHero || !mushDash) {
+  throw new Error('Home requires MushHero and Mush Dash data.');
+}
+
+const ogImage = mushHero.screenshots[0]?.src ?? mushHero.heroImage?.src;
+if (!ogImage) {
+  throw new Error('Home requires a verified Open Graph image.');
+}
+---
+
+<BaseLayout
+  locale={locale}
+  route="home"
+  title={translation.meta.homeTitle}
+  description={translation.meta.homeDescription}
+  ogImage={ogImage}
+>
+  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="home" translation={translation} />
+  <main>
+    <HomeHero game={mushHero} translation={translation} detailPath={getLocalePath(locale, 'mushhero')} />
+    <FeaturedGameSection game={mushHero} translation={translation} />
+    <GamesOverview featured={mushHero} secondary={mushDash} translation={translation} />
+    <MushDashSection game={mushDash} translation={translation} detailPath={getLocalePath(locale, 'mushdash')} />
+    <AboutPreview translation={translation} aboutPath={getLocalePath(locale, 'about')} />
+    <CommunityPreview links={socialLinks} translation={translation} />
+    <ContactPreview locale={locale} translation={translation} />
+  </main>
+  <SiteFooter locale={locale} route="home" translation={translation} />
+</BaseLayout>

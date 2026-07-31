@@ -1,0 +1,31 @@
+---
+import type { SocialLink } from '../../types/social';
+import type { Translation } from '../../i18n/translations/en';
+import SocialLinkCard from './SocialLinkCard.astro';
+
+interface Props {
+  links: readonly SocialLink[];
+  label?: string;
+  externalLabel?: string;
+  variant?: 'cards' | 'inline' | 'list';
+  linkCopy?: Translation['home']['followLinks'];
+}
+
+const { links, label = 'Official Lv.B links', externalLabel, variant = 'cards', linkCopy } = Astro.props;
+const enabledLinks = links.filter((link) => link.enabled && link.url);
+---
+
+{enabledLinks.length > 0 && (
+  <div class:list={['social-links', `social-links--${variant}`]} aria-label={label}>
+    {
+      enabledLinks.map((link) => (
+        <SocialLinkCard
+          link={link}
+          externalLabel={externalLabel}
+          variant={variant}
+          copy={link.id in (linkCopy ?? {}) ? linkCopy?.[link.id as keyof typeof linkCopy] : undefined}
+        />
+      ))
+    }
+  </div>
+)}

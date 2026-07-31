@@ -1,0 +1,28 @@
+---
+import type { GameImage } from '../../types/game';
+
+interface Props {
+  images: readonly GameImage[];
+  label: string;
+  gameTitle: string;
+}
+
+const { images, label, gameTitle } = Astro.props;
+---
+
+{images.length > 0 && (
+  <div class="screenshot-gallery" role="group" aria-label={label}>
+    {images.slice(0, 3).map((image, index) => (
+      <figure>
+        <img
+          src={image.src}
+          width={image.width}
+          height={image.height}
+          alt={`${gameTitle} — ${index + 1}`}
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    ))}
+  </div>
+)}

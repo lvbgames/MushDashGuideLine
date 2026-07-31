@@ -1,0 +1,60 @@
+---
+import { games } from '../../data/games';
+import { getLocalePath, type Locale, type SiteRoute } from '../../i18n/config';
+import { getTranslation } from '../../i18n/translations';
+import type { GameSlug } from '../../types/game';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GameDetailHero from '../game-detail/GameDetailHero.astro';
+import GameFeatureGrid from '../game-detail/GameFeatureGrid.astro';
+import GameOverview from '../game-detail/GameOverview.astro';
+import GamePurchaseCta from '../game-detail/GamePurchaseCta.astro';
+import GameScreenshotSection from '../game-detail/GameScreenshotSection.astro';
+import MoreGamesSection from '../game-detail/MoreGamesSection.astro';
+import SiteFooter from '../layout/SiteFooter.astro';
+import SiteHeader from '../layout/SiteHeader.astro';
+
+interface Props {
+  locale: Locale;
+  slug: GameSlug;
+}
+
+const { locale, slug } = Astro.props;
+const translation = getTranslation(locale);
+const game = games.find((entry) => entry.slug === slug);
+const otherGame = games.find((entry) => entry.slug !== slug);
+
+if (!game || !otherGame) {
+  throw new Error(`Game detail requires data for ${slug} and another Lv.B game.`);
+}
+
+const content = slug === 'mushhero' ? translation.mushHero : translation.mushDash;
+const route: SiteRoute = slug;
+const ogImage = game.screenshots[0]?.src ?? game.heroImage?.src;
+if (!ogImage) {
+  throw new Error(`${game.title} requires a verified Open Graph image.`);
+}
+---
+
+<BaseLayout
+  locale={locale}
+  route={route}
+  title={slug === 'mushhero' ? translation.meta.mushHeroTitle : translation.meta.mushDashTitle}
+  description={slug === 'mushhero' ? translation.meta.mushHeroDescription : translation.meta.mushDashDescription}
+  ogImage={ogImage}
+>
+  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route={route} translation={translation} />
+  <main class="game-detail-page" data-game={slug}>
+    <GameDetailHero game={game} locale={locale} content={content} common={translation.common} />
+    <GameOverview content={content} />
+    <GameFeatureGrid content={content} />
+    <GameScreenshotSection game={game} content={content} common={translation.common} />
+    <GamePurchaseCta game={game} content={content} common={translation.common} />
+    <MoreGamesSection
+      game={otherGame}
+      content={content}
+      common={translation.common}
+      detailPath={getLocalePath(locale, otherGame.slug)}
+    />
+  </main>
+  <SiteFooter locale={locale} route={route} translation={translation} />
+</BaseLayout>

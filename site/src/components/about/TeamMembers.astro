@@ -1,0 +1,57 @@
+---
+import type { Translation } from '../../i18n/translations/en';
+import type { TeamMember } from '../../types/team';
+
+interface Props {
+  members: readonly TeamMember[];
+  translation: Translation;
+}
+
+const { members, translation } = Astro.props;
+---
+
+<ul class="about-team__members">
+  {
+    members.map((member) => (
+      <li>
+        <article class="about-team-card">
+          <div class:list={['about-team-card__media', !member.profileImage && 'about-team-card__media--brand']}>
+            <img
+              class="about-team-card__fallback"
+              src="/brand/lvb-symbol.png"
+              width="794"
+              height="769"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+            {member.profileImage && (
+              <img
+                class="about-team-card__portrait"
+                src={member.profileImage}
+                width="1254"
+                height="1254"
+                alt={translation.about.team.profileAlt.replace('{name}', member.name)}
+                loading="lazy"
+                decoding="async"
+                onerror="this.remove()"
+              />
+            )}
+          </div>
+          <div class="about-team-card__body">
+            <div>
+              <h3>{member.name}</h3>
+              <p class="about-team-card__role">{translation.about.team.roles[member.role]}</p>
+            </div>
+            <div class="about-team-card__responsibilities">
+              <p>{translation.about.team.responsibilitiesLabel}</p>
+              <ul>
+                {member.responsibilities.map((item) => <li>{translation.about.team.responsibilities[item]}</li>)}
+              </ul>
+            </div>
+          </div>
+        </article>
+      </li>
+    ))
+  }
+</ul>

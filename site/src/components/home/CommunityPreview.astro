@@ -1,0 +1,33 @@
+---
+import type { SocialLink } from '../../types/social';
+import type { Translation } from '../../i18n/translations/en';
+import Container from '../ui/Container.astro';
+import SocialLinks from '../social/SocialLinks.astro';
+
+interface Props {
+  links: readonly SocialLink[];
+  translation: Translation;
+}
+
+const { links, translation } = Astro.props;
+const enabledLinks = links.filter((link) => link.enabled && link.url);
+---
+
+{enabledLinks.length > 0 && (
+  <section class="community-preview page-section" id="community" aria-labelledby="community-preview-title">
+    <Container className="community-preview__inner">
+      <div class="community-preview__intro">
+        <p class="eyebrow">{translation.home.followEyebrow}</p>
+        <h2 id="community-preview-title">{translation.home.followTitle}</h2>
+        <p>{translation.home.followDescription}</p>
+      </div>
+      <SocialLinks
+        links={enabledLinks}
+        label={translation.nav.follow}
+        externalLabel={translation.common.opensNewTab}
+        variant="list"
+        linkCopy={translation.home.followLinks}
+      />
+    </Container>
+  </section>
+)}

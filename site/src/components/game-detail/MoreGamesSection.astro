@@ -1,0 +1,51 @@
+---
+import type { GameDetailTranslation, Translation } from '../../i18n/translations/en';
+import type { Game } from '../../types/game';
+import GameMedia from '../game/GameMedia.astro';
+import GameStatusBadge from '../game/GameStatusBadge.astro';
+import GameStoreButtons from '../game/GameStoreButtons.astro';
+import ButtonLink from '../ui/ButtonLink.astro';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  game: Game;
+  content: GameDetailTranslation;
+  common: Translation['common'];
+  detailPath: string;
+}
+
+const { game, content, common, detailPath } = Astro.props;
+const image = game.screenshots[0] ?? game.heroImage;
+const statusLabels = {
+  upcoming: common.coming2027,
+  'early-access': common.earlyAccess,
+  available: common.available
+};
+---
+
+<section class="more-games page-section" data-game={game.slug} aria-labelledby="more-games-title">
+  <Container className="more-games__inner">
+    <GameMedia
+      image={image}
+      alt={game.title}
+      fallbackText={common.mediaUnavailable}
+      className="more-games__media"
+    />
+    <div class="more-games__content">
+      <p class="eyebrow">{content.moreGamesEyebrow}</p>
+      <GameStatusBadge game={game} labels={statusLabels} />
+      <h2 id="more-games-title">{content.moreGamesTitle}</h2>
+      <p>{content.moreGameDescription}</p>
+      <div class="more-games__actions">
+        <ButtonLink href={detailPath} variant="quiet">{content.moreGameCta}</ButtonLink>
+        <GameStoreButtons
+          game={game}
+          labels={common}
+          steamPrimary={false}
+          steamLabel={game.releaseStatus === 'upcoming' ? common.wishlistSteam : common.viewSteam}
+          epicLabel={common.viewEpic}
+        />
+      </div>
+    </div>
+  </Container>
+</section>

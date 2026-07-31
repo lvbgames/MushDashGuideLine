@@ -1,0 +1,44 @@
+---
+import { getLocalePath, type Locale, type SiteRoute } from '../../i18n/config';
+import { newsItems } from '../../data/news';
+import { socialLinks } from '../../data/socialLinks';
+import type { Translation } from '../../i18n/translations/en';
+import Container from '../ui/Container.astro';
+import SocialLinks from '../social/SocialLinks.astro';
+
+interface Props {
+  locale: Locale;
+  route: SiteRoute;
+  translation: Translation;
+}
+
+const { locale, route, translation } = Astro.props;
+const localeRoot = getLocalePath(locale, 'home');
+const gamesPath = getLocalePath(locale, 'games');
+const aboutPath = getLocalePath(locale, 'about');
+const newsPath = getLocalePath(locale, 'news');
+const contactPath = getLocalePath(locale, 'contact');
+const gamesCurrent = route === 'games' || route === 'mushhero' || route === 'mushdash';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <Container className="site-footer__inner">
+    <div class="site-footer__brand">
+      <a class="site-brand site-brand--footer" href={localeRoot} aria-label="Lv.B home" aria-current={route === 'home' ? 'page' : undefined}>
+        <img class="site-brand__icon" src="/brand/lvb-symbol.png" width="794" height="769" alt="" loading="lazy" decoding="async" />
+        <span class="site-brand__wordmark" aria-hidden="true">Lv.B</span>
+      </a>
+      <p class="site-footer__muted">{translation.footer.tagline}</p>
+    </div>
+    <nav aria-label={translation.footer.navigationLabel}>
+      <a href={gamesPath} aria-current={gamesCurrent ? 'page' : undefined}>{translation.nav.games}</a>
+      <a href={aboutPath} aria-current={route === 'about' ? 'page' : undefined}>{translation.nav.about}</a>
+      {newsItems.length > 0 && <a href={newsPath} aria-current={route === 'news' ? 'page' : undefined}>{translation.nav.news}</a>}
+      <a href={contactPath} aria-current={route === 'contact' ? 'page' : undefined}>{translation.nav.contact}</a>
+      <a href="/privacy">{translation.common.privacy}</a>
+    </nav>
+    {socialLinks.length > 0 && <SocialLinks links={socialLinks} label={translation.nav.follow} externalLabel={translation.common.opensNewTab} variant="inline" />}
+    <p class="site-footer__muted site-footer__copyright">© {year} {translation.footer.copyright}</p>
+  </Container>
+</footer>

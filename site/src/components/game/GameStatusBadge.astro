@@ -1,0 +1,17 @@
+---
+import type { Game } from '../../types/game';
+
+interface Props {
+  game: Game;
+  labels?: Partial<Record<Game['releaseStatus'], string>>;
+}
+
+const { game, labels: suppliedLabels } = Astro.props;
+const labels = suppliedLabels ?? {
+  upcoming: 'Upcoming',
+  'early-access': 'Early Access',
+  available: 'Available'
+};
+---
+
+<span class:list={['game-status-badge', `game-status-badge--${game.releaseStatus}`]}>{labels[game.releaseStatus]}</span>

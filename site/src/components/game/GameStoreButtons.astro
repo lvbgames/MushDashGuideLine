@@ -1,0 +1,34 @@
+---
+import type { Game } from '../../types/game';
+import type { Translation } from '../../i18n/translations/en';
+import ButtonLink from '../ui/ButtonLink.astro';
+
+interface Props {
+  game: Game;
+  labels?: Translation['common'];
+  steamPrimary?: boolean;
+  steamLabel?: string;
+  epicLabel?: string;
+}
+
+const { game, labels, steamPrimary, steamLabel, epicLabel } = Astro.props;
+const steamIsPrimary = steamPrimary ?? game.priority === 'primary';
+const steamVariant = steamIsPrimary ? 'primary' : 'secondary';
+const text = labels ?? {
+  wishlistSteam: 'Wishlist on Steam',
+  viewSteam: 'View on Steam',
+  steam: 'Steam',
+  epic: 'Epic Games Store',
+  viewEpic: 'View on Epic Games Store',
+  opensNewTab: 'opens in a new tab'
+};
+const resolvedSteamLabel = steamLabel ?? (game.priority === 'primary' ? text.wishlistSteam : text.steam);
+const resolvedEpicLabel = epicLabel ?? text.epic;
+---
+
+{(game.steamStoreUrl || game.epicStoreUrl) && (
+  <div class="game-store-buttons">
+    {game.steamStoreUrl && <ButtonLink href={game.steamStoreUrl} variant={steamVariant} external externalLabel={text.opensNewTab}>{resolvedSteamLabel}</ButtonLink>}
+    {game.epicStoreUrl && <ButtonLink href={game.epicStoreUrl} variant="secondary" external externalLabel={text.opensNewTab}>{resolvedEpicLabel}</ButtonLink>}
+  </div>
+)}

@@ -1,0 +1,26 @@
+---
+import { getLocalePath, type Locale } from '../../i18n/config';
+import type { Translation } from '../../i18n/translations/en';
+import ButtonLink from '../ui/ButtonLink.astro';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  locale: Locale;
+  translation: Translation;
+}
+
+const { locale, translation } = Astro.props;
+---
+
+<section class="contact-preview page-section" id="contact" aria-labelledby="contact-preview-title">
+  <Container className="contact-preview__inner">
+    <div>
+      <p class="eyebrow">{translation.home.contactEyebrow}</p>
+      <h2 id="contact-preview-title">{translation.home.contactTitle}</h2>
+    </div>
+    <div class="contact-preview__copy">
+      <p>{translation.home.contactDescription}</p>
+      <ButtonLink href={getLocalePath(locale, 'contact')}>{translation.home.contactCta}</ButtonLink>
+    </div>
+  </Container>
+</section>

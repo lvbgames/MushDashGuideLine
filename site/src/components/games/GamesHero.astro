@@ -1,0 +1,21 @@
+---
+import type { Translation } from '../../i18n/translations/en';
+import Container from '../ui/Container.astro';
+import HeadlineText from '../ui/HeadlineText.astro';
+
+interface Props {
+  translation: Translation;
+}
+
+const { translation } = Astro.props;
+---
+
+<section class="games-page-hero" aria-labelledby="games-page-title">
+  <Container className="games-page-hero__inner">
+    <p class="eyebrow">{translation.gamesPage.heroEyebrow}</p>
+    <h1 id="games-page-title">
+      <HeadlineText text={translation.gamesPage.heroTitle} lines={translation.gamesPage.heroTitleLines} />
+    </h1>
+    <p class="games-page-hero__description">{translation.gamesPage.heroDescription}</p>
+  </Container>
+</section>

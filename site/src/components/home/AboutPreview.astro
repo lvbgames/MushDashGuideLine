@@ -1,0 +1,25 @@
+---
+import type { Translation } from '../../i18n/translations/en';
+import ButtonLink from '../ui/ButtonLink.astro';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  translation: Translation;
+  aboutPath: string;
+}
+
+const { translation, aboutPath } = Astro.props;
+---
+
+<section class="about-preview page-section" id="about" aria-labelledby="about-preview-title">
+  <Container className="about-preview__inner">
+    <div>
+      <p class="eyebrow">{translation.home.aboutEyebrow}</p>
+      <h2 id="about-preview-title">{translation.home.aboutTitle}</h2>
+    </div>
+    <div class="about-preview__copy">
+      <p>{translation.home.aboutDescription}</p>
+      <ButtonLink href={aboutPath} variant="quiet">{translation.home.aboutCta}</ButtonLink>
+    </div>
+  </Container>
+</section>

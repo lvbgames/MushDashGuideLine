@@ -1,0 +1,159 @@
+---
+import { company, getGoogleMapsSearchUrl } from '../../data/company';
+import { games } from '../../data/games';
+import { teamMembers } from '../../data/team';
+import { getLocalePath, type Locale } from '../../i18n/config';
+import { getTranslation } from '../../i18n/translations';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TeamMembers from '../about/TeamMembers.astro';
+import SiteFooter from '../layout/SiteFooter.astro';
+import SiteHeader from '../layout/SiteHeader.astro';
+import ButtonLink from '../ui/ButtonLink.astro';
+import Container from '../ui/Container.astro';
+import ExternalLink from '../ui/ExternalLink.astro';
+import HeadlineText from '../ui/HeadlineText.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const translation = getTranslation(locale);
+const mushHero = games.find((game) => game.slug === 'mushhero');
+const ogImage = mushHero?.screenshots[0]?.src ?? mushHero?.heroImage?.src;
+const googleMapsSearchUrl = getGoogleMapsSearchUrl();
+
+if (!ogImage) {
+  throw new Error('About requires a verified Open Graph image.');
+}
+---
+
+<BaseLayout
+  locale={locale}
+  route="about"
+  title={translation.meta.aboutTitle}
+  description={translation.meta.aboutDescription}
+  ogImage={ogImage}
+>
+  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="about" translation={translation} />
+  <main class="about-page">
+    <section class="about-hero" aria-labelledby="about-hero-title">
+      <Container className="about-hero__inner">
+        <div class="about-hero__content">
+          <p class="eyebrow">{translation.about.heroEyebrow}</p>
+          <h1 id="about-hero-title">
+            <HeadlineText text={translation.about.heroTitle} lines={translation.about.heroTitleLines} />
+          </h1>
+          <p>{translation.about.heroDescription}</p>
+        </div>
+        <div class="about-hero__brand-panel">
+          <img
+            src="/brand/lvb-logo.png"
+            width="1876"
+            height="769"
+            alt={translation.about.logoAlt}
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </div>
+      </Container>
+    </section>
+
+    <section class="about-capabilities page-section" aria-labelledby="about-capabilities-title">
+      <Container>
+        <div class="section-heading">
+          <p class="eyebrow">{translation.about.capabilitiesEyebrow}</p>
+          <h2 id="about-capabilities-title">
+            <HeadlineText text={translation.about.capabilitiesTitle} lines={translation.about.capabilitiesTitleLines} />
+          </h2>
+        </div>
+        <ol class="about-capabilities__grid">
+          {
+            translation.about.capabilities.map((item, index) => (
+              <li>
+                <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </Container>
+    </section>
+
+    <section class="about-approach page-section" aria-labelledby="about-approach-title">
+      <Container className="about-approach__inner">
+        <div class="about-approach__intro">
+          <p class="eyebrow">{translation.about.approachEyebrow}</p>
+          <h2 id="about-approach-title">{translation.about.approachTitle}</h2>
+          <p>{translation.about.approachDescription}</p>
+        </div>
+        <ol class="about-approach__list">
+          {
+            translation.about.approach.map((item, index) => (
+              <li>
+                <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </Container>
+    </section>
+
+    <section class="about-team page-section" aria-labelledby="about-team-title">
+      <Container className="about-team__inner">
+        <div class="about-team__intro">
+          <p class="eyebrow">{translation.about.team.eyebrow}</p>
+          <h2 id="about-team-title">{translation.about.team.title}</h2>
+          <p>{translation.about.team.description}</p>
+        </div>
+        <TeamMembers members={teamMembers} translation={translation} />
+      </Container>
+    </section>
+
+    <section class="about-location page-section" aria-labelledby="about-location-title">
+      <Container className="about-location__inner">
+        <div class="about-location__content">
+          <p class="eyebrow">{translation.about.locationEyebrow}</p>
+          <h2 id="about-location-title">{translation.about.locationTitle}</h2>
+          <address>{company.address}</address>
+          <p>{translation.about.locationDescription}</p>
+          <ExternalLink href={googleMapsSearchUrl} externalLabel={translation.common.opensNewTab}>
+            <span class="about-location__cta">{translation.about.mapCta}</span>
+          </ExternalLink>
+        </div>
+        <div class="about-location__map">
+          <iframe
+            src={company.googleMapsEmbedUrl}
+            width="600"
+            height="450"
+            style="border:0;"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+            title={translation.about.mapTitle}
+          ></iframe>
+        </div>
+      </Container>
+    </section>
+
+    <section class="about-contact page-section" aria-labelledby="about-contact-title">
+      <Container className="about-contact__inner">
+        <div>
+          <p class="eyebrow">{translation.about.contactEyebrow}</p>
+          <h2 id="about-contact-title">{translation.about.contactTitle}</h2>
+        </div>
+        <div class="about-contact__action">
+          <p>{translation.about.contactDescription}</p>
+          <ButtonLink href={getLocalePath(locale, 'contact')}>{translation.about.contactCta}</ButtonLink>
+        </div>
+      </Container>
+    </section>
+  </main>
+  <SiteFooter locale={locale} route="about" translation={translation} />
+</BaseLayout>

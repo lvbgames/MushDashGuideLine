@@ -1,0 +1,21 @@
+---
+import type { Translation } from '../../i18n/translations/en';
+
+interface Props {
+  features: Translation['home']['features'];
+}
+
+const { features } = Astro.props;
+---
+
+<ol class="game-feature-list">
+  {features.slice(0, 3).map((feature, index) => (
+    <li>
+      <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+      <div>
+        <h3>{feature.title}</h3>
+        <p>{feature.description}</p>
+      </div>
+    </li>
+  ))}
+</ol>

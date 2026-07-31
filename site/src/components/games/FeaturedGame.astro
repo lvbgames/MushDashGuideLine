@@ -1,0 +1,53 @@
+---
+import type { Game } from '../../types/game';
+import type { Translation } from '../../i18n/translations/en';
+import ButtonLink from '../ui/ButtonLink.astro';
+import Container from '../ui/Container.astro';
+import GameMedia from '../game/GameMedia.astro';
+import GameStatusBadge from '../game/GameStatusBadge.astro';
+import GameStoreButtons from '../game/GameStoreButtons.astro';
+
+interface Props {
+  game: Game;
+  detailPath: string;
+  translation: Translation;
+}
+
+const { game, detailPath, translation } = Astro.props;
+const statusLabels = {
+  upcoming: translation.common.coming2027,
+  'early-access': translation.common.earlyAccess,
+  available: translation.common.available
+};
+const image = game.screenshots[0] ?? game.heroImage;
+---
+
+<section class="games-featured page-section" data-game={game.slug} aria-labelledby="games-featured-title">
+  <Container>
+    <div class="games-featured__heading">
+      <div>
+        <p class="eyebrow">{translation.gamesPage.featuredEyebrow}</p>
+        <GameStatusBadge game={game} labels={statusLabels} />
+      </div>
+      <h2 id="games-featured-title">{game.title}</h2>
+    </div>
+    <GameMedia
+      image={image}
+      alt={translation.gamesPage.gameImageAlts.mushhero}
+      fallbackText={translation.common.mediaUnavailable}
+      className="games-featured__media"
+      loading="lazy"
+    />
+    <div class="games-featured__content">
+      <p>{translation.gamesPage.featuredDescription}</p>
+      <div class="games-page__actions">
+        <ButtonLink href={detailPath} variant="quiet">{translation.gamesPage.detailCta}</ButtonLink>
+        <GameStoreButtons
+          game={game}
+          labels={translation.common}
+          steamLabel={translation.common.wishlistSteam}
+        />
+      </div>
+    </div>
+  </Container>
+</section>

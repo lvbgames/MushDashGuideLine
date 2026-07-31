@@ -1,0 +1,378 @@
+.game-detail-page {
+  --detail-accent: var(--color-mushhero-accent);
+  --detail-accent-rgb: var(--color-mushhero-accent-rgb);
+  --detail-accent-soft: var(--color-mushhero-accent-soft);
+  --detail-accent-text: var(--color-mushhero-accent-text);
+  background: var(--color-page);
+}
+
+.game-detail-page[data-game="mushdash"] {
+  --detail-accent: var(--color-mushdash-accent);
+  --detail-accent-rgb: var(--color-mushdash-accent-rgb);
+  --detail-accent-soft: var(--color-mushdash-accent-soft);
+  --detail-accent-text: var(--color-mushdash-accent-text);
+}
+
+.game-detail-page[data-game="mushdash"] .game-store-buttons .button-link--primary {
+  background: var(--color-mushdash-accent);
+  color: var(--color-mushdash-accent-text);
+}
+
+.game-detail-page .eyebrow,
+.game-detail-page .section-heading__eyebrow {
+  color: var(--color-brand-accent);
+}
+
+.game-detail-hero {
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-border);
+  background:
+    radial-gradient(circle at 85% 10%, rgb(var(--detail-accent-rgb) / 0.12), transparent 34rem),
+    linear-gradient(180deg, var(--color-elevated), var(--color-page));
+}
+
+.game-detail-hero__inner {
+  display: grid;
+  gap: var(--space-8);
+  padding-block: clamp(var(--space-12), 8vw, var(--space-20));
+}
+
+.game-detail-hero__content {
+  display: grid;
+  align-content: center;
+  max-width: 42rem;
+  gap: var(--space-5);
+}
+
+.game-detail-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.game-detail-hero__meta .eyebrow {
+  margin: 0;
+}
+
+.game-detail-hero h1 {
+  margin: 0;
+  font-size: clamp(3.35rem, 16vw, 7.2rem);
+  font-weight: 950;
+  letter-spacing: -0.065em;
+  line-height: 0.9;
+}
+
+.game-detail-hero__description {
+  max-width: 38rem;
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: clamp(1.05rem, 3.7vw, 1.3rem);
+  line-height: 1.6;
+}
+
+.game-detail-hero__genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.game-detail-hero__genres li {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid rgb(var(--detail-accent-rgb) / 0.26);
+  border-radius: 999px;
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+
+.game-detail-hero__creator {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.game-detail-hero__creator strong {
+  color: var(--color-text);
+}
+
+.game-detail-hero__media {
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgb(var(--detail-accent-rgb) / 0.42);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.game-detail-overview {
+  background: linear-gradient(180deg, var(--color-page), var(--color-elevated));
+}
+
+.game-detail-overview__inner {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.game-detail-overview h2,
+.game-purchase-cta h2,
+.more-games h2 {
+  margin: 0;
+  font-size: clamp(2.25rem, 8vw, 5rem);
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+
+.game-detail-overview__copy {
+  display: grid;
+  align-content: start;
+  gap: var(--space-5);
+  max-width: 42rem;
+}
+
+.game-detail-overview__copy p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: clamp(1rem, 2.2vw, 1.18rem);
+}
+
+.game-detail-features {
+  background: var(--color-elevated);
+}
+
+.game-detail-features__grid {
+  display: grid;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--color-border);
+  list-style: none;
+}
+
+.game-detail-features__grid li {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  padding-block: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.game-detail-features__index {
+  color: var(--detail-accent);
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+}
+
+.game-detail-features h3 {
+  margin: 0;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+}
+
+.game-detail-features li p {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.game-detail-featured-shot {
+  background: var(--color-page);
+}
+
+.game-detail-featured-shot__figure,
+.game-detail-gallery figure {
+  margin: 0;
+}
+
+.game-detail-featured-shot__figure .game-media {
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgb(var(--detail-accent-rgb) / 0.36);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.game-detail-gallery {
+  background: linear-gradient(180deg, var(--color-page), var(--color-elevated));
+}
+
+.game-detail-gallery__grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.game-detail-gallery figure .game-media {
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.game-purchase-cta {
+  background:
+    linear-gradient(120deg, rgb(var(--detail-accent-rgb) / 0.12), transparent 62%),
+    var(--color-elevated);
+}
+
+.game-purchase-cta__inner {
+  display: grid;
+  gap: var(--space-8);
+  padding-block: var(--space-8);
+  border-block: 1px solid rgb(var(--detail-accent-rgb) / 0.22);
+}
+
+.game-purchase-cta__copy {
+  max-width: 44rem;
+}
+
+.game-purchase-cta__copy > p:last-child,
+.more-games__content > p:not(.eyebrow) {
+  max-width: var(--text-narrow);
+  margin: var(--space-5) 0 0;
+  color: var(--color-text-secondary);
+}
+
+.more-games {
+  --more-game-accent: var(--color-mushdash);
+  --more-game-accent-rgb: var(--color-mushdash-accent-rgb);
+  background: var(--color-brand-bg);
+}
+
+.more-games[data-game="mushhero"] {
+  --more-game-accent: var(--color-mushhero-accent);
+  --more-game-accent-rgb: var(--color-mushhero-accent-rgb);
+}
+
+.more-games__inner {
+  display: grid;
+  gap: var(--space-6);
+  padding-top: var(--space-10);
+  border-top: 1px solid var(--color-border);
+}
+
+.more-games__media {
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgb(var(--more-game-accent-rgb) / 0.28);
+}
+
+.more-games__content {
+  display: grid;
+  align-content: center;
+  gap: var(--space-4);
+}
+
+.more-games__content .eyebrow {
+  margin: 0;
+  color: var(--more-game-accent);
+}
+
+.more-games__content h2 {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+}
+
+.more-games__content > p:not(.eyebrow) {
+  margin-top: 0;
+}
+
+.more-games__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.game-detail-page[data-game="mushdash"] .game-detail-hero__media img {
+  object-position: center 44%;
+}
+
+@media (min-width: 48rem) {
+  .game-detail-hero__inner {
+    grid-template-columns: minmax(0, 0.9fr) minmax(22rem, 1.1fr);
+    align-items: center;
+  }
+
+  .game-detail-hero h1 {
+    font-size: clamp(4.75rem, 8vw, 7.2rem);
+    white-space: nowrap;
+  }
+
+  .game-detail-overview__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(22rem, 0.8fr);
+    align-items: start;
+  }
+
+  .game-detail-features__grid,
+  .game-detail-gallery__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .game-detail-features__grid li {
+    padding: var(--space-8);
+    border-right: 1px solid var(--color-border);
+  }
+
+  .game-detail-features__grid li:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .game-purchase-cta__inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .more-games__inner {
+    grid-template-columns: minmax(18rem, 0.75fr) minmax(0, 1.25fr);
+    align-items: center;
+  }
+}
+
+@media (min-width: 64rem) {
+  .game-detail-hero__inner {
+    gap: clamp(var(--space-10), 5vw, var(--space-20));
+  }
+
+  .game-detail-features__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .game-detail-features__grid li {
+    border-right: 1px solid var(--color-border);
+  }
+
+  .game-detail-features__grid li:last-child {
+    border-right: 0;
+  }
+}
+
+@media (min-width: 90rem) {
+  .game-detail-hero__inner,
+  .game-detail-featured-shot .container {
+    width: min(100% - 6rem, var(--content-wide));
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .game-detail-page[data-game="mushdash"] .game-store-buttons .button-link--primary:hover {
+    background: var(--color-mushdash-accent-hover);
+  }
+}
+
+@media (max-width: 30rem) {
+  .game-detail-hero .game-store-buttons,
+  .game-purchase-cta .game-store-buttons,
+  .more-games__actions,
+  .more-games .game-store-buttons {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .game-detail-hero .button-link,
+  .game-purchase-cta .button-link,
+  .more-games__actions .button-link,
+  .more-games .button-link {
+    width: 100%;
+  }
+
+  .more-games__actions .game-store-buttons {
+    width: 100%;
+  }
+}

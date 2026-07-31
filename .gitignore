@@ -1,0 +1,15 @@
+node_modules/
+site/dist/
+references/reviews/
+.codex/**/*.log
+.codex/**/qa-runtime*/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.next/
+out/
+next-env.d.ts
+.tmp-verification/
+npm-debug.log*

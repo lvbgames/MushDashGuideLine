@@ -1,0 +1,56 @@
+---
+import '../styles/global.css';
+import { siteConfig } from '../config/site';
+import { getLocalePath, locales, type Locale, type SiteRoute } from '../i18n/config';
+
+interface Props {
+  locale: Locale;
+  route: SiteRoute;
+  title: string;
+  description: string;
+  ogImage: string;
+}
+
+const { locale, route, title, description, ogImage } = Astro.props;
+const site = Astro.site ?? new URL('https://lvb.kr');
+const canonical = new URL(getLocalePath(locale, route), site);
+const localeMap: Record<Locale, string> = {
+  en: 'en_US',
+  ko: 'ko_KR',
+  ja: 'ja_JP',
+  'zh-cn': 'zh_CN'
+};
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0f0d0c" />
+    <meta name="application-name" content={siteConfig.name} />
+    <meta name="naver-site-verification" content={siteConfig.naverSiteVerification} />
+    <link rel="icon" type="image/png" sizes="128x128" href="/brand/lvb-symbol-128.png" />
+    <link rel="apple-touch-icon" href="/brand/lvb-symbol-128.png" />
+    <link rel="canonical" href={canonical} />
+    {locales.map((target) => <link rel="alternate" hreflang={target} href={new URL(getLocalePath(target, route), site)} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(getLocalePath('en', route), site)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={localeMap[locale]} />
+    {locales.filter((target) => target !== locale).map((target) => <meta property="og:locale:alternate" content={localeMap[target]} />)}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

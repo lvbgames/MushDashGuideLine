@@ -1,0 +1,12 @@
+---
+import type { Game } from '../../types/game';
+import GameMedia from './GameMedia.astro';
+
+interface Props {
+  game: Game;
+}
+
+const { game } = Astro.props;
+---
+
+<GameMedia image={game.logo} alt={`${game.title} logo`} fit="contain" />

@@ -1,0 +1,48 @@
+---
+import type { GameDetailTranslation, Translation } from '../../i18n/translations/en';
+import type { Game } from '../../types/game';
+import GameMedia from '../game/GameMedia.astro';
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+
+interface Props {
+  game: Game;
+  content: GameDetailTranslation;
+  common: Translation['common'];
+}
+
+const { game, content, common } = Astro.props;
+const screenshots = game.screenshots.map((image, index) => ({
+  image,
+  alt: content.screenshotAlts[index] ?? game.title,
+  index
+}));
+const featured = screenshots[1] ?? screenshots[0];
+const gallery = screenshots.filter((entry) => entry.index !== featured?.index);
+---
+
+{featured && (
+  <section class="game-detail-featured-shot page-section" aria-labelledby="featured-screenshot-title">
+    <Container>
+      <SectionHeading id="featured-screenshot-title" eyebrow={content.featuredScreenshotEyebrow} title={content.featuredScreenshotTitle} />
+      <figure class="game-detail-featured-shot__figure">
+        <GameMedia image={featured.image} alt={featured.alt} fallbackText={common.mediaUnavailable} />
+      </figure>
+    </Container>
+  </section>
+)}
+
+{gallery.length > 0 && (
+  <section class="game-detail-gallery page-section" aria-labelledby="screenshot-gallery-title">
+    <Container>
+      <SectionHeading id="screenshot-gallery-title" eyebrow={content.galleryEyebrow} title={content.galleryTitle} />
+      <div class="game-detail-gallery__grid">
+        {gallery.map((entry) => (
+          <figure>
+            <GameMedia image={entry.image} alt={entry.alt} fallbackText={common.mediaUnavailable} />
+          </figure>
+        ))}
+      </div>
+    </Container>
+  </section>
+)}

@@ -1,0 +1,84 @@
+---
+import { games } from '../../data/games';
+import { getLocalePath, type Locale } from '../../i18n/config';
+import { getTranslation } from '../../i18n/translations';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FeaturedGame from '../games/FeaturedGame.astro';
+import GamesHero from '../games/GamesHero.astro';
+import ReleasedGame from '../games/ReleasedGame.astro';
+import SiteFooter from '../layout/SiteFooter.astro';
+import SiteHeader from '../layout/SiteHeader.astro';
+import ButtonLink from '../ui/ButtonLink.astro';
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const translation = getTranslation(locale);
+const mushHero = games.find((game) => game.slug === 'mushhero');
+const mushDash = games.find((game) => game.slug === 'mushdash');
+
+if (!mushHero || !mushDash) {
+  throw new Error('Games requires MushHero and Mush Dash data.');
+}
+
+const ogImage = mushHero.screenshots[0]?.src ?? mushHero.heroImage?.src;
+if (!ogImage) {
+  throw new Error('Games requires a verified Open Graph image.');
+}
+---
+
+<BaseLayout
+  locale={locale}
+  route="games"
+  title={translation.meta.gamesTitle}
+  description={translation.meta.gamesDescription}
+  ogImage={ogImage}
+>
+  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="games" translation={translation} />
+  <main class="games-page">
+    <GamesHero translation={translation} />
+    <FeaturedGame game={mushHero} detailPath={getLocalePath(locale, 'mushhero')} translation={translation} />
+    <ReleasedGame game={mushDash} detailPath={getLocalePath(locale, 'mushdash')} translation={translation} />
+
+    <section class="games-principles page-section" aria-labelledby="games-principles-title">
+      <Container>
+        <SectionHeading
+          eyebrow={translation.gamesPage.principlesEyebrow}
+          title={translation.gamesPage.principlesTitle}
+          id="games-principles-title"
+        >
+          <p>{translation.gamesPage.principlesDescription}</p>
+        </SectionHeading>
+        <ol class="games-principles__list">
+          {
+            translation.gamesPage.principles.map((principle, index) => (
+              <li>
+                <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                <h3>{principle.title}</h3>
+                <p>{principle.description}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </Container>
+    </section>
+
+    <section class="games-contact page-section" aria-labelledby="games-contact-title">
+      <Container className="games-contact__inner">
+        <div>
+          <p class="eyebrow">{translation.gamesPage.contactEyebrow}</p>
+          <h2 id="games-contact-title">{translation.gamesPage.contactTitle}</h2>
+        </div>
+        <div class="games-contact__action">
+          <p>{translation.gamesPage.contactDescription}</p>
+          <ButtonLink href={getLocalePath(locale, 'contact')}>{translation.gamesPage.contactCta}</ButtonLink>
+        </div>
+      </Container>
+    </section>
+  </main>
+  <SiteFooter locale={locale} route="games" translation={translation} />
+</BaseLayout>

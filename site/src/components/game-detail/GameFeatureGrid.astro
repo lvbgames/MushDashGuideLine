@@ -1,0 +1,26 @@
+---
+import type { GameDetailTranslation } from '../../i18n/translations/en';
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+
+interface Props {
+  content: GameDetailTranslation;
+}
+
+const { content } = Astro.props;
+---
+
+<section class="game-detail-features page-section" aria-labelledby="game-features-title">
+  <Container>
+    <SectionHeading id="game-features-title" eyebrow={content.featuresEyebrow} title={content.featuresTitle} />
+    <ol class="game-detail-features__grid">
+      {content.features.map((feature, index) => (
+        <li>
+          <span class="game-detail-features__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+          <h3>{feature.title}</h3>
+          <p>{feature.description}</p>
+        </li>
+      ))}
+    </ol>
+  </Container>
+</section>

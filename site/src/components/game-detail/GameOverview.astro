@@ -1,0 +1,22 @@
+---
+import type { GameDetailTranslation } from '../../i18n/translations/en';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  content: GameDetailTranslation;
+}
+
+const { content } = Astro.props;
+---
+
+<section class="game-detail-overview page-section" id="overview" aria-labelledby="game-overview-title">
+  <Container className="game-detail-overview__inner">
+    <header>
+      <p class="eyebrow">{content.overviewEyebrow}</p>
+      <h2 id="game-overview-title">{content.overviewTitle}</h2>
+    </header>
+    <div class="game-detail-overview__copy">
+      {content.overviewParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+  </Container>
+</section>

@@ -1,0 +1,62 @@
+---
+interface NavigationLink {
+  label: string;
+  href: string;
+  current: boolean;
+}
+
+interface Props {
+  links: readonly NavigationLink[];
+  navigationLabel: string;
+  toggleLabel: string;
+}
+
+const { links, navigationLabel, toggleLabel } = Astro.props;
+const panelId = 'mobile-navigation-panel';
+---
+
+<div class="mobile-navigation" data-mobile-navigation>
+  <button class="mobile-navigation__toggle" type="button" aria-expanded="true" aria-controls={panelId} data-mobile-navigation-toggle>
+    <span class="screen-reader">{toggleLabel}</span>
+    <span class="mobile-navigation__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
+  <div class="mobile-navigation__panel" id={panelId} data-mobile-navigation-panel>
+    <nav aria-label={navigationLabel}>
+      {links.map((link) => <a href={link.href} aria-current={link.current ? 'page' : undefined}>{link.label}</a>)}
+    </nav>
+    <slot />
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-mobile-navigation]').forEach((root) => {
+    const toggle = root.querySelector<HTMLButtonElement>('[data-mobile-navigation-toggle]');
+    const panel = root.querySelector<HTMLElement>('[data-mobile-navigation-panel]');
+    if (!toggle || !panel) return;
+
+    const close = () => {
+      panel.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+    const open = () => {
+      panel.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      panel.querySelector<HTMLElement>('a')?.focus();
+    };
+
+    close();
+    toggle.addEventListener('click', () => toggle.getAttribute('aria-expanded') === 'true' ? close() : open());
+    panel.addEventListener('click', (event) => {
+      if ((event.target as Element).closest('a')) close();
+    });
+    root.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        close();
+        toggle.focus();
+      }
+    });
+    window.addEventListener('resize', () => {
+      if (window.matchMedia('(min-width: 48rem)').matches) close();
+    });
+  });
+</script>

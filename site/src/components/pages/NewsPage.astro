@@ -1,0 +1,86 @@
+---
+import { newsItems } from '../../data/news';
+import { socialLinks } from '../../data/socialLinks';
+import type { Locale } from '../../i18n/config';
+import { getTranslation } from '../../i18n/translations';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/news.css';
+import NewsItemCard from '../news/NewsItemCard.astro';
+import SiteFooter from '../layout/SiteFooter.astro';
+import SiteHeader from '../layout/SiteHeader.astro';
+import SocialLinks from '../social/SocialLinks.astro';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const translation = getTranslation(locale);
+const sortedItems = [...newsItems].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+
+if (sortedItems.length === 0) {
+  throw new Error('News requires at least one verified item.');
+}
+
+const site = Astro.site ?? new URL('https://lvb.kr');
+const ogImage = new URL('/brand/lvb-logo.png', site).href;
+---
+
+<BaseLayout
+  locale={locale}
+  route="news"
+  title={translation.meta.newsTitle}
+  description={translation.meta.newsDescription}
+  ogImage={ogImage}
+>
+  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="news" translation={translation} />
+  <main class="news-page">
+    <section class="news-hero" aria-labelledby="news-title">
+      <Container>
+        <p class="eyebrow">{translation.news.heroEyebrow}</p>
+        <h1 id="news-title">{translation.news.heroTitle}</h1>
+        <p>{translation.news.heroDescription}</p>
+      </Container>
+    </section>
+
+    <section class="news-archive page-section" aria-labelledby="news-archive-title">
+      <Container>
+        <div class="news-archive__heading">
+          <p class="eyebrow">{translation.news.allEyebrow}</p>
+          <h2 id="news-archive-title">{translation.news.allTitle}</h2>
+        </div>
+        <div class="news-list">
+          {
+            sortedItems.map((item) => (
+              <NewsItemCard
+                item={item}
+                locale={locale}
+                translation={translation}
+                titleId={`news-${item.slug}`}
+              />
+            ))
+          }
+        </div>
+      </Container>
+    </section>
+
+    <section class="news-follow page-section" aria-labelledby="news-follow-title">
+      <Container className="news-follow__inner">
+        <div class="news-follow__intro">
+          <p class="eyebrow">{translation.news.followEyebrow}</p>
+          <h2 id="news-follow-title">{translation.news.followTitle}</h2>
+          <p>{translation.news.followDescription}</p>
+        </div>
+        <SocialLinks
+          links={socialLinks}
+          label={translation.nav.follow}
+          externalLabel={translation.common.opensNewTab}
+          variant="list"
+          linkCopy={translation.home.followLinks}
+        />
+      </Container>
+    </section>
+  </main>
+  <SiteFooter locale={locale} route="news" translation={translation} />
+</BaseLayout>

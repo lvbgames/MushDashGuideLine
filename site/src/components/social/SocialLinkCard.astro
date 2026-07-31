@@ -1,0 +1,25 @@
+---
+import type { SocialLink } from '../../types/social';
+import ExternalLink from '../ui/ExternalLink.astro';
+
+interface Props {
+  link: SocialLink;
+  externalLabel?: string;
+  variant?: 'cards' | 'inline' | 'list';
+  copy?: { description: string; action: string };
+}
+
+const { link, externalLabel, variant = 'cards', copy } = Astro.props;
+---
+
+{link.enabled && link.url && (
+  <article class:list={['social-link-card', `social-link-card--${variant}`]}>
+    <ExternalLink href={link.url} externalLabel={externalLabel}>
+      <span class="social-link-card__copy">
+        <strong>{link.label}</strong>
+        {copy?.description && <span>{copy.description}</span>}
+      </span>
+      {copy?.action && <span class="social-link-card__action">{copy.action}</span>}
+    </ExternalLink>
+  </article>
+)}

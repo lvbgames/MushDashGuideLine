@@ -1,0 +1,90 @@
+---
+import { contactPolicy } from '../../data/contact';
+import { games } from '../../data/games';
+import type { Locale } from '../../i18n/config';
+import { getTranslation } from '../../i18n/translations';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteFooter from '../layout/SiteFooter.astro';
+import SiteHeader from '../layout/SiteHeader.astro';
+import ButtonLink from '../ui/ButtonLink.astro';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const translation = getTranslation(locale);
+const ogImage = games.find((game) => game.slug === 'mushhero')?.screenshots[0]?.src;
+const mailtoHref = `mailto:${contactPolicy.businessEmail}?subject=${encodeURIComponent(translation.contact.mailtoSubject)}&body=${encodeURIComponent(translation.contact.mailtoBodyTemplate)}`;
+const emailHref = `mailto:${contactPolicy.businessEmail}`;
+
+if (!ogImage) {
+  throw new Error('Contact page requires a verified Open Graph image.');
+}
+---
+
+<BaseLayout
+  locale={locale}
+  route="contact"
+  title={translation.meta.contactTitle}
+  description={translation.meta.contactDescription}
+  ogImage={ogImage}
+>
+  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="contact" translation={translation} />
+  <main class="contact-page">
+    <Container className="contact-page__inner">
+      <header class="contact-page__header">
+        <p class="eyebrow">{translation.contact.eyebrow}</p>
+        <h1>{translation.contact.title}</h1>
+        <p>{translation.contact.description}</p>
+      </header>
+      <div class="contact-page__layout">
+        <section class="contact-page__categories" aria-labelledby="contact-categories-title">
+          <h2 id="contact-categories-title">{translation.contact.categoriesTitle}</h2>
+          <ul>
+            {contactPolicy.businessCategories.map((category) => <li>{translation.contact.categories[category]}</li>)}
+          </ul>
+        </section>
+        <section class="contact-email-card" aria-labelledby="contact-email-title">
+          <p class="eyebrow">{translation.contact.emailEyebrow}</p>
+          <h2 id="contact-email-title">{translation.contact.emailTitle}</h2>
+          <p class="contact-email-card__description">{translation.contact.emailDescription}</p>
+          <ButtonLink href={mailtoHref}>{translation.contact.emailCta}</ButtonLink>
+          <p class="contact-email-card__address">
+            <span>{translation.contact.emailAddressLabel}</span>
+            <a href={emailHref} aria-label={`${translation.contact.emailAddressLabel}: ${contactPolicy.businessEmail}`}>
+              {contactPolicy.businessEmail}
+            </a>
+          </p>
+          <p class="contact-email-card__notice">{translation.contact.emailNotice}</p>
+        </section>
+      </div>
+      <section class="contact-page__guidance" aria-labelledby="contact-guidance-title">
+        <h2 id="contact-guidance-title">{translation.contact.guidanceTitle}</h2>
+        <div class="contact-page__guidance-grid">
+          <article>
+            <h3>{translation.contact.creatorTitle}</h3>
+            <p>{translation.contact.creatorDescription}</p>
+            <a href={mailtoHref}>{translation.contact.creatorCta}</a>
+          </article>
+          <article>
+            <h3>{translation.contact.pressTitle}</h3>
+            <p>{translation.contact.pressDescription}</p>
+            <a href={mailtoHref}>{translation.contact.pressCta}</a>
+          </article>
+        </div>
+      </section>
+      {contactPolicy.discordUrl && (
+        <section class="contact-page__support" aria-labelledby="contact-support-title">
+          <h2 id="contact-support-title">{translation.contact.supportTitle}</h2>
+          <p>{translation.contact.supportNote}</p>
+          <ButtonLink href={contactPolicy.discordUrl} variant="quiet" external externalLabel={translation.common.opensNewTab}>
+            {translation.contact.supportCta}
+          </ButtonLink>
+        </section>
+      )}
+    </Container>
+  </main>
+  <SiteFooter locale={locale} route="contact" translation={translation} />
+</BaseLayout>

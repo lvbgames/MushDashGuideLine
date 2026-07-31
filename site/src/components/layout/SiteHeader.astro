@@ -1,0 +1,51 @@
+---
+import { socialLinks } from '../../data/socialLinks';
+import { newsItems } from '../../data/news';
+import { getLocalePath, type Locale, type SiteRoute } from '../../i18n/config';
+import type { Translation } from '../../i18n/translations/en';
+import Container from '../ui/Container.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import MobileNavigation from './MobileNavigation.astro';
+
+interface Props {
+  locale: Locale;
+  currentPath: string;
+  route: SiteRoute;
+  translation: Translation;
+}
+
+const { locale, currentPath, route, translation } = Astro.props;
+const localeRoot = getLocalePath(locale, 'home');
+const gamesPath = getLocalePath(locale, 'games');
+const aboutPath = getLocalePath(locale, 'about');
+const newsPath = getLocalePath(locale, 'news');
+const contactPath = getLocalePath(locale, 'contact');
+const gamesCurrent = route === 'games' || route === 'mushhero' || route === 'mushdash';
+const links = [
+  { label: translation.nav.games, href: gamesPath, current: gamesCurrent },
+  { label: translation.nav.about, href: aboutPath, current: route === 'about' },
+  ...(newsItems.length > 0
+    ? [{ label: translation.nav.news, href: newsPath, current: route === 'news' }]
+    : []),
+  ...(socialLinks.some((link) => link.enabled && link.url)
+    ? [{ label: translation.nav.follow, href: `${localeRoot}#community`, current: false }]
+    : []),
+  { label: translation.nav.contact, href: contactPath, current: route === 'contact' }
+] as const;
+---
+
+<header class="site-header">
+  <Container className="site-header__inner">
+    <a class="site-brand site-brand--header" href={localeRoot} aria-label="Lv.B home" aria-current={route === 'home' ? 'page' : undefined}>
+      <img class="site-brand__icon" src="/brand/lvb-symbol.png" width="794" height="769" alt="" loading="eager" decoding="async" />
+      <span class="site-brand__wordmark" aria-hidden="true">Lv.B</span>
+    </a>
+    <nav class="desktop-navigation" aria-label={translation.nav.primaryLabel}>
+      {links.map((link) => <a href={link.href} aria-current={link.current ? 'page' : undefined}>{link.label}</a>)}
+    </nav>
+    <LanguageSwitcher locale={locale} currentPath={currentPath} route={route} label={translation.nav.language} className="desktop-language" />
+    <MobileNavigation links={links} navigationLabel={translation.nav.mobileLabel} toggleLabel={translation.nav.toggleMenu}>
+      <LanguageSwitcher locale={locale} currentPath={currentPath} route={route} label={translation.nav.language} className="mobile-language" />
+    </MobileNavigation>
+  </Container>
+</header>

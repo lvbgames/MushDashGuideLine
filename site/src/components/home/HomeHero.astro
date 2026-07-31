@@ -1,0 +1,55 @@
+---
+import type { Game } from '../../types/game';
+import type { Translation } from '../../i18n/translations/en';
+import ButtonLink from '../ui/ButtonLink.astro';
+import Container from '../ui/Container.astro';
+import GameStatusBadge from '../game/GameStatusBadge.astro';
+
+interface Props {
+  game: Game;
+  translation: Translation;
+  detailPath: string;
+}
+
+const { game, translation, detailPath } = Astro.props;
+const heroImage = game.screenshots[0] ?? game.heroImage;
+const statusLabels = {
+  upcoming: translation.common.coming2027,
+  'early-access': translation.common.earlyAccess,
+  available: translation.common.available
+};
+---
+
+<section class="home-hero" aria-labelledby="home-hero-title">
+  {heroImage && (
+    <img
+      class="home-hero__image"
+      src={heroImage.src}
+      width={heroImage.width}
+      height={heroImage.height}
+      alt=""
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+    />
+  )}
+  <div class="home-hero__veil" aria-hidden="true"></div>
+  <Container className="home-hero__inner">
+    <div class="home-hero__content">
+      <div class="home-hero__meta">
+        <p class="eyebrow">{translation.home.heroEyebrow}</p>
+        <GameStatusBadge game={game} labels={statusLabels} />
+      </div>
+      <h1 id="home-hero-title">{game.title}</h1>
+      <p class="home-hero__description">{translation.home.heroDescription}</p>
+      <div class="home-hero__actions">
+        {game.steamStoreUrl && (
+          <ButtonLink href={game.steamStoreUrl} external externalLabel={translation.common.opensNewTab}>
+            {translation.common.wishlistSteam}
+          </ButtonLink>
+        )}
+        <ButtonLink href={detailPath} variant="quiet">{translation.home.heroSecondary}</ButtonLink>
+      </div>
+    </div>
+  </Container>
+</section>
