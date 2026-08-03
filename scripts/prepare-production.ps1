@@ -100,6 +100,9 @@ if ($netlify -notmatch '(?m)^\s*publish\s*=\s*"dist"\s*$') { throw 'netlify.toml
 if ($netlify -match '(?im)@netlify/plugin-nextjs|^\s*\[functions\]|^\s*\[edge_functions\]') {
   throw 'Next.js Runtime, Functions or Edge Functions configuration is not allowed.'
 }
+if ($netlify -match '(?im)^\s*from\s*=\s*"/robots\.txt/?"\s*$') {
+  throw 'robots.txt must be served directly from site/public without a redirect or rewrite.'
+}
 $privacyHtmlRedirectIndex = $netlify.IndexOf('from = "/privacy.html"')
 $genericIndexRedirectIndex = $netlify.IndexOf('from = "/:one/index.html"')
 if ($privacyHtmlRedirectIndex -lt 0) { throw 'The /privacy.html compatibility redirect is missing.' }
@@ -118,9 +121,39 @@ if (-not (Test-Path -LiteralPath (Join-Path $siteRoot 'package-lock.json'))) {
   throw 'site/package-lock.json is required.'
 }
 
+$expectedRobots = "User-agent: *`nAllow: /`n`nUser-agent: Yeti`nAllow: /`n`nSitemap: https://lvb.kr/sitemap-index.xml`n"
+$publicRobotsPath = Join-Path $siteRoot 'public\robots.txt'
+if (-not (Test-Path -LiteralPath $publicRobotsPath)) {
+  throw 'site/public/robots.txt is required.'
+}
+$publicRobotsBytes = [System.IO.File]::ReadAllBytes($publicRobotsPath)
+if ($publicRobotsBytes.Length -ge 3 -and $publicRobotsBytes[0] -eq 0xEF -and $publicRobotsBytes[1] -eq 0xBB -and $publicRobotsBytes[2] -eq 0xBF) {
+  throw 'site/public/robots.txt must be UTF-8 without BOM.'
+}
+$publicRobots = [System.Text.Encoding]::UTF8.GetString($publicRobotsBytes)
+Assert-Equal $publicRobots $expectedRobots 'Public robots.txt content'
+Assert-Equal ([regex]::Matches($publicRobots, '(?m)^User-agent: \*$').Count) 1 'Public robots wildcard user-agent count'
+Assert-Equal ([regex]::Matches($publicRobots, '(?m)^User-agent: Yeti$').Count) 1 'Public robots Yeti user-agent count'
+Assert-Equal ([regex]::Matches($publicRobots, '(?m)^Allow: /$').Count) 2 'Public robots allow count'
+Assert-Equal ([regex]::Matches($publicRobots, '(?m)^Sitemap: https://lvb\.kr/sitemap-index\.xml$').Count) 1 'Public robots sitemap count'
+Assert-Equal ([regex]::Matches($publicRobots, '(?im)^Disallow:\s*/').Count) 0 'Public robots root disallow count'
+Assert-Equal ([regex]::Matches($publicRobots, '<[^>]+>').Count) 0 'Public robots HTML tag count'
+
 Invoke-NativeChecked 'npm.cmd' @('ci') $siteRoot
 Invoke-NativeChecked 'npm.cmd' @('run', 'check') $siteRoot
 Invoke-NativeChecked 'npm.cmd' @('run', 'build') $siteRoot
+
+$distRobotsPath = Join-Path $siteRoot 'dist\robots.txt'
+if (-not (Test-Path -LiteralPath $distRobotsPath)) {
+  throw 'site/dist/robots.txt is required after build.'
+}
+$distRobotsBytes = [System.IO.File]::ReadAllBytes($distRobotsPath)
+if ($distRobotsBytes.Length -ge 3 -and $distRobotsBytes[0] -eq 0xEF -and $distRobotsBytes[1] -eq 0xBB -and $distRobotsBytes[2] -eq 0xBF) {
+  throw 'site/dist/robots.txt must be UTF-8 without BOM.'
+}
+$distRobots = [System.Text.Encoding]::UTF8.GetString($distRobotsBytes)
+Assert-Equal $distRobots $expectedRobots 'Built robots.txt content'
+Assert-Equal ([System.Convert]::ToBase64String($distRobotsBytes)) ([System.Convert]::ToBase64String($publicRobotsBytes)) 'Public and built robots.txt bytes'
 
 $legacyPrivacyPath = Join-Path $repoRoot 'legacy-site\public\privacy.html'
 $legacyPrivacyHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $legacyPrivacyPath).Hash

@@ -12,6 +12,13 @@
 
 무료 운영 정책: 정적 배포만 사용하고 유료 기능·자동 결제·대용량 영상 자체 호스팅을 사용하지 않는다. production deploy는 최소화하고 Deploy Preview를 우선한다. 무료 사용량 소진 가능성은 운영 시 관리한다.
 
+## robots.txt 운영
+
+- 원본은 `site/public/robots.txt`이며 Astro static build가 `site/dist/robots.txt`로 byte 그대로 복사한다. wildcard와 네이버 Yeti를 명시 허용하고 `https://lvb.kr/sitemap-index.xml`을 안내한다.
+- 운영 요구 응답은 `https://lvb.kr/robots.txt`의 200, redirect 0회, `Content-Type: text/plain`이다. 현재 Netlify 정적 응답이 이를 충족하므로 별도 `[[headers]]`는 추가하지 않는다.
+- 배포 후 `curl.exe -sS -D - https://lvb.kr/robots.txt`와 Yeti User-Agent 요청을 다시 실행한다. HTTP 요청은 같은 HTTPS 경로로 한 번만 이동해야 한다.
+- 운영 응답 확인 후 네이버 서치어드바이저의 등록 사이트에서 `검증` → `robots.txt`로 이동해 수집 요청을 실행하고 최신 수집 결과를 확인한다. 메뉴 표기가 변경된 경우 등록 사이트의 robots.txt 검증·수집 화면을 사용한다.
+
 ## Production 명령
 
 ```powershell

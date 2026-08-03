@@ -24,6 +24,7 @@ Node 기준은 `.nvmrc`, 패키지 고정은 `package-lock.json`을 따른다.
 - News & Press: `/news/`와 세 locale prefix route
 - Privacy: `/privacy/`와 세 locale prefix route (`noindex, follow`, sitemap 제외)
 - Branded 404: `/404.html` (영어 기본 안내, 네 locale Home 링크, `noindex`)
+- Robots: `public/robots.txt`를 루트 `/robots.txt`로 정적 제공하며 wildcard와 Yeti를 허용하고 `https://lvb.kr/sitemap-index.xml`을 안내한다. public·dist byte 일치와 BOM 없는 UTF-8은 `../scripts/prepare-production.ps1`이 검증한다.
 
 공개 정규 Astro 페이지 28개, Privacy 4개와 별도 404를 빌드해 전체 HTML 33개를 생성한다. sitemap에는 공개 정규 URL 28개만 포함한다.
 

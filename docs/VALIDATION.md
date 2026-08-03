@@ -20,6 +20,7 @@
 - Header·Footer와 본문 CTA가 현재 locale의 의도한 경로를 사용해야 한다.
 - sitemap은 공개 정규 Astro route만 포함하고 404와 네 Astro Privacy route는 제외한다.
 - `robots.txt`는 공개 sitemap index를 가리켜야 하며 404는 `noindex`이고 복잡한 locale 자동 감지나 JavaScript를 사용하지 않아야 한다.
+- `site/public/robots.txt`와 빌드된 `site/dist/robots.txt`는 UTF-8 BOM 없는 동일 byte여야 한다. wildcard와 `Yeti` 각각에 `Allow: /`가 있어야 하고 절대 HTTPS sitemap URL을 포함하며, root `Disallow`, HTML 태그, `/robots.txt` redirect·rewrite는 없어야 한다.
 - Home 빌드 HTML의 `<head>`에는 `siteConfig.naverSiteVerification`과 일치하는 Naver 소유확인 meta가 정확히 한 번 있어야 하며, 과거 Naver HTML 확인 파일은 `public/`과 `dist/` 모두에 없어야 한다.
 - `dist/index.html`의 `<head>`에는 `application/ld+json` script가 정확히 한 번 있어야 하고 다른 HTML에는 없어야 한다. JSON 파싱, 단일 `@graph`, WebSite·Organization 각 1개, publisher의 Organization `@id` 연결, 절대 logo URL, `addressCountry: KR`, 공식 `sameAs` 4개를 검사한다.
 - JSON-LD 직렬화 소스는 `<`를 `\u003c`로 치환해 `</script>` 조기 종료를 방지하고 사용자 입력·runtime 외부 응답을 삽입하지 않아야 한다. `sameAs`는 전체 공식 프로필 4개와 Naver 지원 채널 X·Instagram 2개를 구분한다.
@@ -53,6 +54,8 @@
 ## Naver SEO 운영 감사
 
 - `https://lvb.kr`의 정규 route, `robots.txt`, sitemap index·하위 sitemap, logo, custom 404를 리디렉션을 끈 HTTP 요청으로 검사한다.
+- 배포 후 일반 요청과 Yeti User-Agent 요청으로 `https://lvb.kr/robots.txt`의 최초·최종 상태, redirect 횟수, `Location`, `Content-Type`, `Content-Length`, `Cache-Control`, `Server`와 body를 기록한다. HTTPS는 200 `text/plain`·redirect 0회여야 한다.
+- 운영 확인 명령은 `curl.exe -sS -D - https://lvb.kr/robots.txt`, `curl.exe -sS -D - -A "Mozilla/5.0 (compatible; Yeti/1.1; +https://naver.me/spd)" https://lvb.kr/robots.txt`, `curl.exe -sS -D - -o NUL http://lvb.kr/robots.txt`를 사용한다.
 - HTTP와 `www`는 대표 HTTPS 호스트로 301/308인지, 정규 페이지는 200인지, custom 404는 실제 404인지 확인한다.
 - 색인 페이지에 `noindex`·`nofollow`·X-Robots-Tag 제한이 없는지 확인하고 404의 `noindex, follow`는 허용한다.
 - sitemap의 모든 `loc`는 `https://lvb.kr/` 절대 URL이어야 하며 28개 route가 모두 200인지 확인한다.
