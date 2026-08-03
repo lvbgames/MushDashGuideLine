@@ -18,6 +18,7 @@ const gamesPath = getLocalePath(locale, 'games');
 const aboutPath = getLocalePath(locale, 'about');
 const newsPath = getLocalePath(locale, 'news');
 const contactPath = getLocalePath(locale, 'contact');
+const privacyPath = getLocalePath(locale, 'privacy');
 const gamesCurrent = route === 'games' || route === 'mushhero' || route === 'mushdash';
 const year = new Date().getFullYear();
 ---
@@ -36,7 +37,7 @@ const year = new Date().getFullYear();
       <a href={aboutPath} aria-current={route === 'about' ? 'page' : undefined}>{translation.nav.about}</a>
       {newsItems.length > 0 && <a href={newsPath} aria-current={route === 'news' ? 'page' : undefined}>{translation.nav.news}</a>}
       <a href={contactPath} aria-current={route === 'contact' ? 'page' : undefined}>{translation.nav.contact}</a>
-      <a href="/privacy">{translation.common.privacy}</a>
+      <a href={privacyPath} aria-current={route === 'privacy' ? 'page' : undefined}>{translation.common.privacy}</a>
     </nav>
     {socialLinks.length > 0 && <SocialLinks links={socialLinks} label={translation.nav.follow} externalLabel={translation.common.opensNewTab} variant="inline" />}
     <p class="site-footer__muted site-footer__copyright">© {year} {translation.footer.copyright}</p>

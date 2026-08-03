@@ -7,7 +7,7 @@ Set-StrictMode -Version Latest
 $expectedRoot = 'E:\Codex\LvB\Homepage'
 $expectedBranch = 'main'
 $expectedOrigin = 'https://github.com/lvbgames/MushDashGuideLine'
-$expectedPrivacyHash = '95CA28BD2313111606DDAE18492BEB7C785152911F14CA60618DF88D8FF36F29'
+$expectedLegacyPrivacyHash = '95CA28BD2313111606DDAE18492BEB7C785152911F14CA60618DF88D8FF36F29'
 $naverVerification = 'f821633783a66dd8edb7025cb1d83caee98641aa'
 $obsoleteNaverFile = 'naver799482ce0e5e513c37daff06412293c5.html'
 $repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -52,6 +52,12 @@ function Get-NativeText {
   }
 }
 
+function ConvertFrom-Utf8Base64 {
+  param([Parameter(Mandatory = $true)][string]$Value)
+
+  return [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Value))
+}
+
 function Assert-Equal {
   param(
     [Parameter(Mandatory = $true)]$Actual,
@@ -94,6 +100,15 @@ if ($netlify -notmatch '(?m)^\s*publish\s*=\s*"dist"\s*$') { throw 'netlify.toml
 if ($netlify -match '(?im)@netlify/plugin-nextjs|^\s*\[functions\]|^\s*\[edge_functions\]') {
   throw 'Next.js Runtime, Functions or Edge Functions configuration is not allowed.'
 }
+$privacyHtmlRedirectIndex = $netlify.IndexOf('from = "/privacy.html"')
+$genericIndexRedirectIndex = $netlify.IndexOf('from = "/:one/index.html"')
+if ($privacyHtmlRedirectIndex -lt 0) { throw 'The /privacy.html compatibility redirect is missing.' }
+if ($genericIndexRedirectIndex -lt 0 -or $privacyHtmlRedirectIndex -gt $genericIndexRedirectIndex) {
+  throw 'The /privacy.html compatibility redirect must precede generic index.html redirects.'
+}
+if ($netlify -notmatch '(?ms)from\s*=\s*"/privacy\.html".*?to\s*=\s*"/privacy/".*?status\s*=\s*301.*?force\s*=\s*true') {
+  throw 'The /privacy.html compatibility redirect must force a 301 to /privacy/.'
+}
 
 $astroConfig = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'astro.config.mjs')
 Assert-Equal ([bool]($astroConfig -match "output:\s*'static'")) $true 'Astro static output'
@@ -107,14 +122,211 @@ Invoke-NativeChecked 'npm.cmd' @('ci') $siteRoot
 Invoke-NativeChecked 'npm.cmd' @('run', 'check') $siteRoot
 Invoke-NativeChecked 'npm.cmd' @('run', 'build') $siteRoot
 
-$privacyFiles = @(
-  (Join-Path $repoRoot 'legacy-site\public\privacy.html'),
-  (Join-Path $siteRoot 'public\privacy.html'),
-  (Join-Path $siteRoot 'dist\privacy.html')
+$legacyPrivacyPath = Join-Path $repoRoot 'legacy-site\public\privacy.html'
+$legacyPrivacyHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $legacyPrivacyPath).Hash
+Assert-Equal $legacyPrivacyHash $expectedLegacyPrivacyHash 'Legacy Privacy SHA-256'
+
+if (Test-Path -LiteralPath (Join-Path $siteRoot 'public\privacy.html')) {
+  throw 'The obsolete site/public/privacy.html must not exist after the Astro Privacy migration.'
+}
+
+$privacySectionIds = @(
+  'scope',
+  'controller',
+  'purposes',
+  'data-categories',
+  'email-inquiries',
+  'games-platforms',
+  'retention',
+  'deletion',
+  'third-party-disclosure',
+  'processors',
+  'external-services',
+  'international-processing',
+  'automatic-data',
+  'children',
+  'rights',
+  'security',
+  'contact',
+  'remedies',
+  'changes'
 )
-foreach ($privacyFile in $privacyFiles) {
-  $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $privacyFile).Hash
-  Assert-Equal $hash $expectedPrivacyHash "Privacy SHA-256: $privacyFile"
+
+$privacyRoutes = @(
+  [PSCustomObject]@{ Locale = 'en'; Path = 'dist\privacy\index.html'; Canonical = 'https://lvb.kr/privacy/'; FooterPath = '/privacy/' },
+  [PSCustomObject]@{ Locale = 'ko'; Path = 'dist\ko\privacy\index.html'; Canonical = 'https://lvb.kr/ko/privacy/'; FooterPath = '/ko/privacy/' },
+  [PSCustomObject]@{ Locale = 'ja'; Path = 'dist\ja\privacy\index.html'; Canonical = 'https://lvb.kr/ja/privacy/'; FooterPath = '/ja/privacy/' },
+  [PSCustomObject]@{ Locale = 'zh-cn'; Path = 'dist\zh-cn\privacy\index.html'; Canonical = 'https://lvb.kr/zh-cn/privacy/'; FooterPath = '/zh-cn/privacy/' }
+)
+
+$expectedLanguagePaths = @('/privacy/', '/ko/privacy/', '/ja/privacy/', '/zh-cn/privacy/')
+$disallowedPrivacyCopy = @(
+  'EIK',
+  'lvbgames.store',
+  'raw.githubusercontent.com',
+  'Main Project: MushDash',
+  'Epic Games Store content guidelines',
+  'brand requirements',
+  '2026-07-31',
+  'pending',
+  (ConvertFrom-Utf8Base64 '66+47KCV'),
+  'TODO',
+  'FIXME',
+  'placeholder',
+  'PlayerProfile.json',
+  'PlayerMoney.json',
+  'PlayerInventory.json',
+  'PlayerEvent.json',
+  'PlayerChallenge.json',
+  'TransactionIds.json',
+  'MushDashCloudValidation.json',
+  'FS_PlayerProfile',
+  'FS_PlayerMoney',
+  'FS_PlayerInventory',
+  'FS_WeeklyChallengeProgress',
+  'DeleteUserFile',
+  'ClearFile',
+  'ClearFiles'
+)
+$requiredPrivacyFacts = @{
+  en = @(
+    'Last updated:',
+    'Effective date:',
+    'August 3, 2026',
+    'Epic Online Services(EOS)',
+    'Lobby',
+    'Session',
+    'P2P',
+    'EOS UserCloud',
+    'one year',
+    'Netlify Web Analytics',
+    'Real User Monitoring',
+    'Log Drains',
+    'does not automatically send crash reports',
+    'The department responsible for privacy inquiries is Lv.B',
+    'selected profile icon, nameplate and avatar settings',
+    'in-game currency balances',
+    'owned customization items and inventory',
+    'weekly challenge ID, progress, completion, reward-claim status and week number',
+    'transaction identifiers used to prevent duplicate purchase processing',
+    'Graphics, audio, language and matchmaking-region settings',
+    'does not trigger deletion when the game is uninstalled or an account is unlinked'
+  )
+  ko = @(
+    (ConvertFrom-Utf8Base64 '7LWc7KKFIOyImOygleydvDo='),
+    (ConvertFrom-Utf8Base64 '7Iuc7ZaJ7J28Og=='),
+    (ConvertFrom-Utf8Base64 'MjAyNuuFhCA47JuUIDPsnbw='),
+    'Epic Online Services(EOS)',
+    'Lobby',
+    'Session',
+    'P2P',
+    'EOS UserCloud',
+    '1',
+    'Netlify Web Analytics',
+    'Real User Monitoring',
+    'Log Drains',
+    'lvb909@naver.com',
+    (ConvertFrom-Utf8Base64 '7KO86rCEIOuPhOyghCDsi53rs4TsnpDCt+ynhO2WieqwksK37JmE66OMIOyXrOu2gMK367O07IOBIOyImOuguSDsl6zrtoDCt+yjvOywqA=='),
+    (ConvertFrom-Utf8Base64 '7KSR67O1IOq1rOunpCDsspjrpqzrpbwg67Cp7KeA7ZWY6riwIOychO2VnCDqsbDrnpgg7Iud67OE7J6Q'),
+    (ConvertFrom-Utf8Base64 '6re4656Y7ZS9wrfsmKTrlJTsmKTCt+yWuOyWtMK366ek7LmtIOyngOyXrSDshKTsoJU='),
+    (ConvertFrom-Utf8Base64 '6rKM7J6EIOyCreygnCDrmJDripQg6rOE7KCVIOyXsOuPmSDtlbTsoJzrp4zsnLzroZwg7J6Q64+ZIOyCreygnOuQmOuKlCDquLDriqXrj4Qg7JeG7Iq164uI64uk')
+  )
+  ja = @(
+    (ConvertFrom-Utf8Base64 '5pyA57WC5pu05paw5pel77ya'),
+    (ConvertFrom-Utf8Base64 '5pa96KGM5pel77ya'),
+    (ConvertFrom-Utf8Base64 'MjAyNuW5tDjmnIgz5pel'),
+    'Epic Online Services(EOS)',
+    'Lobby',
+    'Session',
+    'P2P',
+    'EOS UserCloud',
+    '1',
+    'Netlify Web Analytics',
+    'Real User Monitoring',
+    'Log Drains',
+    'lvb909@naver.com',
+    (ConvertFrom-Utf8Base64 '44Km44Kj44O844Kv44Oq44O844OB44Oj44Os44Oz44K444GuSUTjg7vpgLLooYzlgKTjg7vlrozkuobnirbms4Hjg7vloLHphazlj5flj5bnirbms4Hjg7vpgLHnlarlj7c='),
+    (ConvertFrom-Utf8Base64 '6LO85YWl5Yem55CG44Gu6YeN6KSH44KS6Ziy5q2i44GZ44KL44Gf44KB44Gu5Y+W5byV6K2Y5Yil5a2Q'),
+    (ConvertFrom-Utf8Base64 '44Kw44Op44OV44Kj44OD44Kv44CB44Kq44O844OH44Kj44Kq44CB6KiA6Kqe44CB44Oe44OD44OB44Oh44Kk44Kt44Oz44Kw5Zyw5Z+f44Gu6Kit5a6a'),
+    (ConvertFrom-Utf8Base64 '56K66KqN44GX44Gf44Ky44O844Og44Kz44O844OJ44Gr44Gv6Ieq5YuV5pyJ5Yq55pyf6ZmQ44KE5a6a5pyf5YmK6Zmk5pyf6ZaT44GM44Gq44GP44CB44Ky44O844Og44Gu44Ki44Oz44Kk44Oz44K544OI44O844Or44KE44Ki44Kr44Km44Oz44OI6YCj5pC644Gu6Kej6Zmk44KS5aWR5qmf44Gr6Ieq5YuV5YmK6Zmk44GZ44KL5Yem55CG44KC44GC44KK44G+44Gb44KT44CC')
+  )
+  'zh-cn' = @(
+    (ConvertFrom-Utf8Base64 '5pyA5ZCO5pu05paw5pel5pyf77ya'),
+    (ConvertFrom-Utf8Base64 '55Sf5pWI5pel5pyf77ya'),
+    (ConvertFrom-Utf8Base64 'MjAyNuW5tDjmnIgz5pel'),
+    'Epic Online Services(EOS)',
+    'Lobby',
+    'Session',
+    'P2P',
+    'EOS UserCloud',
+    '1',
+    'Netlify Web Analytics',
+    'Real User Monitoring',
+    'Log Drains',
+    'lvb909@naver.com',
+    (ConvertFrom-Utf8Base64 '5q+P5ZGo5oyR5oiYSUTjgIHov5vluqbjgIHlrozmiJDnirbmgIHjgIHlpZblirHpooblj5bnirbmgIHkuI7lkajmrKE='),
+    (ConvertFrom-Utf8Base64 '55So5LqO6Ziy5q2i6YeN5aSN5aSE55CG6LSt5Lmw5Lqk5piT55qE5Lqk5piT5qCH6K+G56ym'),
+    (ConvertFrom-Utf8Base64 '55S76Z2i44CB6Z+z6aKR44CB6K+t6KiA5ZKM5Yy56YWN5Zyw5Yy66K6+572u'),
+    (ConvertFrom-Utf8Base64 '57uP5qC45p+l77yM5ri45oiP5Luj56CB5pyq6K6+572u6Ieq5Yqo5Yiw5pyf5oiW5a6a5pyf5Yig6Zmk5pyf6ZmQ77yM5Lmf5LiN5YyF5ZCr5Lul5Y246L295ri45oiP5oiW6Kej6Zmk6LSm5oi35YWz6IGU5Li66Kem5Y+R5p2h5Lu255qE6Ieq5Yqo5Yig6Zmk5rWB56iL44CC')
+  )
+}
+$supersededPrivacyCopy = @(
+  'This Policy does not state an unverified fixed period',
+  'If enabled, they are governed by Netlify'
+)
+
+foreach ($route in $privacyRoutes) {
+  $privacyPath = Join-Path $siteRoot $route.Path
+  if (-not (Test-Path -LiteralPath $privacyPath)) {
+    throw "Privacy route output is missing: $($route.Path)"
+  }
+
+  $privacyHtml = Get-Content -Raw -Encoding utf8 $privacyPath
+  $sectionPositions = @()
+  foreach ($sectionId in $privacySectionIds) {
+    $matches = [regex]::Matches($privacyHtml, 'id="' + [regex]::Escape($sectionId) + '"')
+    Assert-Equal $matches.Count 1 "Privacy section '$sectionId' count: $($route.Locale)"
+    $sectionPositions += $matches[0].Index
+  }
+  for ($sectionIndex = 1; $sectionIndex -lt $sectionPositions.Count; $sectionIndex++) {
+    if ($sectionPositions[$sectionIndex] -le $sectionPositions[$sectionIndex - 1]) {
+      throw "Privacy section order mismatch: $($route.Locale)"
+    }
+  }
+
+  Assert-Equal ([regex]::Matches($privacyHtml, '<h1(?:\s|>)').Count) 1 "Privacy H1 count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($privacyHtml, '<main(?:\s|>)').Count) 1 "Privacy main count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($privacyHtml, '<meta name="robots" content="noindex, follow">').Count) 1 "Privacy robots meta: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($privacyHtml, '<link rel="canonical" href="' + [regex]::Escape($route.Canonical) + '">').Count) 1 "Privacy canonical: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($privacyHtml, 'rel="alternate" hreflang=').Count) 5 "Privacy hreflang count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($privacyHtml, 'hreflang="x-default" href="https://lvb\.kr/privacy/"').Count) 1 "Privacy x-default: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($privacyHtml, '<html lang="' + [regex]::Escape($route.Locale) + '">').Count) 1 "Privacy html lang: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($privacyHtml, 'application/ld\+json').Count) 0 "Privacy JSON-LD count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($privacyHtml, 'datetime="2026-08-03"').Count) 2 "Privacy policy date count: $($route.Locale)"
+
+  foreach ($languagePath in $expectedLanguagePaths) {
+    if ($privacyHtml -notmatch 'href="' + [regex]::Escape($languagePath) + '"') {
+      throw "Privacy language path '$languagePath' is missing: $($route.Locale)"
+    }
+  }
+  if ($privacyHtml -notmatch 'href="' + [regex]::Escape($route.FooterPath) + '"[^>]*aria-current="page"') {
+    throw "Privacy Footer active link is missing: $($route.Locale)"
+  }
+  foreach ($disallowed in $disallowedPrivacyCopy) {
+    if ($privacyHtml.IndexOf($disallowed, [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
+      throw "Disallowed Privacy text '$disallowed' found: $($route.Locale)"
+    }
+  }
+  foreach ($requiredFact in $requiredPrivacyFacts[$route.Locale]) {
+    if ($privacyHtml.IndexOf($requiredFact, [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+      throw "Required Privacy fact '$requiredFact' is missing: $($route.Locale)"
+    }
+  }
+  foreach ($superseded in $supersededPrivacyCopy) {
+    if ($privacyHtml.IndexOf($superseded, [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
+      throw "Superseded Privacy text '$superseded' found: $($route.Locale)"
+    }
+  }
 }
 
 $publicNaverPath = Join-Path $siteRoot "public\$obsoleteNaverFile"
@@ -135,7 +347,10 @@ if (-not $head -or -not [regex]::IsMatch($head, $metaPattern, [System.Text.Regul
 $requiredFiles = @(
   'dist\index.html',
   'dist\404.html',
-  'dist\privacy.html',
+  'dist\privacy\index.html',
+  'dist\ko\privacy\index.html',
+  'dist\ja\privacy\index.html',
+  'dist\zh-cn\privacy\index.html',
   'dist\ko\index.html',
   'dist\ja\index.html',
   'dist\zh-cn\index.html',
@@ -157,13 +372,14 @@ foreach ($relativePath in $requiredFiles) {
 }
 
 $htmlFiles = @(Get-ChildItem -LiteralPath (Join-Path $siteRoot 'dist') -Recurse -File -Filter '*.html')
-$regularHtml = @($htmlFiles | Where-Object { $_.Name -notin @('404.html', 'privacy.html') })
-Assert-Equal $htmlFiles.Count 30 'Total production HTML count'
-Assert-Equal $regularHtml.Count 28 'Regular production HTML count'
+$regularHtml = @($htmlFiles | Where-Object { $_.Name -ne '404.html' })
+Assert-Equal $htmlFiles.Count 33 'Total production HTML count'
+Assert-Equal $regularHtml.Count 32 'Regular production HTML count'
 
 $sitemap = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'dist\sitemap-0.xml')
 $sitemapCount = ([regex]::Matches($sitemap, '<url>')).Count
 Assert-Equal $sitemapCount 28 'Sitemap URL count'
+if ($sitemap -match '/privacy/') { throw 'Privacy routes must be excluded from the sitemap.' }
 
 $profilePairs = @(
   [PSCustomObject]@{

@@ -1,13 +1,26 @@
-# Locked: Privacy
+# Locked: Privacy history and change policy
 
-- `site/`는 Astro static build를 사용하지만 `site/public/privacy.html`은 그대로 복사되는 public asset이다. 따라서 Astro page·layout·i18n routing은 `/privacy` 콘텐츠에 적용하지 않는다.
+## 역사 보관본
 
-- 보호 URL: `https://lvb.kr/privacy` 및 `/privacy`.
-- 보호 파일: `legacy-site/public/privacy.html` 및 `site/public/privacy.html`. 기준 SHA-256과 byte-identical 검증은 `VALIDATION.md`를 따른다. 내부 `<style>`, metadata, 본문, `lvbgames.store` 링크가 모두 잠금 대상이다.
-- 정적 경로: 기존 source상 `/privacy.html`; legacy App Router에 `app/privacy/page.tsx`는 없다. 신규 `site/`에서는 `public/privacy.html`이 Astro 처리 없이 그대로 `dist/privacy.html`로 복사된다.
-- runtime: `/privacy` 200, `/privacy/` 301→`/privacy`, `/privacy.html` 200; 세 최종 본문은 4,271 bytes 및 원본과 같은 SHA-256이다. Mapping mechanism은 Likely Netlify Pretty URLs, Netlify UI setting은 Unverified다.
-- routing 영향: `next.config.ts`에는 redirect/rewrite가 없고 `netlify.toml`에는 redirect 규칙이 없으며 middleware 파일도 없다.
-- 변경 금지: 정책 본문, 제목·문장·링크·이메일·날짜, metadata, 파일 내 스타일, 페이지 구조·표시, HTTP 응답, 직접 접근성, redirect/rewrite, 404/catch-all, middleware, locale routing.
-- `lvbgames.store` 링크가 존재하더라도 이를 이유로 정책을 수정하지 않는다. `/privacy`에 다국어 route·이동·redirect를 적용하지 않는다.
-- 검증 절차는 `VALIDATION.md`를 따른다. 신규 framework·Netlify 설정은 직접 접근성과 출력을 보존해야 한다.
-- 사용자 명시적 별도 승인 없이는 두 보호 파일과 관련 URL·라우팅을 수정·삭제·교체하지 않는다.
+- `legacy-site/public/privacy.html`은 이전 영어 단일 Privacy의 역사 보관본이며 수정·이동·삭제하지 않는다.
+- 기준 SHA-256은 `95CA28BD2313111606DDAE18492BEB7C785152911F14CA60618DF88D8FF36F29`다.
+- 보관본의 구형 본문, 내부 스타일, raw GitHub logo, `lvbgames.store`와 과거 EOS 문구는 현재 정책의 사실 근거로 사용하지 않는다.
+
+## 신규 정책
+
+- 사용자는 2026-07-31 작업에서 기존 Privacy의 내용·디자인·로고·언어 구조 변경과 `site/public/privacy.html` 폐기를 명시적으로 승인했다.
+- 현재 source는 `site/src/data/privacy.ts`, 타입은 `site/src/types/privacy.ts`다.
+- 정규 route는 `/privacy/`, `/ko/privacy/`, `/ja/privacy/`, `/zh-cn/privacy/`이며 모두 `noindex, follow`이고 sitemap에서 제외한다.
+- `/privacy.html`은 `/privacy/`로 forced 301하며, 깊이별 `index.html` canonical redirect를 유지한다.
+- 2026-07-31 사용자가 Netlify Analytics·RUM·Log Drains 미사용, Mush Dash의 Epic Online Services(EOS)·Lobby·Session·P2P·UserCloud 사용, 자체 서버·DB 및 자체 텔레메트리·자동 크래시 전송 미사용, 이메일 보관·아동 정책·담당부서를 확정했다. 상세 근거는 `PRIVACY_DATA_INVENTORY.md`에서만 관리한다.
+
+## 검증과 향후 변경
+
+- 신규 Astro 생성 HTML은 빌드 포맷·줄바꿈 차이 때문에 raw byte SHA-256으로 잠그지 않는다.
+- `scripts/prepare-production.ps1`은 legacy 해시, 네 route, 19개 section의 동일 ID·순서, canonical·hreflang·robots, 언어 경로, 금지 문구와 sitemap 제외를 의미 기반으로 검사한다.
+- 개인정보 처리 사실과 운영자 확인 항목은 `docs/PRIVACY_DATA_INVENTORY.md`를 단일 근거 문서로 사용한다.
+- MushDash UserCloud 공개 범주는 `E:\MushDash` 현재 작업 트리의 `PRIVACY_USERCLOUD_AUDIT.md` 근거로만 갱신한다. 내부 파일명·key·C++ field·SDK 함수·development 검증 파일과 보안 finding은 공개 정책에 노출하지 않는다.
+- 삭제 API가 서비스에 존재한다는 사실과 현재 Mush Dash의 삭제 호출 0건을 구분한다. 이메일 요청은 `PRIVACY_REQUEST_RUNBOOK.md`의 본인·게임·플랫폼·범위 확인을 거치며, 조직 단위 삭제를 Mush Dash 기본 절차로 사용하지 않는다.
+- 사용자는 2026-08-03 운영 배포와 같은 날짜의 시행일을 승인했다. 네 언어의 최종 수정일과 시행일은 모두 `2026-08-03`으로 유지하며 정책 변경 시 함께 갱신한다.
+- 승인본 영구 잠금이 필요하면 생성 HTML이 아니라 정규화한 `site/src/data/privacy.ts` 또는 별도 policy source snapshot을 대상으로 규칙과 해시를 새 작업에서 확정한다.
+- 이후 처리 활동·외부 서비스·연락처·보유 기준이 바뀌면 inventory, source, 네 번역과 검증을 함께 갱신하며, 추측한 법적 관계를 추가하지 않는다.

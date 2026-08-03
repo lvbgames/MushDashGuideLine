@@ -8,12 +8,12 @@
 | ADR-004 | 2026-07-30 | Confirmed | PC·모바일 반응형 요구 | 제공된 반응형 정책 | 고정 폭 전용 금지 |
 | ADR-005 | 2026-07-30 | Confirmed | `lvb.kr` 사용, `lvbgames.store` 2026-08-01 종료 예정 | 제공된 도메인 사실 | 신규 지원 금지 |
 | ADR-006 | 2026-07-30 | Confirmed | 기존 GitHub 저장소 이름·remote 유지 | 제공된 저장소 정책 | 변경 금지 |
-| ADR-007 | 2026-07-30 | Confirmed | `/privacy` 변경 금지 | 보호 규칙 | 별도 승인 필요 |
+| ADR-007 | 2026-07-30 | Superseded | `/privacy` 변경 금지 | 초기 보호 규칙 | ADR-029로 대체 |
 | ADR-008 | 2026-07-30 | Confirmed | 목적별 MD로 반복 규칙 분리 | 토큰 사용 최소화 | 필요한 문서만 읽음 |
 | ADR-009 | 2026-07-30 | Confirmed | 참조 사이트는 구조만 참고 | 저작물 복제 방지 | 디자인/문구/코드 복제 금지 |
 | ADR-010 | 2026-07-30 | Confirmed | 기존·신규 사이트를 물리적으로 분리 | 배포본 보존과 신규 구현 혼동 방지 | legacy-site 읽기 전용, 구현은 site만 |
 | ADR-011 | 2026-07-30 | Confirmed | Codex 문서를 docs에서 관리 | 작업 경계 명확화 | 루트에는 AGENTS만 유지 |
-| ADR-012 | 2026-07-30 | Confirmed | privacy를 신규 site에 byte-identical 복제 | 기존 보호 URL·내용 보존 | 두 파일 동시 잠금·해시 검증 |
+| ADR-012 | 2026-07-30 | Superseded | privacy를 신규 site에 byte-identical 복제 | 초기 보호 URL·내용 보존 | ADR-029로 대체 |
 | ADR-013 | 2026-07-30 | Confirmed | 신규 홈페이지는 Astro 7 static | 무료 정적 배포와 단순 운영 | site는 legacy와 독립 |
 | ADR-014 | 2026-07-30 | Confirmed | strict TS·Tailwind CSS 4·4개 언어 | type safety와 반응형 기반 | English 기본 Astro i18n |
 | ADR-015 | 2026-07-30 | Superseded | 호스팅 수집 폼과 Discord 분리 검토 | 서버리스·유료 이메일 API 없이 문의 분류 | ADR-022로 대체 |
@@ -30,3 +30,4 @@
 | ADR-026 | 2026-07-31 | Confirmed | X·Instagram·Discord·Steam Developer Page를 공식 링크로 사용 | 사용자 검증 URL 제공 | Home·Footer·About·Contact에 조건부 공통 데이터 적용 |
 | ADR-027 | 2026-07-31 | Confirmed | YouTube는 nullable 게임 데이터만 준비하고 URL 등록 전 UI를 숨김 | 가짜 URL·빈 영상·초기 iframe 방지 | 자체 호스팅·autoplay 금지 |
 | ADR-028 | 2026-07-31 | Confirmed | News는 빈 type-safe 정적 큐레이션으로 시작 | scraping·가짜 seed·본문 복제 방지 | 항목 0개에서는 route·navigation 미노출 |
+| ADR-029 | 2026-07-31 | Confirmed | 이전 Privacy는 legacy에 역사 보관하고 네 locale Astro 정책으로 교체 | 사용자의 명시적 개편 승인과 현재 처리 사실 재조사 | 공통 typed source·19개 동일 section·`noindex, follow`·sitemap 제외·`/privacy.html` 301 |

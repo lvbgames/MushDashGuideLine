@@ -1,0 +1,56 @@
+---
+import { getPrivacyDocument } from '../../data/privacy';
+import { getTranslation } from '../../i18n/translations';
+import type { Locale } from '../../i18n/config';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PrivacyDocument from '../privacy/PrivacyDocument.astro';
+import PrivacyTableOfContents from '../privacy/PrivacyTableOfContents.astro';
+import SiteFooter from '../layout/SiteFooter.astro';
+import SiteHeader from '../layout/SiteHeader.astro';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const content = getPrivacyDocument(locale);
+const translation = getTranslation(locale);
+---
+
+<BaseLayout
+  locale={locale}
+  route="privacy"
+  title={content.metaTitle}
+  description={content.metaDescription}
+  ogImage="https://lvb.kr/brand/lvb-logo.png"
+  robots="noindex, follow"
+>
+  <a class="privacy-skip-link" href="#privacy-content">{content.title}</a>
+  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="privacy" translation={translation} />
+  <main id="privacy-content" class="privacy-page">
+    <header class="privacy-hero">
+      <Container className="privacy-hero__inner">
+        <p class="eyebrow">{content.eyebrow}</p>
+        <h1>{content.title}</h1>
+        <p class="privacy-hero__summary">{content.summary}</p>
+        <p class="privacy-hero__updated">
+          <span class="privacy-hero__date">
+            <span>{content.lastUpdatedLabel}</span>
+            <time datetime={content.lastUpdated}>{content.lastUpdatedDisplay}</time>
+          </span>
+          <span class="privacy-hero__date">
+            <span>{content.effectiveDateLabel}</span>
+            <time datetime={content.effectiveDate}>{content.effectiveDateDisplay}</time>
+          </span>
+        </p>
+      </Container>
+    </header>
+
+    <Container className="privacy-body">
+      <PrivacyTableOfContents content={content} variant="mobile" />
+      <PrivacyDocument content={content} />
+    </Container>
+  </main>
+  <SiteFooter locale={locale} route="privacy" translation={translation} />
+</BaseLayout>

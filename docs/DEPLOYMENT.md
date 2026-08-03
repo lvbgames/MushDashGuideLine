@@ -4,9 +4,11 @@
 - 공식 도메인: `lvb.kr`; DNS는 카페24 관리로 제공되었으나 실제 DNS/Netlify site 값은 저장소에서 확인되지 않는다.
 - legacy `netlify.toml`과 `next.config.ts`는 `legacy-site/`에 있다. 기존 실서비스 설정은 변경하지 않았다.
 - 신규 root `netlify.toml`: base `site`, command `npm run build`, publish `dist`. Astro adapter·Next plugin·functions·serverless 설정은 사용하지 않는다. 실행 권한과 배포 전 검증은 `VALIDATION.md`를 따른다.
+- 대표 URL 정책: HTTP와 `www`는 Netlify에서 `https://lvb.kr/`로 301 처리한다. root와 최대 3개 경로 segment의 명시적 `index.html` 요청은 `netlify.toml`의 forced 301 규칙으로 같은 trailing-slash 대표 URL에 통합한다. 기존 `/privacy.html`은 generic 규칙보다 앞선 명시적 forced 301로 `/privacy/`에 연결한다.
 - Naver 사이트 소유확인은 HTML 파일이 아니라 `site/src/config/site.ts`의 `naverSiteVerification` 값을 `BaseLayout.astro`가 정적 `<head>` meta로 출력하는 방식을 사용한다. 과거 `naver799482ce0e5e513c37daff06412293c5.html` 파일은 사용하거나 배포하지 않는다.
-- `lvbgames.store`는 `legacy-site/public/privacy.html:115` 및 byte-identical 신규 복제본에 있다. 2026-08-01 종료 예정이나 보호 규칙상 수정하지 않는다.
-- `/privacy` 동작(`/privacy` 200, `/privacy/` 301→`/privacy`, `/privacy.html` 200)은 신규 배포에서도 보존해야 한다.
+- 기존 운영 `/privacy`는 영어 단일 static HTML이고 `/privacy/`가 `/privacy`로 이동하며 `/privacy.html`도 200이었다. 신규 배포에서는 `/privacy/`와 세 locale Privacy를 Astro 정규 URL로 제공하고, `/privacy.html` 및 각 `index.html` 직접 경로는 trailing-slash canonical로 301 처리한다.
+- `site/public/privacy.html`은 새 Astro route 빌드 확인 후 제거했다. `legacy-site/public/privacy.html`은 4,271 bytes·SHA-256 `95CA28BD2313111606DDAE18492BEB7C785152911F14CA60618DF88D8FF36F29`인 역사 보관본으로 유지한다.
+- 신규 생성 HTML은 빌드 포맷과 줄바꿈에 따라 byte가 달라지므로 raw SHA-256 잠금을 사용하지 않는다. `prepare-production.ps1`은 네 route, 19개 section 순서, canonical·hreflang·robots, Footer·언어 경로, 금지 문구와 sitemap 제외를 의미 기반으로 검사한다.
 
 무료 운영 정책: 정적 배포만 사용하고 유료 기능·자동 결제·대용량 영상 자체 호스팅을 사용하지 않는다. production deploy는 최소화하고 Deploy Preview를 우선한다. 무료 사용량 소진 가능성은 운영 시 관리한다.
 
@@ -20,7 +22,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\deploy-production.ps1 `
   -CommitMessage "feat: launch new Lv.B website"
 ```
 
-- `prepare-production.ps1`은 root·main·origin·divergence, 재현 빌드, Privacy, Naver meta, 필수 route·asset을 검사하며 Commit·Push하지 않는다.
+- `prepare-production.ps1`은 root·main·origin·divergence, 재현 빌드, legacy Privacy 보관 해시, 신규 Privacy 의미 구조, Naver meta, 필수 route·asset을 검사하며 Commit·Push하지 않는다.
 - `deploy-production.ps1`은 `-ConfirmProduction`이 있을 때만 준비 검사를 다시 실행하고, 생성물·로그·리뷰 캡처·비밀정보를 제외한 변경을 단일 Commit으로 만든 뒤 `origin/main`에 일반 Push한다.
 - Pull·Merge·Rebase·Reset·Force Push·토큰 저장은 사용하지 않는다. Git 인증은 Windows Git Credential Manager에 맡긴다.
 - 배포 Commit SHA는 자기 자신을 포함하는 Commit 파일에 고정하지 않고 `git log -1 --format=%H`, 배포 스크립트 출력과 완료 보고를 기준 기록으로 사용한다.
@@ -38,3 +40,12 @@ powershell -ExecutionPolicy Bypass -File .\scripts\deploy-production.ps1 `
 - Contact는 사용자 이메일 프로그램을 여는 정적 `mailto:` 링크다. 홈페이지와 호스팅 플랫폼은 문의 내용을 저장하지 않는다.
 - 수신과 회신은 Lv.B 비즈니스 메일함에서 처리하며 공개 주소는 `site/src/data/contact.ts`에서 관리한다.
 - SMTP·이메일 API·Functions·Edge Functions를 사용하지 않는다.
+
+## Privacy 배포 게이트
+
+- `docs/PRIVACY_DATA_INVENTORY.md`에 남은 UserCloud 제품별 처리 권한·본인 확인·공개 package provenance와 외부 사업자 법적 관계를 운영자와 필요 시 법률 전문가가 확인한다.
+- `docs/PRIVACY_REQUEST_RUNBOOK.md`에 따라 Steam·Epic별 계정 소유 확인, Mush Dash 범위의 열람·정정·삭제·처리정지 절차와 요청 처리 기록 보유기간을 확정한다. 조직 단위 `Delete User`는 제품별 영향 확인 없이 기본 절차로 사용하지 않는다.
+- 네 언어 본문을 사용자와 필요 시 법률 전문가가 검토한다.
+- 사용자는 2026-08-03 운영 배포를 승인했으며, 네 언어 Privacy의 최종 수정일과 시행일은 모두 `2026-08-03`으로 확정한다. `site/src/data/privacy.ts` 반영 후 check/build/prepare와 운영 route 검사를 다시 수행한다.
+- 영구 잠금이 필요하면 생성 HTML이 아닌 승인된 정책 source snapshot의 정규화 규칙과 해시를 별도 작업에서 확정한다.
+- 배포 후 `/privacy`, `/privacy/`, 세 locale route, `/privacy.html`, 네 locale `index.html` redirect를 실제 HTTP로 다시 검사한다.

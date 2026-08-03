@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import RootStructuredData from '../components/seo/RootStructuredData.astro';
 import { siteConfig } from '../config/site';
 import { getLocalePath, locales, type Locale, type SiteRoute } from '../i18n/config';
 
@@ -9,11 +10,19 @@ interface Props {
   title: string;
   description: string;
   ogImage: string;
+  robots?: string;
 }
 
-const { locale, route, title, description, ogImage } = Astro.props;
+const { locale, route, title, description, ogImage, robots } = Astro.props;
 const site = Astro.site ?? new URL('https://lvb.kr');
 const canonical = new URL(getLocalePath(locale, route), site);
+const isRootHome = locale === 'en' && route === 'home';
+const hreflangMap: Record<Locale, string> = {
+  en: 'en',
+  ko: 'ko',
+  ja: 'ja',
+  'zh-cn': 'zh-CN'
+};
 const localeMap: Record<Locale, string> = {
   en: 'en_US',
   ko: 'ko_KR',
@@ -29,13 +38,14 @@ const localeMap: Record<Locale, string> = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
     <meta name="theme-color" content="#0f0d0c" />
     <meta name="application-name" content={siteConfig.name} />
     <meta name="naver-site-verification" content={siteConfig.naverSiteVerification} />
     <link rel="icon" type="image/png" sizes="128x128" href="/brand/lvb-symbol-128.png" />
     <link rel="apple-touch-icon" href="/brand/lvb-symbol-128.png" />
     <link rel="canonical" href={canonical} />
-    {locales.map((target) => <link rel="alternate" hreflang={target} href={new URL(getLocalePath(target, route), site)} />)}
+    {locales.map((target) => <link rel="alternate" hreflang={hreflangMap[target]} href={new URL(getLocalePath(target, route), site)} />)}
     <link rel="alternate" hreflang="x-default" href={new URL(getLocalePath('en', route), site)} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteConfig.name} />
@@ -49,6 +59,7 @@ const localeMap: Record<Locale, string> = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    {isRootHome && <RootStructuredData />}
   </head>
   <body>
     <slot />

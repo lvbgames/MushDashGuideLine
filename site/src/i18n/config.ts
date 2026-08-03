@@ -13,7 +13,7 @@ export function isLocale(value: string): value is Locale {
   return (locales as readonly string[]).includes(value);
 }
 
-export type SiteRoute = 'home' | 'games' | 'about' | 'contact' | 'news' | 'mushhero' | 'mushdash';
+export type SiteRoute = 'home' | 'games' | 'about' | 'contact' | 'news' | 'privacy' | 'mushhero' | 'mushdash';
 
 export function getLocalePath(locale: Locale, route: SiteRoute = 'home'): string {
   const prefix = locale === defaultLocale ? '' : `/${locale}`;
@@ -32,6 +32,10 @@ export function getLocalePath(locale: Locale, route: SiteRoute = 'home'): string
 
   if (route === 'news') {
     return `${prefix}/news/`;
+  }
+
+  if (route === 'privacy') {
+    return `${prefix}/privacy/`;
   }
 
   if (route === 'games') {

@@ -29,8 +29,11 @@
 | Discord | Verified External Link | `https://discord.gg/yuphyAWWUr`; 게임 피드백·버그·기술지원 |
 | Steam Developer Page | Verified External Link | `https://store.steampowered.com/search/?developer=Lv.B` |
 | 공식 YouTube | Missing | `youtubeTrailerUrl`이 `null`이면 영상 UI 전체를 숨김 |
-| News & Press | Verified External Link / Draft / User Review | 원문·매체·날짜를 확인한 인터뷰 1건과 BIC 2024 보도 2건을 최신순 단일 목록에 한 번씩 표시. 네 locale 제목·자체 요약은 User Review, 기사 이미지·본문 복제·자동 수집 없음 |
-| `/privacy` 콘텐츠 | Locked | `docs/LOCKED.md`와 보호 파일 적용 |
+| News & Press | Verified External Link / Draft / User Review | 원문·매체·날짜를 확인한 인터뷰 1건과 BIC 2024 보도 2건을 최신순 단일 목록에 한 번씩 표시. 네 locale 제목·자체 요약은 User Review, 기사 이미지·본문 복제·자동 수집 없음. 자체 기사 상세와 본문 발행이 없어 현재는 sitemap만 사용하고 RSS는 보류 |
+| Privacy 4개 언어 | Draft / User Review | 네 언어 19개 동일 section에 Netlify 분석 기능 3종 미사용, Mush Dash Epic Online Services(EOS)·Lobby·Session·P2P·UserCloud의 검증된 gameplay·transaction 범주, 계정 식별자와 payload 구분, 로컬 설정 분리, 자동 만료·게임 제거·연결 해제 자동 삭제 없음, 자체 서버·DB·텔레메트리·자동 크래시 전송 미사용, 이메일 1년 보관과 예외, 만 14세 미만 정책, Lv.B 담당부서를 반영. `/privacy/` 및 세 locale route는 `noindex, follow`이고 sitemap에서 제외 |
 | Naver 사이트 소유확인 | Verified Public Metadata | `site/src/config/site.ts`의 공개 verification 값을 `BaseLayout.astro`가 일반 Astro 페이지 `<head>`에 정적 meta로 출력. 과거 HTML 확인 파일 방식은 폐기 |
+| 루트 구조화 데이터 | Verified Public Metadata | `site/src/data/structuredData.ts`가 기존 site config·회사·연락처·공식 SNS 데이터를 조합해 `/`에만 WebSite와 Organization을 단일 `@graph`로 출력. 주 이름은 `Lv.B`, 대체 이름은 `레벨비`이며 추측한 법인·설립·대표·직원·평점 정보는 추가하지 않음. `sameAs` 4개 중 Naver 지원 연관 채널은 X·Instagram, Discord·Steam Developer Page는 기타 공식 프로필이며 검색 노출을 보장하지 않음 |
 
 게임 데이터는 `site/src/data/games.ts`에서 고정 관리하며 브라우저·빌드 중 runtime scraping을 하지 않는다. 기존 사이트의 코드·문구·자산은 `legacy-site/` 보관물일 뿐 신규 구현의 기반이 아니다.
+
+Privacy의 처리 사실 근거와 운영자 확인 항목은 `PRIVACY_DATA_INVENTORY.md`에서, MushDash UserCloud의 내부 파일·field·호출 라인은 `PRIVACY_USERCLOUD_AUDIT.md`에서 관리한다. 공개 문구는 2026-07-31 현재 게임 작업 트리에서 확인한 데이터 범주만 사용하고 내부 key·변수명·development 진단 payload는 노출하지 않는다. UserCloud의 고정 보유기간과 게임 내 삭제 기능은 없으며, 요청 접수·본인/범위 확인·플랫폼/EOS 확인은 내부 전용 `PRIVACY_REQUEST_RUNBOOK.md`를 따른다. 외부 사업자의 위탁·제3자 제공·독립 처리 관계와 국외 이전 유형도 법률 확인 전 단정하지 않는다. 공개 Privacy의 최종 수정일과 시행일은 사용자가 승인한 운영 배포일 `2026-08-03`으로 확정한다.

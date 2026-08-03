@@ -22,9 +22,10 @@ Node 기준은 `.nvmrc`, 패키지 고정은 `package-lock.json`을 따른다.
 - Mush Dash: `/games/mushdash/`와 세 locale prefix route
 - Business Contact: `/contact/`와 세 locale prefix route
 - News & Press: `/news/`와 세 locale prefix route
+- Privacy: `/privacy/`와 세 locale prefix route (`noindex, follow`, sitemap 제외)
 - Branded 404: `/404.html` (영어 기본 안내, 네 locale Home 링크, `noindex`)
 
-정규 Astro 페이지 28개와 별도 404를 빌드한다. `public/privacy.html`을 포함한 전체 HTML은 30개이며 sitemap에는 정규 URL 28개만 포함한다.
+공개 정규 Astro 페이지 28개, Privacy 4개와 별도 404를 빌드해 전체 HTML 33개를 생성한다. sitemap에는 공개 정규 URL 28개만 포함한다.
 
 ## Structure
 
@@ -36,9 +37,12 @@ Node 기준은 `.nvmrc`, 패키지 고정은 `package-lock.json`을 따른다.
 - `src/data/games.ts`는 확인된 Store URL·출시 상태·Steam CDN 이미지·상세 태그를 관리한다.
 - `src/data/contact.ts`는 공개 비즈니스 이메일, business category, 선택적 Discord URL을 관리한다.
 - `src/data/company.ts`는 UI 브랜드명, 한국어 공식 스튜디오 주소, 검증된 Google Maps 공유 iframe URL과 검색 URL 생성을 관리한다.
+- `src/data/structuredData.ts`는 site config·`company.ts`·`contact.ts`·`socialLinks.ts`를 조합해 루트 `/` 전용 WebSite·Organization JSON-LD를 관리하고, `src/components/seo/RootStructuredData.astro`가 BaseLayout `<head>`에 단일 script로 출력한다. 회사 정보 변경 시 각 원본 데이터를 수정하며 추측 정보를 추가하지 않는다.
 - `src/data/team.ts`와 `src/types/team.ts`는 팀원 이름·역할·담당·선택적 프로필 이미지 경로를 관리한다. 현재 `public/team/profiles/park-jaemin.png`와 `jeong-bogeon.png`를 사용하며 로드 실패 또는 경로가 `null`이면 기존 Lv.B symbol을 대체 표시한다. 승인 원본과 교체 절차는 `public/team/profiles/README.md`를 따른다.
 - `src/data/socialLinks.ts`는 공식 X·Instagram·Discord·Steam Developer 링크를 한 번만 관리한다.
 - `src/data/news.ts`는 원문·매체·날짜를 검증한 외부 자료 3건과 네 locale 자체 제목·요약을 정적으로 관리한다.
+- `src/data/privacy.ts`와 `src/types/privacy.ts`는 네 locale Privacy의 메타데이터와 동일 순서 19개 section을 관리한다. `src/components/privacy/`가 목차와 본문을 공유하고 `src/styles/privacy.css`가 legal 문서·print 레이아웃을 제공한다.
+- Privacy에는 사용자 확인 운영 사실인 Netlify 분석 기능 3종 미사용, Mush Dash의 Epic Online Services(EOS) 온라인 기능과 UserCloud, 자체 서버·DB·텔레메트리·자동 크래시 전송 미사용, 이메일 보관·아동 정책·Lv.B 담당부서를 반영한다. UserCloud 공개 범주는 `E:\MushDash` 현재 작업 트리의 SaveManager·server/local data struct 감사 결과만 사용하며 세부 파일·field 근거는 `../docs/PRIVACY_USERCLOUD_AUDIT.md`, 공개하지 않는 이메일 권리 요청 절차는 `../docs/PRIVACY_REQUEST_RUNBOOK.md`에서 관리한다.
 - `src/i18n/`은 네 언어 문구와 locale 보존 route를 관리한다.
 - `src/styles/game-detail.css`는 공통 레이아웃에 게임별 accent override만 적용한다.
 - `src/pages/404.astro`와 `src/styles/not-found.css`는 JavaScript 없는 브랜드 V3 404를 구성한다.
@@ -57,4 +61,8 @@ Contact 문의 범위는 비즈니스, 파트너십, 행사·전시, 크리에�
 
 News & Press는 네 locale route와 Header·Footer 링크를 제공한다. 모든 항목은 외부 원문으로 연결되는 최신순 단일 목록에 한 번씩 표시하며 기사 본문·이미지·Featured 분리·자동 수집 기능은 포함하지 않는다. 기사 추가 기준은 `../docs/NEWS.md`를 따른다.
 
-`public/privacy.html`은 보호 파일이다. 내용·경로·출력물을 임의로 수정하지 않는다. 반복 검증과 실행 권한은 `../docs/VALIDATION.md`를 따른다.
+현재 News는 Lv.B 자체 기사 상세·본문 발행이 아니라 외부 자료 링크 목록이므로 sitemap만 사용하고 RSS는 만들지 않는다. 자체 공지나 개발일지의 상세 route와 본문을 직접 발행하게 될 때 RSS를 재검토한다.
+
+루트 `netlify.toml`은 직접 요청된 `index.html` URL을 같은 trailing-slash canonical URL로 보내는 forced 301 규칙과 `/privacy.html` → `/privacy/` 호환 301을 정의한다. 실제 응답은 배포 후 `../docs/VALIDATION.md` 절차로 확인한다.
+
+기존 `public/privacy.html`은 폐기했으며 역사 보관본은 `../legacy-site/public/privacy.html`에만 남긴다. 신규 정책 source 변경 시 `../docs/PRIVACY_DATA_INVENTORY.md`와 `../docs/PRIVACY_USERCLOUD_AUDIT.md`의 근거·수동 확인 항목, 네 언어 section 순서 및 의미를 함께 검토한다. 생성 HTML raw hash는 사용하지 않으며, 네 언어의 최종 수정일과 시행일은 사용자 승인 운영 배포일 `2026-08-03`으로 확정했다. 이후 정책 변경 시 두 날짜와 전체 검증을 함께 갱신한다.

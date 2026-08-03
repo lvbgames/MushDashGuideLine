@@ -16,7 +16,7 @@
 4. 검증된 News & Press
 5. Contact
 
-MushHero를 가장 중요하게, Mush Dash보다 크게 강조한다. 현재 공개 페이지는 Home, Our Games, MushHero, Mush Dash, About, Contact, News & Press, 404와 보호된 `/privacy`다.
+MushHero를 가장 중요하게, Mush Dash보다 크게 강조한다. 현재 공개 페이지는 Home, Our Games, MushHero, Mush Dash, About, Contact, News & Press와 404다. Privacy는 네 locale Astro route로 제공하되 `noindex, follow`이며 sitemap에서 제외한다.
 
 Home은 MushHero Hero와 특징·스크린샷, Our Games와 Mush Dash, 회사 소개, 공식 커뮤니티, 비즈니스 문의 순서다.
 

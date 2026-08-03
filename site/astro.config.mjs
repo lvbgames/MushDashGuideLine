@@ -9,7 +9,11 @@ export default defineConfig({
   site: 'https://lvb.kr',
   output: 'static',
   trailingSlash: 'always',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) => !new URL(page).pathname.match(/^\/(?:ko\/|ja\/|zh-cn\/)?privacy\/$/)
+    })
+  ],
   vite: {
     plugins: [tailwindcss()]
   },

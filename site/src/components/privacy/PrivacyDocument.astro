@@ -1,0 +1,73 @@
+---
+import { company } from '../../data/company';
+import { contactPolicy } from '../../data/contact';
+import type { PrivacyDocumentContent } from '../../types/privacy';
+import PrivacyTableOfContents from './PrivacyTableOfContents.astro';
+
+interface Props {
+  content: PrivacyDocumentContent;
+}
+
+const { content } = Astro.props;
+---
+
+<div class="privacy-layout">
+  <aside class="privacy-layout__aside">
+    <PrivacyTableOfContents content={content} variant="desktop" />
+  </aside>
+
+  <article class="privacy-document">
+    {
+      content.sections.map((section, index) => (
+        <section id={section.id} class="privacy-section" aria-labelledby={`${section.id}-title`}>
+          <div class="privacy-section__heading">
+            <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            <h2 id={`${section.id}-title`}>{section.title}</h2>
+          </div>
+          {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+          {section.bullets && (
+            <ul>
+              {section.bullets.map((bullet) => <li>{bullet}</li>)}
+            </ul>
+          )}
+          {section.links && (
+            <ul class="privacy-section__links">
+              {section.links.map((link) => (
+                <li>
+                  <a href={link.href} target="_blank" rel="noopener noreferrer">
+                    {link.label}
+                    <span class="screen-reader"> ({content.externalLinkLabel})</span>
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ))
+    }
+
+    <section class="privacy-contact-card" aria-labelledby="privacy-contact-card-title">
+      <p class="eyebrow">{content.eyebrow}</p>
+      <h2 id="privacy-contact-card-title">{content.controllerCardTitle}</h2>
+      <dl>
+        <div>
+          <dt>{content.controllerLabels.name}</dt>
+          <dd>{company.name}</dd>
+        </div>
+        <div>
+          <dt>{content.controllerLabels.location}</dt>
+          <dd>{company.address}</dd>
+        </div>
+        <div>
+          <dt>{content.controllerLabels.website}</dt>
+          <dd><a href="https://lvb.kr/">https://lvb.kr/</a></dd>
+        </div>
+        <div>
+          <dt>{content.controllerLabels.email}</dt>
+          <dd><a href={`mailto:${contactPolicy.businessEmail}`}>{contactPolicy.businessEmail}</a></dd>
+        </div>
+      </dl>
+    </section>
+  </article>
+</div>

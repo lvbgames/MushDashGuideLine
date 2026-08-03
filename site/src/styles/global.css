@@ -3,6 +3,7 @@
 @import "./game-detail.css";
 @import "./about.css";
 @import "./games.css";
+@import "./privacy.css";
 
 :root {
   color-scheme: dark;

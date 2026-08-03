@@ -2,3 +2,33 @@
   base = "site"
   command = "npm run build"
   publish = "dist"
+
+[[redirects]]
+  from = "/privacy.html"
+  to = "/privacy/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/:one/index.html"
+  to = "/:one/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/:one/:two/index.html"
+  to = "/:one/:two/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/:one/:two/:three/index.html"
+  to = "/:one/:two/:three/"
+  status = 301
+  force = true
