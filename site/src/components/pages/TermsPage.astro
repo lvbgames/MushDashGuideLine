@@ -1,12 +1,12 @@
 ---
-import { getPrivacyDocument } from '../../data/privacy';
+import { getTermsDocument } from '../../data/terms';
 import { getTranslation } from '../../i18n/translations';
 import type { Locale } from '../../i18n/config';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PrivacyDocument from '../privacy/PrivacyDocument.astro';
 import LegalTableOfContents from '../legal/LegalTableOfContents.astro';
 import SiteFooter from '../layout/SiteFooter.astro';
 import SiteHeader from '../layout/SiteHeader.astro';
+import TermsDocument from '../terms/TermsDocument.astro';
 import Container from '../ui/Container.astro';
 
 interface Props {
@@ -14,21 +14,21 @@ interface Props {
 }
 
 const { locale } = Astro.props;
-const content = getPrivacyDocument(locale);
+const content = getTermsDocument(locale);
 const translation = getTranslation(locale);
 ---
 
 <BaseLayout
   locale={locale}
-  route="privacy"
+  route="terms"
   title={content.metaTitle}
   description={content.metaDescription}
   ogImage="https://lvb.kr/brand/lvb-logo.png"
   robots="noindex, follow"
 >
-  <a class="privacy-skip-link" href="#privacy-content">{content.title}</a>
-  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="privacy" translation={translation} />
-  <main id="privacy-content" class="privacy-page">
+  <a class="privacy-skip-link" href="#terms-content">{content.title}</a>
+  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="terms" translation={translation} />
+  <main id="terms-content" class="privacy-page">
     <header class="privacy-hero">
       <Container className="privacy-hero__inner">
         <p class="eyebrow">{content.eyebrow}</p>
@@ -49,8 +49,8 @@ const translation = getTranslation(locale);
 
     <Container className="privacy-body">
       <LegalTableOfContents label={content.tableOfContentsLabel} sections={content.sections} variant="mobile" />
-      <PrivacyDocument content={content} />
+      <TermsDocument content={content} />
     </Container>
   </main>
-  <SiteFooter locale={locale} route="privacy" translation={translation} />
+  <SiteFooter locale={locale} route="terms" translation={translation} />
 </BaseLayout>

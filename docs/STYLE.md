@@ -21,6 +21,7 @@
 - About 스튜디오 위치는 desktop에서 주소·설명·지도 CTA와 16:9 Google 지도를 2열로, mobile에서 1열로 배치한다. 지도는 raised surface·기존 border/radius를 사용하며 별도 glow나 지도 라이브러리를 추가하지 않는다.
 - About 팀 소개는 desktop에서 소개와 팀원 카드 영역을 나누고 카드 2개를 나란히, mobile에서 카드 1열로 표시한다. 프로필은 4:5 영역을 유지하며 이미지가 `null`이면 기존 Lv.B symbol을 중립적으로 표시한다.
 - News & Press는 Featured 위계 없이 모든 항목을 같은 정보 구조의 최신순 단일 목록으로 표시한다. mobile은 1열, desktop은 메타와 본문을 나눈 읽기 좋은 세로 목록을 사용한다.
+- Privacy와 Terms는 같은 Legal Hero, mobile details 목차, desktop sticky 목차, 본문·print 스타일을 사용한다. 문서별 데이터와 본문 컴포넌트는 분리하고 목차처럼 안전한 표시 컴포넌트만 공통화한다.
 - YouTube 영상은 공식 URL이 있을 때만 16:9로 제공하며 사용자 클릭 전 iframe을 로드하지 않고 autoplay를 사용하지 않는다.
 - Home·MushHero·Mush Dash의 정보 구조와 게임별 미디어·문구는 브랜드 패스에서도 변경하지 않는다.
 

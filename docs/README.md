@@ -11,6 +11,7 @@
 - `LOCKED.md`: Privacy 역사 보관본과 현재 정책의 변경·승인 규칙.
 - `PRIVACY_DATA_INVENTORY.md` / `PRIVACY_USERCLOUD_AUDIT.md`: Privacy 처리 사실 inventory와 MushDash UserCloud 코드 근거.
 - `PRIVACY_REQUEST_RUNBOOK.md`: 개인정보 열람·정정·삭제·처리정지 이메일 요청의 내부 운영 절차. 사용자 화면에는 연결하지 않는다.
+- `TERMS_AUDIT.md`: 게임 이용약관의 참고 범위, 실제 기능 근거, 미채택 조항과 플랫폼·고지 후속 확인 항목.
 - `VALIDATION.md`: 반복 검증 절차와 Commit·Push·배포 권한 경계.
 - `DEPLOYMENT.md`: GitHub·Netlify·도메인·무료 정적 운영.
 - `MAP.md` / `ARCHITECTURE.md`: 작업공간과 실행 구조.

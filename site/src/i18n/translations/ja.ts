@@ -39,6 +39,7 @@ export const ja: Translation = {
     coming2027: '2027年リリース予定',
     available: '配信中',
     privacy: 'プライバシー',
+    terms: 'ゲーム利用規約',
     opensNewTab: '新しいタブで開きます',
     mediaUnavailable: 'ゲーム画像を読み込めません'
   },

@@ -11,7 +11,7 @@ export default defineConfig({
   trailingSlash: 'always',
   integrations: [
     sitemap({
-      filter: (page) => !new URL(page).pathname.match(/^\/(?:ko\/|ja\/|zh-cn\/)?privacy\/$/)
+      filter: (page) => !new URL(page).pathname.match(/^\/(?:ko\/|ja\/|zh-cn\/)?(?:privacy|terms)\/$/)
     })
   ],
   vite: {

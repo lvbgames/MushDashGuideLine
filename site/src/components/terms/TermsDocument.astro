@@ -1,14 +1,16 @@
 ---
 import { company } from '../../data/company';
 import { contactPolicy } from '../../data/contact';
-import type { PrivacyDocumentContent } from '../../types/privacy';
+import { getLocalePath } from '../../i18n/config';
+import type { TermsDocumentContent } from '../../types/terms';
 import LegalTableOfContents from '../legal/LegalTableOfContents.astro';
 
 interface Props {
-  content: PrivacyDocumentContent;
+  content: TermsDocumentContent;
 }
 
 const { content } = Astro.props;
+const privacyPath = getLocalePath(content.locale, 'privacy');
 ---
 
 <div class="privacy-layout">
@@ -32,40 +34,43 @@ const { content } = Astro.props;
           )}
           {section.links && (
             <ul class="privacy-section__links">
-              {section.links.map((link) => (
-                <li>
-                  <a href={link.href} target="_blank" rel="noopener noreferrer">
-                    {link.label}
-                    <span class="screen-reader"> ({content.externalLinkLabel})</span>
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                </li>
-              ))}
+              {section.links.map((link) => {
+                const external = /^https?:\/\//.test(link.href);
+                return (
+                  <li>
+                    <a href={link.href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
+                      {link.label}
+                      {external && <span class="screen-reader"> ({content.externalLinkLabel})</span>}
+                      {external && <span aria-hidden="true">↗</span>}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </section>
       ))
     }
 
-    <section class="privacy-contact-card" aria-labelledby="privacy-contact-card-title">
+    <section class="privacy-contact-card" aria-labelledby="terms-contact-card-title">
       <p class="eyebrow">{content.eyebrow}</p>
-      <h2 id="privacy-contact-card-title">{content.controllerCardTitle}</h2>
+      <h2 id="terms-contact-card-title">{content.contactCardTitle}</h2>
       <dl>
         <div>
-          <dt>{content.controllerLabels.name}</dt>
+          <dt>{content.contactLabels.name}</dt>
           <dd>{company.name}</dd>
         </div>
         <div>
-          <dt>{content.controllerLabels.location}</dt>
-          <dd>{company.address}</dd>
-        </div>
-        <div>
-          <dt>{content.controllerLabels.website}</dt>
+          <dt>{content.contactLabels.website}</dt>
           <dd><a href="https://lvb.kr/">https://lvb.kr/</a></dd>
         </div>
         <div>
-          <dt>{content.controllerLabels.email}</dt>
+          <dt>{content.contactLabels.email}</dt>
           <dd><a href={`mailto:${contactPolicy.businessEmail}`}>{contactPolicy.businessEmail}</a></dd>
+        </div>
+        <div>
+          <dt>{content.contactLabels.privacy}</dt>
+          <dd><a href={privacyPath}>{content.privacyLabel}</a></dd>
         </div>
       </dl>
     </section>

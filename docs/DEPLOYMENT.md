@@ -4,7 +4,7 @@
 - 공식 도메인: `lvb.kr`; DNS는 카페24 관리로 제공되었으나 실제 DNS/Netlify site 값은 저장소에서 확인되지 않는다.
 - legacy `netlify.toml`과 `next.config.ts`는 `legacy-site/`에 있다. 기존 실서비스 설정은 변경하지 않았다.
 - 신규 root `netlify.toml`: base `site`, command `npm run build`, publish `dist`. Astro adapter·Next plugin·functions·serverless 설정은 사용하지 않는다. 실행 권한과 배포 전 검증은 `VALIDATION.md`를 따른다.
-- 대표 URL 정책: HTTP와 `www`는 Netlify에서 `https://lvb.kr/`로 301 처리한다. root와 최대 3개 경로 segment의 명시적 `index.html` 요청은 `netlify.toml`의 forced 301 규칙으로 같은 trailing-slash 대표 URL에 통합한다. 기존 `/privacy.html`은 generic 규칙보다 앞선 명시적 forced 301로 `/privacy/`에 연결한다.
+- 대표 URL 정책: HTTP와 `www`는 Netlify에서 `https://lvb.kr/`로 301 처리한다. root와 최대 3개 경로 segment의 명시적 `index.html` 요청은 `netlify.toml`의 forced 301 규칙으로 같은 trailing-slash 대표 URL에 통합한다. 기존 `/privacy.html`과 호환용 `/terms.html`은 generic 규칙보다 앞선 명시적 forced 301로 각각 `/privacy/`, `/terms/`에 연결한다.
 - Naver 사이트 소유확인은 HTML 파일이 아니라 `site/src/config/site.ts`의 `naverSiteVerification` 값을 `BaseLayout.astro`가 정적 `<head>` meta로 출력하는 방식을 사용한다. 과거 `naver799482ce0e5e513c37daff06412293c5.html` 파일은 사용하거나 배포하지 않는다.
 - 기존 운영 `/privacy`는 영어 단일 static HTML이고 `/privacy/`가 `/privacy`로 이동하며 `/privacy.html`도 200이었다. 신규 배포에서는 `/privacy/`와 세 locale Privacy를 Astro 정규 URL로 제공하고, `/privacy.html` 및 각 `index.html` 직접 경로는 trailing-slash canonical로 301 처리한다.
 - `site/public/privacy.html`은 새 Astro route 빌드 확인 후 제거했다. `legacy-site/public/privacy.html`은 4,271 bytes·SHA-256 `95CA28BD2313111606DDAE18492BEB7C785152911F14CA60618DF88D8FF36F29`인 역사 보관본으로 유지한다.
@@ -56,3 +56,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\deploy-production.ps1 `
 - 사용자는 2026-08-03 운영 배포를 승인했으며, 네 언어 Privacy의 최종 수정일과 시행일은 모두 `2026-08-03`으로 확정한다. `site/src/data/privacy.ts` 반영 후 check/build/prepare와 운영 route 검사를 다시 수행한다.
 - 영구 잠금이 필요하면 생성 HTML이 아닌 승인된 정책 source snapshot의 정규화 규칙과 해시를 별도 작업에서 확정한다.
 - 배포 후 `/privacy`, `/privacy/`, 세 locale route, `/privacy.html`, 네 locale `index.html` redirect를 실제 HTTP로 다시 검사한다.
+
+## Terms 배포 게이트
+
+- `docs/TERMS_AUDIT.md`의 한국어 기준 원문, 네 언어 법적 의미, 실제 Steam/Epic 구매 상태, 고지·동의 방식과 필요 시 법률 검토를 완료한다.
+- 사용자는 2026-08-12 운영 배포를 승인했으며 Terms 네 언어의 `Last updated`와 `Effective date`는 모두 `2026-08-12`로 확정한다. `site/src/data/terms.ts` 반영 후 check/build/prepare와 운영 route·redirect를 다시 검증한다.
+- 권한 있는 Steamworks·Epic Games Store Developer Portal에서 제품별 Terms/EULA URL 등록 위치와 현재 연결 상태를 수동 확인한다.
+- 배포 후 `/terms`, `/terms/`, 세 locale route, `/terms.html`, 네 locale `index.html` redirect와 Privacy 상호 링크를 실제 HTTP로 검사한다.

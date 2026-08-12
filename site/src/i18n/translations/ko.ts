@@ -39,6 +39,7 @@ export const ko: Translation = {
     coming2027: '2027년 출시 예정',
     available: '지금 플레이 가능',
     privacy: '개인정보 처리방침',
+    terms: '게임 이용약관',
     opensNewTab: '새 탭에서 열림',
     mediaUnavailable: '게임 이미지를 불러올 수 없습니다'
   },

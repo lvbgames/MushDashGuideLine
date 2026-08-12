@@ -1,20 +1,24 @@
 ---
-import type { PrivacyDocumentContent } from '../../types/privacy';
+interface LegalSectionLink {
+  id: string;
+  title: string;
+}
 
 interface Props {
-  content: PrivacyDocumentContent;
+  label: string;
+  sections: readonly LegalSectionLink[];
   variant: 'desktop' | 'mobile';
 }
 
-const { content, variant } = Astro.props;
+const { label, sections, variant } = Astro.props;
 ---
 
 {
   variant === 'desktop' ? (
-    <nav class="privacy-toc privacy-toc--desktop" aria-label={content.tableOfContentsLabel}>
-      <p>{content.tableOfContentsLabel}</p>
+    <nav class="privacy-toc privacy-toc--desktop" aria-label={label}>
+      <p>{label}</p>
       <ol>
-        {content.sections.map((section, index) => (
+        {sections.map((section, index) => (
           <li>
             <a href={`#${section.id}`}>
               <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
@@ -26,10 +30,10 @@ const { content, variant } = Astro.props;
     </nav>
   ) : (
     <details class="privacy-toc privacy-toc--mobile">
-      <summary>{content.tableOfContentsLabel}</summary>
-      <nav aria-label={content.tableOfContentsLabel}>
+      <summary>{label}</summary>
+      <nav aria-label={label}>
         <ol>
-          {content.sections.map((section, index) => (
+          {sections.map((section, index) => (
             <li>
               <a href={`#${section.id}`}>
                 <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>

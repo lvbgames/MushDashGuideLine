@@ -10,6 +10,12 @@
   force = true
 
 [[redirects]]
+  from = "/terms.html"
+  to = "/terms/"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/index.html"
   to = "/"
   status = 301

@@ -39,6 +39,7 @@ export const zhCn: Translation = {
     coming2027: '预计2027年推出',
     available: '现已推出',
     privacy: '隐私',
+    terms: '游戏服务条款',
     opensNewTab: '在新标签页中打开',
     mediaUnavailable: '无法加载游戏图片'
   },

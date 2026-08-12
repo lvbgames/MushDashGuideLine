@@ -65,6 +65,7 @@ export interface Translation {
     coming2027: string;
     available: string;
     privacy: string;
+    terms: string;
     opensNewTab: string;
     mediaUnavailable: string;
   };
@@ -249,6 +250,7 @@ export const en: Translation = {
     coming2027: 'Coming 2027',
     available: 'Available now',
     privacy: 'Privacy',
+    terms: 'Terms',
     opensNewTab: 'opens in a new tab',
     mediaUnavailable: 'Game image unavailable'
   },

@@ -18,7 +18,7 @@
 - 중국어 locale route는 `/zh-cn/`을 유지하되 HTML `hreflang` 값은 BCP 47 표기 `zh-CN`인지 확인한다.
 - `LanguageSwitcher`는 현재 페이지 종류와 게임 상세 slug를 유지해야 한다.
 - Header·Footer와 본문 CTA가 현재 locale의 의도한 경로를 사용해야 한다.
-- sitemap은 공개 정규 Astro route만 포함하고 404와 네 Astro Privacy route는 제외한다.
+- sitemap은 공개 정규 Astro route만 포함하고 404와 네 Astro Privacy·Terms route는 제외한다.
 - `robots.txt`는 공개 sitemap index를 가리켜야 하며 404는 `noindex`이고 복잡한 locale 자동 감지나 JavaScript를 사용하지 않아야 한다.
 - `site/public/robots.txt`와 빌드된 `site/dist/robots.txt`는 UTF-8 BOM 없는 동일 byte여야 한다. wildcard와 `Yeti` 각각에 `Allow: /`가 있어야 하고 절대 HTTPS sitemap URL을 포함하며, root `Disallow`, HTML 태그, `/robots.txt` redirect·rewrite는 없어야 한다.
 - Home 빌드 HTML의 `<head>`에는 `siteConfig.naverSiteVerification`과 일치하는 Naver 소유확인 meta가 정확히 한 번 있어야 하며, 과거 Naver HTML 확인 파일은 `public/`과 `dist/` 모두에 없어야 한다.
@@ -34,6 +34,8 @@
 - Contact의 수신 주소와 locale별 subject·body를 percent-decoding해 손상 여부를 확인하고, 사용하지 않는 form·success 코드가 없는지 검사한다.
 - 신규 Astro 페이지의 외부 새 탭 링크는 보안 속성을 검사한다.
 - Privacy 4개 HTML에서 `noindex, follow`, 자기 canonical, en·ko·ja·zh-CN·x-default, H1·main 각 1개, JSON-LD 0개, 19개 section ID의 일치·순서, locale별 Footer와 LanguageSwitcher 경로를 검사한다.
+- Terms 4개 HTML에서 `noindex, follow`, 자기 canonical, en·ko·ja·zh-CN·x-default, H1·main 각 1개, JSON-LD 0개, 16개 section ID의 일치·순서, locale별 Footer와 LanguageSwitcher 경로를 검사한다. `Last updated`와 `Effective date`는 locale별 표기로 각각 한 번 표시하고 두 `<time>`의 `datetime` 값은 모두 `2026-08-12`여야 한다.
+- Privacy와 Terms의 locale별 상호 링크, Footer active 상태와 `/terms.html` → `/terms/` forced 301을 검사한다. Terms의 Nintendo, 고정 Steam 환불 시간, 미확인 DLC·시즌패스, 지속 업데이트 보장, 전면 면책, 전속 관할, 확인되지 않은 영구정지 문구는 0건이어야 한다.
 - Privacy 화면에서 `TODO`, `FIXME`, `placeholder`, `lvbgames.store`, raw GitHub logo, `Main Project: MushDash`, Epic brand requirement 문구가 0건인지 확인한다.
 - Privacy 네 언어에 첫 언급 `Epic Online Services(EOS)`와 이후 `EOS`, Lobby·Session·P2P·EOS UserCloud, 일반 문의 1년 보관, Netlify Web Analytics·RUM·Log Drains 미사용, 자체 서버·DB·텔레메트리·자동 크래시 전송 미사용, 담당부서 Lv.B가 동일한 의미로 포함되는지 확인한다.
 - 빌드된 Privacy 네 언어 HTML에서 대소문자 구분 없이 내부 구현 명칭 `EIK`가 0건인지 확인한다.
@@ -71,6 +73,7 @@
   `95CA28BD2313111606DDAE18492BEB7C785152911F14CA60618DF88D8FF36F29`
 - `site/public/privacy.html`은 폐기했고 신규 출력은 locale별 Astro `index.html`이다. 생성 HTML은 빌드 포맷·줄바꿈에 따라 달라질 수 있으므로 raw byte 해시로 잠그지 않는다.
 - `scripts/prepare-production.ps1`은 legacy 해시와 함께 네 route 존재, section 의미 구조, SEO, 언어 경로, 금지 문구, sitemap 제외를 검증한다.
+- `scripts/prepare-production.ps1`은 Terms 네 route의 16개 section, SEO, 언어 경로, Privacy 상호 링크, 금지 문구와 sitemap 제외도 함께 검증한다.
 - 최종 승인 후 잠금이 필요하면 `site/src/data/privacy.ts`의 정규화 source snapshot을 별도 검토해 확정하고, 정책 변경 시 source·네 번역·인벤토리·검증을 함께 갱신한다.
 
 ## 실행 권한

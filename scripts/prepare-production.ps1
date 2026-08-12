@@ -104,6 +104,7 @@ if ($netlify -match '(?im)^\s*from\s*=\s*"/robots\.txt/?"\s*$') {
   throw 'robots.txt must be served directly from site/public without a redirect or rewrite.'
 }
 $privacyHtmlRedirectIndex = $netlify.IndexOf('from = "/privacy.html"')
+$termsHtmlRedirectIndex = $netlify.IndexOf('from = "/terms.html"')
 $genericIndexRedirectIndex = $netlify.IndexOf('from = "/:one/index.html"')
 if ($privacyHtmlRedirectIndex -lt 0) { throw 'The /privacy.html compatibility redirect is missing.' }
 if ($genericIndexRedirectIndex -lt 0 -or $privacyHtmlRedirectIndex -gt $genericIndexRedirectIndex) {
@@ -111,6 +112,13 @@ if ($genericIndexRedirectIndex -lt 0 -or $privacyHtmlRedirectIndex -gt $genericI
 }
 if ($netlify -notmatch '(?ms)from\s*=\s*"/privacy\.html".*?to\s*=\s*"/privacy/".*?status\s*=\s*301.*?force\s*=\s*true') {
   throw 'The /privacy.html compatibility redirect must force a 301 to /privacy/.'
+}
+if ($termsHtmlRedirectIndex -lt 0) { throw 'The /terms.html compatibility redirect is missing.' }
+if ($genericIndexRedirectIndex -lt 0 -or $termsHtmlRedirectIndex -gt $genericIndexRedirectIndex) {
+  throw 'The /terms.html compatibility redirect must precede generic index.html redirects.'
+}
+if ($netlify -notmatch '(?ms)from\s*=\s*"/terms\.html".*?to\s*=\s*"/terms/".*?status\s*=\s*301.*?force\s*=\s*true') {
+  throw 'The /terms.html compatibility redirect must force a 301 to /terms/.'
 }
 
 $astroConfig = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'astro.config.mjs')
@@ -345,6 +353,10 @@ foreach ($route in $privacyRoutes) {
   if ($privacyHtml -notmatch 'href="' + [regex]::Escape($route.FooterPath) + '"[^>]*aria-current="page"') {
     throw "Privacy Footer active link is missing: $($route.Locale)"
   }
+  $termsFooterPath = if ($route.Locale -eq 'en') { '/terms/' } else { "/$($route.Locale)/terms/" }
+  if ($privacyHtml -notmatch 'href="' + [regex]::Escape($termsFooterPath) + '"') {
+    throw "Privacy-to-Terms Footer link is missing: $($route.Locale)"
+  }
   foreach ($disallowed in $disallowedPrivacyCopy) {
     if ($privacyHtml.IndexOf($disallowed, [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
       throw "Disallowed Privacy text '$disallowed' found: $($route.Locale)"
@@ -358,6 +370,106 @@ foreach ($route in $privacyRoutes) {
   foreach ($superseded in $supersededPrivacyCopy) {
     if ($privacyHtml.IndexOf($superseded, [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
       throw "Superseded Privacy text '$superseded' found: $($route.Locale)"
+    }
+  }
+}
+
+$termsSectionIds = @(
+  'scope',
+  'definitions',
+  'notice-changes',
+  'platform-terms',
+  'license-ip',
+  'accounts-online',
+  'user-obligations',
+  'service-changes',
+  'online-termination',
+  'game-data',
+  'purchases-refunds',
+  'external-services',
+  'privacy',
+  'restrictions-liability',
+  'law-disputes',
+  'contact-dates'
+)
+$termsRoutes = @(
+  [PSCustomObject]@{ Locale = 'en'; Path = 'dist\terms\index.html'; Canonical = 'https://lvb.kr/terms/'; FooterPath = '/terms/'; PrivacyPath = '/privacy/' },
+  [PSCustomObject]@{ Locale = 'ko'; Path = 'dist\ko\terms\index.html'; Canonical = 'https://lvb.kr/ko/terms/'; FooterPath = '/ko/terms/'; PrivacyPath = '/ko/privacy/' },
+  [PSCustomObject]@{ Locale = 'ja'; Path = 'dist\ja\terms\index.html'; Canonical = 'https://lvb.kr/ja/terms/'; FooterPath = '/ja/terms/'; PrivacyPath = '/ja/privacy/' },
+  [PSCustomObject]@{ Locale = 'zh-cn'; Path = 'dist\zh-cn\terms\index.html'; Canonical = 'https://lvb.kr/zh-cn/terms/'; FooterPath = '/zh-cn/terms/'; PrivacyPath = '/zh-cn/privacy/' }
+)
+$expectedTermsLanguagePaths = @('/terms/', '/ko/terms/', '/ja/terms/', '/zh-cn/terms/')
+$disallowedTermsCopy = @(
+  'Nintendo',
+  '2 hours',
+  ([regex]::Unescape('2\uC2DC\uAC04')),
+  ([regex]::Unescape('2\u6642\u9593')),
+  'DLC',
+  'season pass',
+  ([regex]::Unescape('\uC2DC\uC98C \uD328\uC2A4')),
+  ([regex]::Unescape('\u30B7\u30FC\u30BA\u30F3\u30D1\u30B9')),
+  ([regex]::Unescape('\u5B63\u7968')),
+  'permanent ban',
+  ([regex]::Unescape('\uC601\uAD6C \uC774\uC6A9 \uC81C\uD55C')),
+  ([regex]::Unescape('\u6C38\u4E45\u5229\u7528\u505C\u6B62')),
+  ([regex]::Unescape('\u6C38\u4E45\u5C01\u7981')),
+  'exclusive jurisdiction',
+  ([regex]::Unescape('\uC804\uC18D \uAD00\uD560')),
+  ([regex]::Unescape('\u5C02\u5C5E\u7BA1\u8F44')),
+  ([regex]::Unescape('\u4E13\u5C5E\u7BA1\u8F96')),
+  'TODO',
+  'FIXME',
+  'placeholder'
+)
+
+foreach ($route in $termsRoutes) {
+  $termsPath = Join-Path $siteRoot $route.Path
+  if (-not (Test-Path -LiteralPath $termsPath)) {
+    throw "Terms route output is missing: $($route.Path)"
+  }
+  $termsHtml = Get-Content -Raw -Encoding utf8 $termsPath
+  $sectionPositions = @()
+  foreach ($sectionId in $termsSectionIds) {
+    $matches = [regex]::Matches($termsHtml, 'id="' + [regex]::Escape($sectionId) + '"')
+    Assert-Equal $matches.Count 1 "Terms section '$sectionId' count: $($route.Locale)"
+    $sectionPositions += $matches[0].Index
+  }
+  for ($sectionIndex = 1; $sectionIndex -lt $sectionPositions.Count; $sectionIndex++) {
+    if ($sectionPositions[$sectionIndex] -le $sectionPositions[$sectionIndex - 1]) {
+      throw "Terms section order mismatch: $($route.Locale)"
+    }
+  }
+
+  Assert-Equal ([regex]::Matches($termsHtml, '<h1(?:\s|>)').Count) 1 "Terms H1 count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($termsHtml, '<main(?:\s|>)').Count) 1 "Terms main count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($termsHtml, '<meta name="robots" content="noindex, follow">').Count) 1 "Terms robots meta: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($termsHtml, '<link rel="canonical" href="' + [regex]::Escape($route.Canonical) + '">').Count) 1 "Terms canonical: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($termsHtml, 'rel="alternate" hreflang=').Count) 5 "Terms hreflang count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($termsHtml, 'hreflang="x-default" href="https://lvb\.kr/terms/"').Count) 1 "Terms x-default: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($termsHtml, '<html lang="' + [regex]::Escape($route.Locale) + '">').Count) 1 "Terms html lang: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($termsHtml, 'application/ld\+json').Count) 0 "Terms JSON-LD count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($termsHtml, 'datetime="2026-08-12"').Count) 2 "Terms approved date count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($termsHtml, 'Effective date|\uC2DC\uD589\uC77C|\u65BD\u884C\u65E5|\u751F\u6548\u65E5\u671F').Count) 1 "Terms effective-date copy count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($termsHtml, '2026-08-11').Count) 0 "Terms obsolete date count: $($route.Locale)"
+  foreach ($languagePath in $expectedTermsLanguagePaths) {
+    if ($termsHtml -notmatch 'href="' + [regex]::Escape($languagePath) + '"') {
+      throw "Terms language path '$languagePath' is missing: $($route.Locale)"
+    }
+  }
+  if ($termsHtml -notmatch 'href="' + [regex]::Escape($route.FooterPath) + '"[^>]*aria-current="page"') {
+    throw "Terms Footer active link is missing: $($route.Locale)"
+  }
+  if ($termsHtml -notmatch 'href="' + [regex]::Escape($route.PrivacyPath) + '"') {
+    throw "Terms-to-Privacy link is missing: $($route.Locale)"
+  }
+  foreach ($disallowed in $disallowedTermsCopy) {
+    if ($termsHtml.IndexOf($disallowed, [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
+      throw "Disallowed Terms text '$disallowed' found: $($route.Locale)"
+    }
+  }
+  foreach ($requiredFact in @('Steam', 'Epic Games Store', 'Epic Online Services(EOS)', 'EOS UserCloud')) {
+    if ($termsHtml.IndexOf($requiredFact, [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+      throw "Required Terms fact '$requiredFact' is missing: $($route.Locale)"
     }
   }
 }
@@ -384,6 +496,10 @@ $requiredFiles = @(
   'dist\ko\privacy\index.html',
   'dist\ja\privacy\index.html',
   'dist\zh-cn\privacy\index.html',
+  'dist\terms\index.html',
+  'dist\ko\terms\index.html',
+  'dist\ja\terms\index.html',
+  'dist\zh-cn\terms\index.html',
   'dist\ko\index.html',
   'dist\ja\index.html',
   'dist\zh-cn\index.html',
@@ -406,13 +522,14 @@ foreach ($relativePath in $requiredFiles) {
 
 $htmlFiles = @(Get-ChildItem -LiteralPath (Join-Path $siteRoot 'dist') -Recurse -File -Filter '*.html')
 $regularHtml = @($htmlFiles | Where-Object { $_.Name -ne '404.html' })
-Assert-Equal $htmlFiles.Count 33 'Total production HTML count'
-Assert-Equal $regularHtml.Count 32 'Regular production HTML count'
+Assert-Equal $htmlFiles.Count 37 'Total production HTML count'
+Assert-Equal $regularHtml.Count 36 'Regular production HTML count'
 
 $sitemap = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'dist\sitemap-0.xml')
 $sitemapCount = ([regex]::Matches($sitemap, '<url>')).Count
 Assert-Equal $sitemapCount 28 'Sitemap URL count'
 if ($sitemap -match '/privacy/') { throw 'Privacy routes must be excluded from the sitemap.' }
+if ($sitemap -match '/terms/') { throw 'Terms routes must be excluded from the sitemap.' }
 
 $profilePairs = @(
   [PSCustomObject]@{
