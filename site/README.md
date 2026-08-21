@@ -36,9 +36,9 @@ Node 기준은 `.nvmrc`, 패키지 고정은 `package-lock.json`을 따른다.
 - `src/components/pages/GameDetailPage.astro`가 MushHero와 Mush Dash 상세 구조를 공유한다.
 - `src/components/pages/AboutPage.astro`가 네 locale About 구조, 소규모 팀 소개, 스튜디오 위치·Google 지도를 공유하고 `src/components/about/TeamMembers.astro`가 `team.ts` 기반 팀원 카드를 출력한다.
 - `src/components/pages/NewsPage.astro`와 `src/components/news/NewsItemCard.astro`가 네 locale의 최신순 단일 News & Press 목록을 공유한다.
-- `src/components/pages/PressPage.astro`가 `src/data/press.ts`와 기존 회사·게임·News 데이터를 조합해 네 locale Press Kit을 출력한다.
+- `src/components/pages/PressPage.astro`가 `src/data/press.ts`와 기존 회사·게임 데이터를 조합해 네 locale Press Kit을 출력한다. Recent Press는 News 페이지와 중복하지 않는다.
 - `src/components/media/MediaGallery.astro`가 게임 상세와 Press의 native scroll-snap, 무 JavaScript 원본 링크, progressive `dialog` lightbox를 공유한다. `ClickToLoadVideo.astro`는 검증된 URL과 poster가 모두 있을 때만 사용자 클릭 후 iframe을 만든다.
-- `src/components/ui/MotionEnhancements.astro`와 `src/styles/motion.css`가 법률 페이지를 제외한 섹션의 일회성 progressive reveal과 reduced-motion 정책을 관리한다. Home Hero는 첫 이미지를 LCP로 유지하고 보조 2장은 load 이후 연결한다.
+- `src/components/ui/MotionEnhancements.astro`와 `src/styles/motion.css`가 법률 페이지를 제외한 섹션의 일회성 progressive reveal, 내부 block stagger와 reduced-motion 정책을 관리한다. Home Hero는 첫 이미지를 LCP로 유지하고 보조 2장은 load 이후 연결한다. Home의 공식 JPG fallback은 `src/data/homeMedia.ts`가 `public/home/assets/`의 640/1280 WebP 파생본과 연결한다.
 - `src/components/pages/NewsArticlePage.astro`와 동적 `[slug].astro`가 네 locale 자체 글을 생성하고 `ArticleStructuredData.astro`가 Article JSON-LD를 출력한다.
 - `src/components/pages/GamesPage.astro`가 네 locale Our Games 구조를 공유하고 `src/components/games/`가 주력·출시작 위계를 구성한다.
 - `src/components/game-detail/`은 공통 섹션 컴포넌트다.
@@ -71,6 +71,8 @@ Contact 문의 범위는 비즈니스, 파트너십, 행사·전시, 크리에�
 News & Press는 네 locale route와 Header·Footer 링크를 제공한다. 외부 7건은 원문 새 탭, 내부 글은 대응 locale 상세 route의 같은 탭으로 연결하며 모든 항목은 최신순 단일 목록에 한 번씩 표시한다. 기사 본문·이미지 복제·Featured 분리·자동 수집 기능은 포함하지 않는다. 추가 기준은 `../docs/NEWS.md`를 따른다.
 
 Press 다운로드는 `public/press/downloads/`의 정적 ZIP 3개와 `public/press/assets/`의 공식 게임 스크린샷 6개를 사용한다. 개별 브랜드 PNG·게임 JPG도 로컬 파일로 내려받으며 source URL·SHA·archive 내용과 재생성 절차는 `../docs/PRESS_KIT.md`가 단일 운영 기록이다. 서버 Function이나 runtime scraping은 사용하지 않는다.
+
+Home은 같은 로컬 Press screenshot manifest에서 MushHero·Mush Dash 각각 첫 2장을 독립 쇼케이스에 사용하고, MushHero 첫 3장은 Hero rotator에 사용한다. 화면 전송은 Home 전용 640/1280 WebP 파생본을 우선하고 Press JPG 원본을 fallback으로 보존한다. 향후 사용자 승인 자산의 검토·교체 작업 공간은 `../references/press-assets/README.md`를 따른다. 이 references 폴더는 자동으로 public 자산과 동기화되지 않는다.
 
 자체 News 상세 route는 sitemap과 Article JSON-LD에 포함한다. RSS는 자체 글 운영량과 배포 요구가 확정될 때 재검토한다.
 

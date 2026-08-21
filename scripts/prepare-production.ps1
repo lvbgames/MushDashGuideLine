@@ -617,6 +617,25 @@ foreach ($asset in $pressScreenshotFiles) {
   Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $distAsset).Hash $asset.Hash "Built Press screenshot hash: $($asset.Path)"
 }
 
+$homeResponsiveFiles = @(
+  [PSCustomObject]@{ Path = 'home\assets\mushhero-01-640.webp'; Hash = 'E875C7ECF44AB1732C97573C086FBE1C576AD0FC03E2282BE0939F52E412DDCA' },
+  [PSCustomObject]@{ Path = 'home\assets\mushhero-01-1280.webp'; Hash = '462059C60B0D1B327243135A41242401107D6D40D5A0A26BE8FB1C194414E106' },
+  [PSCustomObject]@{ Path = 'home\assets\mushhero-02-640.webp'; Hash = 'C720F1A943FD9C386A3CD9E9E8CB18D7BD1852A72420667B24B1E08204CBD988' },
+  [PSCustomObject]@{ Path = 'home\assets\mushhero-02-1280.webp'; Hash = '304C98A425301688518272898641D5405ACFC2EB9620B0C09135E9F539808F42' },
+  [PSCustomObject]@{ Path = 'home\assets\mushhero-03-640.webp'; Hash = 'EC7D61100B41D79881E2F9940ABAE3544D3A2A5485A181FB02FC54E8465FA884' },
+  [PSCustomObject]@{ Path = 'home\assets\mushhero-03-1280.webp'; Hash = '501B6913D0307F1CA814E5A67B3157D729CE1B00652EF65E60443389D6A53D5F' },
+  [PSCustomObject]@{ Path = 'home\assets\mushdash-01-640.webp'; Hash = 'CDCA3A488C2B6A58E4C498383D618F4164BBC8806D156352892E16D1A8530353' },
+  [PSCustomObject]@{ Path = 'home\assets\mushdash-01-1280.webp'; Hash = 'E3342F00EC0C7075CB135C58E374C39D582A39E757B3323B5260E13A8C13F5B6' },
+  [PSCustomObject]@{ Path = 'home\assets\mushdash-02-640.webp'; Hash = '6F8EE82D56DA8698E1A60DC351AF22D2222EFD51336010F14EA8B98F4BD9BF70' },
+  [PSCustomObject]@{ Path = 'home\assets\mushdash-02-1280.webp'; Hash = 'CB14D9402AFDCEEFDCFB679508527FC2F6F38DF75E6082591F8C8CF359210A28' }
+)
+foreach ($asset in $homeResponsiveFiles) {
+  $publicAsset = Join-Path $siteRoot "public\$($asset.Path)"
+  $distAsset = Join-Path $siteRoot "dist\$($asset.Path)"
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $publicAsset).Hash $asset.Hash "Home responsive source hash: $($asset.Path)"
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $distAsset).Hash $asset.Hash "Built Home responsive hash: $($asset.Path)"
+}
+
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $pressArchives = @(
   [PSCustomObject]@{ Name = 'lvb-brand-assets.zip'; Hash = 'B9281432DD14EDB034B3691D32262F9A07A86B9055B911C0EA1DE8427D3A696B'; Entries = @('brand/lvb-logo.png', 'brand/lvb-symbol.png', 'USAGE.txt') },
@@ -649,13 +668,22 @@ foreach ($pressPath in @('dist\press\index.html', 'dist\ko\press\index.html', 'd
   Assert-Equal ([regex]::Matches($pressHtml, 'href="/press/downloads/[^"]+\.zip" download="[^"]+\.zip"').Count) 3 "Press ZIP download links: $pressPath"
   Assert-Equal ([regex]::Matches($pressHtml, 'href="/brand/[^"]+\.png" download="[^"]+\.png"').Count) 2 "Press brand downloads: $pressPath"
   Assert-Equal ([regex]::Matches($pressHtml, 'class="media-gallery__item"').Count) 6 "Press gallery item count: $pressPath"
-  Assert-Equal ([regex]::Matches($pressHtml, 'src="/press/assets/(?:mushhero|mushdash)/[^"]+\.jpg"').Count) 6 "Press local screenshot count: $pressPath"
+  Assert-Equal ([regex]::Matches($pressHtml, 'src="/press/assets/(?:mushhero|mushdash)/[^"]+\.jpg"').Count) 8 "Press local screenshot count: $pressPath"
+  Assert-Equal ([regex]::Matches($pressHtml, 'press-recent|press-recent-title|class="news-card"').Count) 0 "Removed Press recent coverage UI: $pressPath"
 }
 
 Assert-Equal ([regex]::Matches($indexHtml, '<img[^>]+data-hero-slide').Count) 3 'Home Hero slide count'
 Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-dot').Count) 3 'Home Hero pagination count'
 Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-playback').Count) 1 'Home Hero playback control count'
 Assert-Equal ([regex]::Matches($indexHtml, 'loading="eager" decoding="async" fetchpriority="high"').Count -ge 1) $true 'Home Hero eager image'
+$homeMushHeroShowcase = [regex]::Match($indexHtml, '(?s)<section[^>]+data-home-game-showcase="mushhero".*?</section>').Value
+$homeMushDashShowcase = [regex]::Match($indexHtml, '(?s)<section[^>]+data-home-game-showcase="mushdash".*?</section>').Value
+Assert-Equal ([bool]$homeMushHeroShowcase) $true 'Home MushHero showcase'
+Assert-Equal ([bool]$homeMushDashShowcase) $true 'Home Mush Dash showcase'
+Assert-Equal ([regex]::Matches($homeMushHeroShowcase, 'data-home-game-image').Count) 2 'Home MushHero showcase image count'
+Assert-Equal ([regex]::Matches($homeMushDashShowcase, 'data-home-game-image').Count) 2 'Home Mush Dash showcase image count'
+Assert-Equal ([regex]::Matches($homeMushHeroShowcase + $homeMushDashShowcase, 'src="/press/assets/(?:mushhero|mushdash)/[^"]+\.jpg"').Count) 4 'Home local showcase image count'
+Assert-Equal ([regex]::Matches($indexHtml, '/home/assets/(?:mushhero|mushdash)-\d{2}-640\.webp 640w, /home/assets/(?:mushhero|mushdash)-\d{2}-1280\.webp 1280w').Count) 7 'Home responsive image source-set count'
 foreach ($gameDetailPath in @('dist\games\mushhero\index.html', 'dist\games\mushdash\index.html')) {
   $gameDetailHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $gameDetailPath)
   Assert-Equal ([regex]::Matches($gameDetailHtml, 'class="media-gallery__item"').Count) 3 "Game gallery item count: $gameDetailPath"

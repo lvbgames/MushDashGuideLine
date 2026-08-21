@@ -1,10 +1,11 @@
 # Press Kit
 
-- 네 locale Press Kit은 `site/src/data/press.ts`의 표시 문구·브랜드 asset metadata와 기존 회사·게임·연락처·News 데이터를 조합한다.
+- 네 locale Press Kit은 `site/src/data/press.ts`의 표시 문구·브랜드 asset metadata와 기존 회사·게임·연락처 데이터를 조합한다. News 목록은 `/news/`에서만 제공하고 Press Kit에는 Recent Press를 중복 표시하지 않는다.
 - 공개 브랜드 원본은 `/brand/lvb-logo.png`, `/brand/lvb-symbol.png`이며 개별 PNG와 정적 ZIP에서 같은 승인 원본을 제공한다. 사용 안내는 기사·보도 목적임을 설명할 뿐 새로운 상표 라이선스를 만들지 않는다.
 - Steam CDN 스크린샷은 `games.ts`의 검증 URL에서 2026-08-21에 내려받은 원본 byte를 `/press/assets/`에 보존한다. crop·resize·re-encode하지 않으며 외부 기사·블로그·행사 촬영 이미지와 본문은 포함하지 않는다.
 - 브랜드 자료 용도 안내는 Lv.B와 게임의 기사·보도 목적 범위로 제한한다.
 - 다운로드 manifest의 단일 원본은 `site/src/data/press.ts`다. 화면은 로컬 자산만 다운로드하고, `scripts/prepare-production.ps1`은 public/dist byte·SHA, ZIP entry와 화면 링크를 함께 검증한다.
+- 향후 사용자 승인 자산은 먼저 `references/press-assets/{brand,mushhero,mushdash}/`에서 검토한다. 이 폴더는 자동 배포되지 않으며, 승인 후 public 경로·manifest·SHA·필요한 ZIP을 명시적으로 갱신한다.
 
 ## Local screenshot manifest
 

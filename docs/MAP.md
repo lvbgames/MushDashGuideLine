@@ -6,6 +6,7 @@ Homepage/
 ├─ references/
 │  ├─ Reference.png         # 초기 참고 이미지
 │  ├─ Profile/              # 사용자 제공 팀 프로필 원본; 사이트 복사본과 분리 보존
+│  ├─ press-assets/         # 승인 전 브랜드·게임 자산 교체/추가 작업 공간
 │  └─ reviews/              # 단계별 시각 QA 캡처
 ├─ site/                    # 신규 Astro 정적 사이트
 ├─ docs/                    # 상태·콘텐츠·스타일·다국어 문서
@@ -27,7 +28,7 @@ Homepage/
 - `site/src/components/pages/TermsPage.astro`, `site/src/components/terms/`, `site/src/components/legal/`: 네 locale Terms Hero·본문과 Privacy/Terms 공통 목차 조립.
 - `site/src/components/news/NewsItemCard.astro`: locale별 제목·요약과 외부 원문 링크를 출력하는 텍스트 카드.
 - `site/src/components/game-detail/`: Hero, Overview, Feature Grid, Featured Screenshot, Gallery, Purchase CTA, More Games 섹션.
-- `site/src/components/home/`: Home 전용 섹션. Mush Dash 영역은 locale별 상세 CTA를 포함한다.
+- `site/src/components/home/`: Home 전용 섹션. `GameShowcaseSection.astro`가 MushHero·Mush Dash의 동등한 정보 위계, locale별 CTA와 게임별 로컬 이미지 2장을 공유한다.
 - `site/src/components/games/`: Our Games Hero, MushHero 주력 영역, Mush Dash 출시작 영역.
 - `site/src/components/about/TeamMembers.astro`: `team.ts` 기반 팀원 카드와 승인 프로필 이미지·브랜드 대체 표시.
 - `site/src/components/layout/`: Header, Footer, 모바일 내비게이션, 언어 전환.

@@ -21,10 +21,10 @@
 - About 스튜디오 위치는 desktop에서 주소·설명·지도 CTA와 16:9 Google 지도를 2열로, mobile에서 1열로 배치한다. 지도는 raised surface·기존 border/radius를 사용하며 별도 glow나 지도 라이브러리를 추가하지 않는다.
 - About 팀 소개는 desktop에서 소개와 팀원 카드 영역을 나누고 카드 2개를 나란히, mobile에서 카드 1열로 표시한다. 프로필은 4:5 영역을 유지하며 이미지가 `null`이면 기존 Lv.B symbol을 중립적으로 표시한다.
 - News & Press는 Featured 위계 없이 모든 항목을 같은 정보 구조의 최신순 단일 목록으로 표시한다. mobile은 1열, desktop은 메타와 본문을 나눈 읽기 좋은 세로 목록을 사용한다.
-- Press Kit은 짧은 Hero 뒤에 회사·게임·브랜드·스크린샷·주요 정보·최근 보도·연락처를 순서대로 배치한다. 첫 화면 이하 이미지는 lazy loading하고 브랜드 원본과 16:9 스크린샷 비율을 유지한다.
-- Motion token은 `motion.css`의 fast 180ms, normal 320ms, slow 460ms, 16px reveal distance와 공통 ease-out을 사용한다. 기본 콘텐츠는 visible이며 JavaScript와 IntersectionObserver가 모두 가능할 때만 섹션을 한 번 reveal한다. `prefers-reduced-motion: reduce`에서는 reveal·hover 이동·smooth 이동·Home 자동 전환을 제거한다.
+- Press Kit은 여유 있는 Hero 뒤에 회사·게임·브랜드·다운로드·스크린샷·주요 정보·연락처를 순서대로 배치한다. News/Recent Press를 중복 노출하지 않으며 첫 화면 이하 이미지는 lazy loading하고 브랜드 원본과 16:9 스크린샷 비율을 유지한다.
+- Motion token은 `motion.css`의 fast 180ms, normal 320ms, slow 560ms, 32px section reveal distance, 75ms item stagger와 공통 ease-out을 사용한다. 기본 콘텐츠는 visible이며 JavaScript와 IntersectionObserver가 모두 가능할 때만 섹션과 명시된 내부 블록을 한 번 reveal한다. `prefers-reduced-motion: reduce`에서는 reveal·stagger·hover 이동·smooth 이동·Home 자동 전환을 제거한다.
 - Reveal은 Home·Games·게임 상세·About·News·Press·자체 News·Contact에만 적용하고 Privacy·Terms에는 적용하지 않는다. 카드 hover lift는 3~4px, 이미지 확대는 최대 약 1.03, CTA 화살표 이동은 4~6px 범위로 제한하며 `:focus-visible`에 동등한 상태를 둔다.
-- Home Hero는 공식 MushHero 3장을 crossfade하며 첫 이미지만 eager/high priority로 유지한다. 게임 상세와 Press 스크린샷은 공통 native scroll-snap·`dialog` lightbox를 사용하고 JavaScript가 없을 때도 스크롤과 원본 링크가 동작한다.
+- Home Hero는 로컬 공식 MushHero 3장을 crossfade하며 첫 이미지만 eager/high priority로 유지한다. 이어지는 MushHero·Mush Dash 쇼케이스는 같은 정보 위계에서 각각 로컬 공식 이미지 2장을 교차 배치한다. 게임 상세와 Press 스크린샷은 공통 native scroll-snap·`dialog` lightbox를 사용하고 JavaScript가 없을 때도 스크롤과 원본 링크가 동작한다.
 - 자체 News 상세는 본문 폭을 제한하고 article Hero·메타·섹션 위계를 사용한다. 외부 News 카드와 달리 내부 화살표 CTA로 같은 탭에서 이동한다.
 - 팀 프로필은 4:5 카드 crop을 유지하며 640·1024 WebP srcset과 승인 PNG fallback을 사용한다.
 - Privacy와 Terms는 같은 Legal Hero, mobile details 목차, desktop sticky 목차, 본문·print 스타일을 사용한다. 문서별 데이터와 본문 컴포넌트는 분리하고 목차처럼 안전한 표시 컴포넌트만 공통화한다.

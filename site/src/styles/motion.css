@@ -1,29 +1,77 @@
 :root {
   --motion-fast: 180ms;
   --motion-normal: 320ms;
-  --motion-slow: 460ms;
-  --motion-distance: 1rem;
+  --motion-slow: 560ms;
+  --motion-distance: 2rem;
+  --motion-inline-distance: .75rem;
+  --motion-item-distance: 1.35rem;
+  --motion-stagger: 75ms;
   --motion-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.motion-enabled [data-motion-page] {
+  overflow-x: clip;
+}
+
 .motion-enabled .motion-reveal {
+  --motion-x: 0rem;
   transition: opacity var(--motion-slow) var(--motion-ease-out), transform var(--motion-slow) var(--motion-ease-out);
+  will-change: opacity, transform;
+}
+
+.motion-enabled .motion-reveal[data-motion-direction="left"] {
+  --motion-x: calc(var(--motion-inline-distance) * -1);
+}
+
+.motion-enabled .motion-reveal[data-motion-direction="right"] {
+  --motion-x: var(--motion-inline-distance);
 }
 
 .motion-enabled .motion-reveal:not(.is-revealed) {
   opacity: 0;
-  transform: translateY(var(--motion-distance));
+  transform: translate3d(var(--motion-x), var(--motion-distance), 0) scale(.992);
 }
 
 .motion-enabled .motion-reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+.motion-enabled .motion-reveal .motion-reveal__item {
+  --motion-item-x: 0rem;
+  transition:
+    opacity var(--motion-slow) var(--motion-ease-out),
+    transform var(--motion-slow) var(--motion-ease-out);
+  transition-delay: calc(80ms + var(--motion-order, 0) * var(--motion-stagger));
+}
+
+.motion-enabled .motion-reveal[data-motion-direction="left"] .motion-reveal__item:nth-child(even),
+.motion-enabled .motion-reveal[data-motion-direction="right"] .motion-reveal__item:nth-child(odd) {
+  --motion-item-x: var(--motion-item-distance);
+}
+
+.motion-enabled .motion-reveal[data-motion-direction="left"] .motion-reveal__item:nth-child(odd),
+.motion-enabled .motion-reveal[data-motion-direction="right"] .motion-reveal__item:nth-child(even) {
+  --motion-item-x: calc(var(--motion-item-distance) * -1);
+}
+
+.motion-enabled .motion-reveal:not(.is-revealed) .motion-reveal__item {
+  opacity: 0;
+  transform: translate3d(var(--motion-item-x), var(--motion-item-distance), 0) scale(.985);
+}
+
+.motion-enabled .motion-reveal.is-revealed .motion-reveal__item {
   opacity: 1;
   transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .motion-reveal,
-  .motion-reveal.is-revealed {
+  .motion-reveal.is-revealed,
+  .motion-reveal .motion-reveal__item {
     opacity: 1 !important;
     transform: none !important;
+    transition: none !important;
   }
 }

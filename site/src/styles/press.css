@@ -1,9 +1,18 @@
 .press-page { background: var(--color-page); }
 
 .press-hero {
-  padding-block: clamp(var(--space-14), 10vw, var(--space-24));
+  padding-block: clamp(5.5rem, 12.5vw, 8rem) clamp(4.5rem, 9vw, 6.5rem);
   border-bottom: 1px solid var(--color-border);
   background: linear-gradient(135deg, rgb(var(--color-brand-accent-rgb) / 0.08), transparent 45%), var(--color-brand-surface);
+}
+
+.press-hero > .container {
+  display: grid;
+  gap: 0;
+}
+
+.press-hero .eyebrow {
+  margin: 0 0 clamp(var(--space-6), 4vw, var(--space-10));
 }
 
 .press-hero h1,
@@ -21,7 +30,7 @@
 .press-section-heading > p:last-child,
 .press-contact p {
   max-width: 46rem;
-  margin: var(--space-5) 0 0;
+  margin: clamp(var(--space-6), 3vw, var(--space-8)) 0 0;
   color: var(--color-text-secondary);
 }
 
@@ -91,7 +100,6 @@
 .press-facts dd { margin: 0; color: var(--color-text); font-weight: 750; overflow-wrap: break-word; }
 .press-facts a { color: var(--color-brand-cream); }
 
-.press-recent { background: var(--color-page); }
 .press-contact { background: var(--color-brand-surface-warm); }
 .press-contact__inner { display: grid; gap: var(--space-8); align-items: end; }
 .press-contact__inner > div:last-child { display: grid; gap: var(--space-4); justify-items: start; }

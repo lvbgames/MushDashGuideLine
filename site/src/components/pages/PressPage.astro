@@ -2,7 +2,6 @@
 import { company } from '../../data/company';
 import { contactPolicy } from '../../data/contact';
 import { games } from '../../data/games';
-import { newsItems } from '../../data/news';
 import { pressAssets, pressDownloads, pressScreenshots, pressTranslations } from '../../data/press';
 import { siteConfig } from '../../config/site';
 import type { Locale } from '../../i18n/config';
@@ -10,7 +9,6 @@ import { getTranslation } from '../../i18n/translations';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/press.css';
 import GameStoreButtons from '../game/GameStoreButtons.astro';
-import NewsItemCard from '../news/NewsItemCard.astro';
 import SiteFooter from '../layout/SiteFooter.astro';
 import SiteHeader from '../layout/SiteHeader.astro';
 import ButtonLink from '../ui/ButtonLink.astro';
@@ -24,12 +22,7 @@ interface Props {
 const { locale } = Astro.props;
 const translation = getTranslation(locale);
 const press = pressTranslations[locale];
-const mushHero = games.find((game) => game.slug === 'mushhero');
-const ogImage = mushHero?.screenshots[0]?.src;
-const recentPress = newsItems
-  .filter((item) => item.type === 'external')
-  .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
-  .slice(0, 4);
+const ogImagePath = pressScreenshots.find((asset) => asset.game === 'mushhero')?.path;
 const mailtoHref = `mailto:${contactPolicy.businessEmail}?subject=${encodeURIComponent(translation.contact.mailtoSubject)}&body=${encodeURIComponent(translation.contact.mailtoBodyTemplate)}`;
 const releaseLabels = {
   upcoming: translation.common.coming2027,
@@ -54,9 +47,10 @@ const galleryItems = pressScreenshots.map((asset) => {
   };
 });
 
-if (!ogImage) {
+if (!ogImagePath) {
   throw new Error('Press Kit requires a verified MushHero image.');
 }
+const ogImage = new URL(ogImagePath, Astro.site ?? 'https://lvb.kr').href;
 ---
 
 <BaseLayout
@@ -79,7 +73,7 @@ if (!ogImage) {
 
     <section class="press-about page-section" aria-labelledby="press-about-title">
       <Container className="press-about__inner">
-        <div>
+        <div data-motion-item>
           <p class="eyebrow">{press.aboutEyebrow}</p>
           <h2 id="press-about-title">{press.aboutTitle}</h2>
           <p data-press-boilerplate>{translation.about.heroDescription}</p>
@@ -93,7 +87,7 @@ if (!ogImage) {
           >{press.copyBoilerplate}</button>
           <span class="screen-reader" aria-live="polite" data-press-copy-status></span>
         </div>
-        <div class="press-about__identity" aria-label={`${company.name} / ${company.alternateName}`}>
+        <div class="press-about__identity" aria-label={`${company.name} / ${company.alternateName}`} data-motion-item>
           <img src="/brand/lvb-logo.png" width="1876" height="769" alt="Lv.B" loading="lazy" decoding="async" />
         </div>
       </Container>
@@ -101,18 +95,18 @@ if (!ogImage) {
 
     <section class="press-games page-section" aria-labelledby="press-games-title">
       <Container>
-        <div class="press-section-heading">
+        <div class="press-section-heading" data-motion-item>
           <p class="eyebrow">{press.gamesEyebrow}</p>
           <h2 id="press-games-title">{press.gamesTitle}</h2>
         </div>
         <div class="press-games__grid">
           {games.map((game) => {
-            const image = game.screenshots[0] ?? game.heroImage;
+            const image = pressScreenshots.find((asset) => asset.game === game.slug);
             const gameCopy = game.slug === 'mushhero' ? translation.gamesPage.featuredDescription : translation.gamesPage.releasedDescription;
             const imageAlt = translation.gamesPage.gameImageAlts[game.slug];
             return (
-              <article class:list={['press-game', `press-game--${game.slug}`]}>
-                {image && <img src={image.src} width={image.width} height={image.height} alt={imageAlt} loading="lazy" decoding="async" />}
+              <article class:list={['press-game', `press-game--${game.slug}`]} data-motion-item>
+                {image && <img src={image.path} width={image.width} height={image.height} alt={imageAlt} loading="lazy" decoding="async" />}
                 <div class="press-game__body">
                   <div class="press-game__meta">
                     <span>{press.gameGenres[game.slug]}</span>
@@ -131,14 +125,14 @@ if (!ogImage) {
 
     <section class="press-brand page-section" aria-labelledby="press-brand-title">
       <Container>
-        <div class="press-section-heading">
+        <div class="press-section-heading" data-motion-item>
           <p class="eyebrow">{press.brandEyebrow}</p>
           <h2 id="press-brand-title">{press.brandTitle}</h2>
           <p>{press.brandDescription}</p>
         </div>
         <div class="press-brand__grid">
           {pressAssets.map((asset) => (
-            <article class="press-brand-card">
+            <article class="press-brand-card" data-motion-item>
               <div class="press-brand-card__preview">
                 <img src={asset.path} width={asset.width} height={asset.height} alt={press.assetLabels[asset.id]} loading="lazy" decoding="async" />
               </div>
@@ -159,13 +153,13 @@ if (!ogImage) {
 
     <section class="press-downloads page-section" aria-labelledby="press-downloads-title">
       <Container>
-        <div class="press-section-heading">
+        <div class="press-section-heading" data-motion-item>
           <p class="eyebrow">{press.downloadsEyebrow}</p>
           <h2 id="press-downloads-title">{press.downloadsTitle}</h2>
         </div>
         <div class="press-downloads__grid">
           {pressDownloads.map((download) => (
-            <article class="press-download-card">
+            <article class="press-download-card" data-motion-item>
               <p>{download.contents}</p>
               <h3>{press.downloadLabels[download.id]}</h3>
               <p>{press.downloadDescriptions[download.id]}</p>
@@ -182,7 +176,7 @@ if (!ogImage) {
 
     <section class="press-screenshots page-section" aria-labelledby="press-screenshots-title">
       <Container>
-        <div class="press-section-heading">
+        <div class="press-section-heading" data-motion-item>
           <p class="eyebrow">{press.screenshotsEyebrow}</p>
           <h2 id="press-screenshots-title">{press.screenshotsTitle}</h2>
         </div>
@@ -200,11 +194,11 @@ if (!ogImage) {
 
     <section class="press-facts page-section" aria-labelledby="press-facts-title">
       <Container>
-        <div class="press-section-heading">
+        <div class="press-section-heading" data-motion-item>
           <p class="eyebrow">{press.factsEyebrow}</p>
           <h2 id="press-facts-title">{press.factsTitle}</h2>
         </div>
-        <dl>
+        <dl data-motion-item>
           <div><dt>{press.factLabels.studio}</dt><dd>{company.name} ({company.alternateName})</dd></div>
           <div><dt>{press.factLabels.basedIn}</dt><dd>{press.basedInValue}</dd></div>
           <div><dt>{press.factLabels.currentGames}</dt><dd>{games.map((game) => game.title).join(', ')}</dd></div>
@@ -214,28 +208,14 @@ if (!ogImage) {
       </Container>
     </section>
 
-    <section class="press-recent page-section" aria-labelledby="press-recent-title">
-      <Container>
-        <div class="press-section-heading">
-          <p class="eyebrow">{press.recentEyebrow}</p>
-          <h2 id="press-recent-title">{press.recentTitle}</h2>
-        </div>
-        <div class="news-list">
-          {recentPress.map((item) => (
-            <NewsItemCard item={item} locale={locale} translation={translation} titleId={`press-${item.slug}`} />
-          ))}
-        </div>
-      </Container>
-    </section>
-
     <section class="press-contact page-section" aria-labelledby="press-contact-title">
       <Container className="press-contact__inner">
-        <div>
+        <div data-motion-item>
           <p class="eyebrow">{press.contactEyebrow}</p>
           <h2 id="press-contact-title">{press.contactTitle}</h2>
           <p>{press.contactDescription}</p>
         </div>
-        <div>
+        <div data-motion-item>
           <ButtonLink href={mailtoHref}>{press.contactCta}</ButtonLink>
           <a class="press-contact__email" href={`mailto:${contactPolicy.businessEmail}`}>{contactPolicy.businessEmail}</a>
         </div>

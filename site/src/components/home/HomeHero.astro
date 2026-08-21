@@ -1,6 +1,7 @@
 ---
 import type { Game } from '../../types/game';
 import type { Translation } from '../../i18n/translations/en';
+import { getHomeImageSrcSet } from '../../data/homeMedia';
 import ButtonLink from '../ui/ButtonLink.astro';
 import Container from '../ui/Container.astro';
 import GameStatusBadge from '../game/GameStatusBadge.astro';
@@ -23,20 +24,26 @@ const statusLabels = {
 
 <section class="home-hero" aria-labelledby="home-hero-title">
   <div class="home-hero__media" data-hero-rotator>
-    {heroImages.map((image, index) => (
-      <img
-        class:list={['home-hero__image', { 'is-active': index === 0 }]}
-        src={index === 0 ? image.src : undefined}
-        data-src={index > 0 ? image.src : undefined}
-        data-hero-slide
-        width={image.width}
-        height={image.height}
-        alt=""
-        loading={index === 0 ? 'eager' : 'lazy'}
-        decoding="async"
-        fetchpriority={index === 0 ? 'high' : 'low'}
-      />
-    ))}
+    {heroImages.map((image, index) => {
+      const srcset = getHomeImageSrcSet(image.src);
+      return (
+        <img
+          class:list={['home-hero__image', { 'is-active': index === 0 }]}
+          src={index === 0 ? image.src : undefined}
+          srcset={index === 0 ? srcset : undefined}
+          sizes={index === 0 && srcset ? '100vw' : undefined}
+          data-src={index > 0 ? image.src : undefined}
+          data-srcset={index > 0 ? srcset : undefined}
+          data-hero-slide
+          width={image.width}
+          height={image.height}
+          alt=""
+          loading={index === 0 ? 'eager' : 'lazy'}
+          decoding="async"
+          fetchpriority={index === 0 ? 'high' : 'low'}
+        />
+      );
+    })}
   </div>
   <div class="home-hero__veil" aria-hidden="true"></div>
   <Container className="home-hero__inner">
@@ -93,6 +100,7 @@ const statusLabels = {
 
     const loadSecondary = () => slides.slice(1).forEach((slide) => {
       if (!slide.src && slide.dataset.src) slide.src = slide.dataset.src;
+      if (!slide.srcset && slide.dataset.srcset) slide.srcset = slide.dataset.srcset;
     });
     const show = (nextIndex: number, announce = false) => {
       index = (nextIndex + slides.length) % slides.length;

@@ -1,16 +1,16 @@
 ---
 import { games } from '../../data/games';
+import { pressScreenshots } from '../../data/press';
 import { socialLinks } from '../../data/socialLinks';
 import { getLocalePath, type Locale } from '../../i18n/config';
 import { getTranslation } from '../../i18n/translations';
+import type { Game, GameImage, GameSlug } from '../../types/game';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AboutPreview from '../home/AboutPreview.astro';
 import CommunityPreview from '../home/CommunityPreview.astro';
 import ContactPreview from '../home/ContactPreview.astro';
-import FeaturedGameSection from '../home/FeaturedGameSection.astro';
-import GamesOverview from '../home/GamesOverview.astro';
+import GameShowcaseSection from '../home/GameShowcaseSection.astro';
 import HomeHero from '../home/HomeHero.astro';
-import MushDashSection from '../home/MushDashSection.astro';
 import SiteFooter from '../layout/SiteFooter.astro';
 import SiteHeader from '../layout/SiteHeader.astro';
 
@@ -27,10 +27,29 @@ if (!mushHero || !mushDash) {
   throw new Error('Home requires MushHero and Mush Dash data.');
 }
 
-const ogImage = mushHero.screenshots[0]?.src ?? mushHero.heroImage?.src;
-if (!ogImage) {
+const getLocalScreenshots = (slug: GameSlug): readonly GameImage[] => pressScreenshots
+  .filter((asset) => asset.game === slug)
+  .slice(0, 3)
+  .map((asset, index) => ({
+    src: asset.path,
+    width: asset.width,
+    height: asset.height,
+    aspectRatio: asset.width / asset.height,
+    altKey: `${slug} official screenshot ${index + 1}`,
+    purpose: 'screenshot',
+    sourcePage: asset.sourceUrl,
+    lastVerifiedAt: '2026-08-21'
+  }));
+const withLocalScreenshots = (game: Game): Game => ({ ...game, screenshots: getLocalScreenshots(game.slug) });
+const homeMushHero = withLocalScreenshots(mushHero);
+const homeMushDash = withLocalScreenshots(mushDash);
+const mushHeroShowcaseImages = homeMushHero.screenshots.slice(0, 2);
+const mushDashShowcaseImages = homeMushDash.screenshots.slice(0, 2);
+const ogImagePath = homeMushHero.screenshots[0]?.src;
+if (!ogImagePath) {
   throw new Error('Home requires a verified Open Graph image.');
 }
+const ogImage = new URL(ogImagePath, Astro.site ?? 'https://lvb.kr').href;
 ---
 
 <BaseLayout
@@ -43,10 +62,19 @@ if (!ogImage) {
 >
   <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="home" translation={translation} />
   <main data-motion-page>
-    <HomeHero game={mushHero} translation={translation} detailPath={getLocalePath(locale, 'mushhero')} />
-    <FeaturedGameSection game={mushHero} translation={translation} />
-    <GamesOverview featured={mushHero} secondary={mushDash} translation={translation} />
-    <MushDashSection game={mushDash} translation={translation} detailPath={getLocalePath(locale, 'mushdash')} />
+    <HomeHero game={homeMushHero} translation={translation} detailPath={getLocalePath(locale, 'mushhero')} />
+    <GameShowcaseSection
+      game={homeMushHero}
+      images={mushHeroShowcaseImages}
+      translation={translation}
+      detailPath={getLocalePath(locale, 'mushhero')}
+    />
+    <GameShowcaseSection
+      game={homeMushDash}
+      images={mushDashShowcaseImages}
+      translation={translation}
+      detailPath={getLocalePath(locale, 'mushdash')}
+    />
     <AboutPreview translation={translation} aboutPath={getLocalePath(locale, 'about')} />
     <CommunityPreview links={socialLinks} translation={translation} />
     <ContactPreview locale={locale} translation={translation} />

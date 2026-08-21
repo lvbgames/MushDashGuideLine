@@ -34,7 +34,7 @@
 - Contact의 수신 주소와 locale별 subject·body를 percent-decoding해 손상 여부를 확인하고, 사용하지 않는 form·success 코드가 없는지 검사한다.
 - 신규 Astro 페이지의 외부 새 탭 링크는 보안 속성을 검사한다.
 - News 데이터는 source URL·slug 중복 0건, `publishedAt` 내림차순, locale별 제목·요약 존재, 외부 링크 보안 속성을 검사한다. 개인 블로그는 언론 보도로 분류하지 않고 동일 캠페인의 SNS 재게시를 중복 노출하지 않는다.
-- 내부 News는 locale별 같은 slug 상세 route, 같은 탭 링크, Article OG·JSON-LD를 사용하고 외부 원문 표현·아이콘을 사용하지 않는지 검사한다. Press Kit은 네 locale canonical·hreflang·sitemap, 공개 브랜드 원본, lazy screenshot, 최근 외부 News 재사용과 기존 press mailto를 확인한다.
+- 내부 News는 locale별 같은 slug 상세 route, 같은 탭 링크, Article OG·JSON-LD를 사용하고 외부 원문 표현·아이콘을 사용하지 않는지 검사한다. Press Kit은 네 locale canonical·hreflang·sitemap, 공개 브랜드 원본, lazy screenshot, Recent Press UI 0건과 기존 press mailto를 확인한다.
 - Privacy 4개 HTML에서 `noindex, follow`, 자기 canonical, en·ko·ja·zh-CN·x-default, H1·main 각 1개, JSON-LD 0개, 19개 section ID의 일치·순서, locale별 Footer와 LanguageSwitcher 경로를 검사한다.
 - Terms 4개 HTML에서 `noindex, follow`, 자기 canonical, en·ko·ja·zh-CN·x-default, H1·main 각 1개, JSON-LD 0개, 16개 section ID의 일치·순서, locale별 Footer와 LanguageSwitcher 경로를 검사한다. `Last updated`와 `Effective date`는 locale별 표기로 각각 한 번 표시하고 두 `<time>`의 `datetime` 값은 모두 `2026-08-12`여야 한다.
 - Privacy와 Terms의 locale별 상호 링크, Footer active 상태와 `/terms.html` → `/terms/` forced 301을 검사한다. Terms의 Nintendo, 고정 Steam 환불 시간, 미확인 DLC·시즌패스, 지속 업데이트 보장, 전면 면책, 전속 관할, 확인되지 않은 영구정지 문구는 0건이어야 한다.
@@ -57,8 +57,9 @@
 - About 프로필은 640·1024 WebP srcset과 승인 PNG fallback, public·dist WebP byte 일치, 4:5 crop을 검사하고 원본 PNG SHA를 유지한다.
 - JavaScript 비활성 상태에서 첫 Home Hero, 모든 본문, 내비게이션, News, 게임 스크린샷 원본 링크와 Press ZIP/개별 다운로드가 남는지 확인한다. reveal의 CSS 기본 상태는 visible이어야 한다.
 - Home rotator는 공식 이미지 3개, 첫 이미지 eager/high priority, dot 3개, Pause/Play accessible name과 hover·focus·document hidden·reduced-motion 정지를 확인한다.
+- Home의 MushHero·Mush Dash 쇼케이스는 각각 로컬 공식 이미지가 정확히 2개이고 desktop 교차 2열·mobile 1열에서 잘림과 가로 overflow가 없는지 확인한다.
 - 공통 MediaGallery는 native scroll-snap, 이전·다음 label과 경계 disabled, mobile touch scroll, dialog Close·화살표·Escape·backdrop·trigger focus 복귀를 확인한다.
-- Press는 정적 ZIP 3개와 로컬 스크린샷 6개, 개별 PNG/JPG 다운로드, boilerplate Clipboard 상태, public/dist SHA와 ZIP entry integrity를 확인한다. 현재 nullable video URL이 `null`이면 iframe·poster placeholder·영상 UI는 0개여야 한다.
+- Press는 정적 ZIP 3개와 로컬 스크린샷 6개, 개별 PNG/JPG 다운로드, boilerplate Clipboard 상태, public/dist SHA와 ZIP entry integrity를 확인한다. Hero divider 아래 여백과 제목·설명 간격, Recent Press 관련 UI·번역·스타일 0건도 확인한다. 현재 nullable video URL이 `null`이면 iframe·poster placeholder·영상 UI는 0개여야 한다.
 - Home·MushHero·Press·About mobile Lighthouse는 각각 90·90·90·95 이상, 모든 대상 CLS 0.02 이하·TBT 100ms 이하를 유지하고 report JSON과 Chrome 임시 profile은 저장소에 추가하지 않는다.
 
 ## Naver SEO 운영 감사

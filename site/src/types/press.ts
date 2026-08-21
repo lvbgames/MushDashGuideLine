@@ -68,8 +68,6 @@ export interface PressTranslation {
     contact: string;
   };
   basedInValue: string;
-  recentEyebrow: string;
-  recentTitle: string;
   contactEyebrow: string;
   contactTitle: string;
   contactDescription: string;

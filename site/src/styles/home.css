@@ -174,3 +174,186 @@
     transition: none;
   }
 }
+
+.home-game-showcase {
+  position: relative;
+  overflow: clip;
+  isolation: isolate;
+  background: var(--color-brand-surface);
+}
+
+.home-game-showcase::before {
+  position: absolute;
+  z-index: -1;
+  width: min(42rem, 80vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(var(--home-showcase-accent) / .13), transparent 68%);
+  content: '';
+  opacity: .36;
+  pointer-events: none;
+  transform: translate3d(-12%, 12%, 0) scale(.9);
+  transition: opacity 900ms var(--motion-ease-out), transform 1100ms var(--motion-ease-out);
+}
+
+.home-game-showcase--mushhero {
+  --home-showcase-accent: var(--color-mushhero-accent-rgb);
+}
+
+.home-game-showcase--mushdash {
+  --home-showcase-accent: var(--color-mushdash-accent-rgb);
+  background: var(--color-elevated);
+}
+
+.home-game-showcase--mushhero::before {
+  top: -16rem;
+  right: -10rem;
+}
+
+.home-game-showcase--mushdash::before {
+  bottom: -18rem;
+  left: -9rem;
+}
+
+.home-game-showcase.is-revealed::before {
+  opacity: .72;
+  transform: none;
+}
+
+.home-game-showcase__inner {
+  display: grid;
+  gap: clamp(var(--space-8), 7vw, var(--space-16));
+  align-items: center;
+}
+
+.home-game-showcase__content {
+  display: grid;
+  align-content: center;
+  gap: var(--space-4);
+}
+
+.home-game-showcase__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.home-game-showcase__meta .eyebrow,
+.home-game-showcase__name,
+.home-game-showcase h2,
+.home-game-showcase__description {
+  margin: 0;
+}
+
+.home-game-showcase__name {
+  color: rgb(var(--home-showcase-accent));
+  font-size: .86rem;
+  font-weight: 900;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.home-game-showcase h2 {
+  max-width: 13ch;
+  font-size: clamp(2.5rem, 9vw, 5.6rem);
+  letter-spacing: -.06em;
+  line-height: .98;
+}
+
+:lang(ko) .home-game-showcase h2,
+:lang(ja) .home-game-showcase h2,
+:lang(zh-cn) .home-game-showcase h2 {
+  max-width: 15ch;
+  font-size: clamp(2.15rem, 7vw, 4.65rem);
+  letter-spacing: -.035em;
+  line-height: 1.1;
+}
+
+.home-game-showcase__description {
+  max-width: 37rem;
+  color: var(--color-text-secondary);
+  font-size: clamp(1rem, 2vw, 1.12rem);
+}
+
+.home-game-showcase__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.home-game-showcase__gallery {
+  display: grid;
+  gap: clamp(var(--space-3), 2vw, var(--space-5));
+}
+
+.home-game-showcase__gallery figure {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgb(var(--home-showcase-accent) / .38);
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
+}
+
+.home-game-showcase__gallery figure:nth-child(2) {
+  width: 88%;
+  margin-top: clamp(-2.5rem, -4vw, -1rem);
+  margin-left: auto;
+}
+
+.home-game-showcase__gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  transition: transform 700ms var(--motion-ease-out);
+}
+
+@media (min-width: 64rem) {
+  .home-game-showcase__inner {
+    grid-template-columns: minmax(18rem, .82fr) minmax(0, 1.18fr);
+  }
+
+  .home-game-showcase--mushdash .home-game-showcase__content {
+    order: 2;
+  }
+
+  .home-game-showcase--mushdash .home-game-showcase__gallery {
+    order: 1;
+  }
+}
+
+@media (max-width: 30rem) {
+  .home-game-showcase__actions,
+  .home-game-showcase__actions .game-store-buttons {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .home-game-showcase__actions .button-link {
+    width: 100%;
+  }
+
+  .home-game-showcase__gallery figure:nth-child(2) {
+    width: 92%;
+    margin-top: -1.25rem;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-game-showcase__gallery figure:hover img {
+    transform: scale(1.025);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-game-showcase::before,
+  .home-game-showcase__gallery img {
+    transition: none;
+    transform: none;
+  }
+}

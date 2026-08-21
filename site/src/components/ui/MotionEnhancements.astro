@@ -8,7 +8,16 @@
       ...document.querySelectorAll<HTMLElement>('[data-motion-page] [data-reveal]')
     ]));
 
-    targets.forEach((target) => target.classList.add('motion-reveal'));
+    targets.forEach((target, targetIndex) => {
+      target.classList.add('motion-reveal');
+      if (!target.dataset.motionDirection) {
+        target.dataset.motionDirection = targetIndex % 2 === 0 ? 'left' : 'right';
+      }
+      target.querySelectorAll<HTMLElement>('[data-motion-item]').forEach((item, itemIndex) => {
+        item.classList.add('motion-reveal__item');
+        item.style.setProperty('--motion-order', String(Math.min(itemIndex, 5)));
+      });
+    });
 
     if (targets.length > 0) {
       document.documentElement.classList.add('motion-enabled');
@@ -18,7 +27,7 @@
           entry.target.classList.add('is-revealed');
           observer.unobserve(entry.target);
         });
-      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
 
       targets.forEach((target) => observer.observe(target));
     }
