@@ -2,8 +2,8 @@ import type { Translation } from './en';
 
 export const ja: Translation = {
   meta: {
-    homeTitle: 'Lv.B — 韓国のインディーゲームスタジオ',
-    homeDescription: '韓国・釜山を拠点とするインディーゲームスタジオLv.BのMushHeroとMush Dashをご紹介します。',
+    homeTitle: 'Lv.B — 韓国・釜山のインディーゲームスタジオ',
+    homeDescription: 'Lv.Bは韓国・釜山を拠点にMushHeroとMush Dashを開発するインディーゲームスタジオです。',
     gamesTitle: 'ゲーム — Lv.B',
     gamesDescription: 'Lv.Bが手がける二つの異なるマルチプレイ世界、MushHeroとMush Dashをご紹介します。',
     aboutTitle: 'Lv.Bについて — インディーゲームスタジオ',
@@ -15,7 +15,7 @@ export const ja: Translation = {
     mushDashTitle: 'Mush Dash — オンラインパーティーレース | Lv.B',
     mushDashDescription: '最大7人で危険な障害物コースを駆け抜ける、早期アクセス中のオンラインパーティーレースMush Dash。',
     newsTitle: 'ニュース＆プレス — Lv.B',
-    newsDescription: 'Lv.B、MushHero、Mush Dashに関する確認済みのインタビューとメディア掲載情報をご紹介します。'
+    newsDescription: 'Lv.B、MushHero、Mush Dashに関する確認済みのインタビュー、メディア掲載、特集情報をご紹介します。'
   },
   nav: {
     games: 'ゲーム',
@@ -195,12 +195,14 @@ export const ja: Translation = {
   news: {
     heroEyebrow: 'ニュース＆プレス',
     heroTitle: 'Lv.Bの最新情報。',
-    heroDescription: 'スタジオとゲームに関する、確認済みのインタビューとメディア掲載情報をお届けします。',
+    heroDescription: 'スタジオとゲームに関する、確認済みのインタビュー、メディア掲載、特集情報をお届けします。',
     allEyebrow: '掲載一覧',
     allTitle: 'ニュース＆プレス',
     kindLabels: {
       interview: 'インタビュー',
-      'press-coverage': 'メディア掲載'
+      'press-coverage': 'メディア掲載',
+      'blog-review': '試遊レポート',
+      feature: '特集'
     },
     sourceCta: '原文を読む',
     followEyebrow: '公式チャンネル',

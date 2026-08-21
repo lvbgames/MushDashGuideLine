@@ -1,5 +1,6 @@
 ---
 import { newsItems } from '../../data/news';
+import { games } from '../../data/games';
 import { socialLinks } from '../../data/socialLinks';
 import type { Locale } from '../../i18n/config';
 import { getTranslation } from '../../i18n/translations';
@@ -23,8 +24,12 @@ if (sortedItems.length === 0) {
   throw new Error('News requires at least one verified item.');
 }
 
-const site = Astro.site ?? new URL('https://lvb.kr');
-const ogImage = new URL('/brand/lvb-logo.png', site).href;
+const mushHero = games.find((game) => game.slug === 'mushhero');
+const ogImage = mushHero?.screenshots[0]?.src ?? mushHero?.heroImage?.src;
+
+if (!ogImage) {
+  throw new Error('News requires a verified Open Graph image.');
+}
 ---
 
 <BaseLayout
@@ -33,6 +38,7 @@ const ogImage = new URL('/brand/lvb-logo.png', site).href;
   title={translation.meta.newsTitle}
   description={translation.meta.newsDescription}
   ogImage={ogImage}
+  ogImageAlt={translation.gamesPage.gameImageAlts.mushhero}
 >
   <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="news" translation={translation} />
   <main class="news-page">

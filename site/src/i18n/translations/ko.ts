@@ -2,8 +2,8 @@ import type { Translation } from './en';
 
 export const ko: Translation = {
   meta: {
-    homeTitle: 'Lv.B — 한국의 인디 게임 스튜디오',
-    homeDescription: '부산을 기반으로 활동하는 인디 게임 개발사 Lv.B의 MushHero와 Mush Dash를 만나보세요.',
+    homeTitle: 'Lv.B(레벨비) — 부산 인디 게임 개발사',
+    homeDescription: 'Lv.B(레벨비)는 부산에서 MushHero와 Mush Dash를 만드는 인디 게임 개발사입니다.',
     gamesTitle: '게임 — Lv.B',
     gamesDescription: 'Lv.B가 선보이는 서로 다른 두 멀티플레이 세계, MushHero와 Mush Dash를 만나보세요.',
     aboutTitle: 'Lv.B 소개 — 독립 게임 스튜디오',
@@ -15,7 +15,7 @@ export const ko: Translation = {
     mushDashTitle: 'Mush Dash — 온라인 파티 레이스 | Lv.B',
     mushDashDescription: '최대 7명이 위험한 장애물 코스를 달리는 앞서 해보기 온라인 파티 레이스 게임 Mush Dash를 만나보세요.',
     newsTitle: '소식과 보도 — Lv.B',
-    newsDescription: 'Lv.B와 MushHero, Mush Dash를 다룬 검증된 인터뷰와 보도 자료를 확인하세요.'
+    newsDescription: 'Lv.B와 MushHero, Mush Dash를 다룬 검증된 인터뷰와 보도·소개 자료를 확인하세요.'
   },
   nav: {
     games: '게임',
@@ -194,12 +194,14 @@ export const ko: Translation = {
   news: {
     heroEyebrow: '소식과 보도',
     heroTitle: 'Lv.B의 새로운 소식.',
-    heroDescription: '스튜디오와 게임을 다룬 검증된 인터뷰와 보도 자료를 전합니다.',
+    heroDescription: '스튜디오와 게임을 다룬 검증된 인터뷰와 보도·소개 자료를 전합니다.',
     allEyebrow: '전체 자료',
     allTitle: 'News & Press',
     kindLabels: {
       interview: '인터뷰',
-      'press-coverage': '언론 보도'
+      'press-coverage': '언론 보도',
+      'blog-review': '플레이 후기',
+      feature: '소개'
     },
     sourceCta: '원문 보기',
     followEyebrow: '공식 채널',

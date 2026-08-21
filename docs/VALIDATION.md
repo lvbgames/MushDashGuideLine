@@ -27,12 +27,13 @@
 
 ## 페이지 품질과 메타데이터
 
-- 정규 페이지의 title·description 중복, canonical·네 locale `hreflang`·`x-default` 대응을 확인한다.
+- 정규 페이지의 title·description 누락·중복, canonical·네 locale `hreflang`·`x-default` 대응을 확인한다. Open Graph·Twitter의 title·description은 페이지 메타와 같은 의미여야 하고, 공유 이미지 URL은 절대 경로·HTTP 200이어야 하며 `og:image:alt`를 포함해야 한다.
 - 페이지별 H1 하나와 heading 단계, `main`·`nav`·`footer` landmark를 확인한다.
 - 이미지의 `width`·`height`·`alt`와 Hero `eager`·나머지 `lazy` 우선순위를 확인한다.
 - 화면에 TODO·placeholder·개발 상태 문구가 노출되지 않는지 확인한다.
 - Contact의 수신 주소와 locale별 subject·body를 percent-decoding해 손상 여부를 확인하고, 사용하지 않는 form·success 코드가 없는지 검사한다.
 - 신규 Astro 페이지의 외부 새 탭 링크는 보안 속성을 검사한다.
+- News 데이터는 source URL·slug 중복 0건, `publishedAt` 내림차순, locale별 제목·요약 존재, 외부 링크 보안 속성을 검사한다. 개인 블로그는 언론 보도로 분류하지 않고 동일 캠페인의 SNS 재게시를 중복 노출하지 않는다.
 - Privacy 4개 HTML에서 `noindex, follow`, 자기 canonical, en·ko·ja·zh-CN·x-default, H1·main 각 1개, JSON-LD 0개, 19개 section ID의 일치·순서, locale별 Footer와 LanguageSwitcher 경로를 검사한다.
 - Terms 4개 HTML에서 `noindex, follow`, 자기 canonical, en·ko·ja·zh-CN·x-default, H1·main 각 1개, JSON-LD 0개, 16개 section ID의 일치·순서, locale별 Footer와 LanguageSwitcher 경로를 검사한다. `Last updated`와 `Effective date`는 locale별 표기로 각각 한 번 표시하고 두 `<time>`의 `datetime` 값은 모두 `2026-08-12`여야 한다.
 - Privacy와 Terms의 locale별 상호 링크, Footer active 상태와 `/terms.html` → `/terms/` forced 301을 검사한다. Terms의 Nintendo, 고정 Steam 환불 시간, 미확인 DLC·시즌패스, 지속 업데이트 보장, 전면 면책, 전속 관할, 확인되지 않은 영구정지 문구는 0건이어야 한다.

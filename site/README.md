@@ -40,9 +40,10 @@ Node 기준은 `.nvmrc`, 패키지 고정은 `package-lock.json`을 따른다.
 - `src/data/contact.ts`는 공개 비즈니스 이메일, business category, 선택적 Discord URL을 관리한다.
 - `src/data/company.ts`는 UI 브랜드명, 한국어 공식 스튜디오 주소, 검증된 Google Maps 공유 iframe URL과 검색 URL 생성을 관리한다.
 - `src/data/structuredData.ts`는 site config·`company.ts`·`contact.ts`·`socialLinks.ts`를 조합해 루트 `/` 전용 WebSite·Organization JSON-LD를 관리하고, `src/components/seo/RootStructuredData.astro`가 BaseLayout `<head>`에 단일 script로 출력한다. 회사 정보 변경 시 각 원본 데이터를 수정하며 추측 정보를 추가하지 않는다.
+- 색인 페이지 title·description은 `src/i18n/translations/*.ts`의 `meta`에서 locale별로 관리하고 `src/layouts/BaseLayout.astro`가 canonical·hreflang·Open Graph·Twitter를 출력한다. 공유 이미지는 `src/data/games.ts`의 검증된 Steam 스크린샷과 기존 locale별 이미지 alt를 사용하며 가짜 경로나 비율이 부적절한 placeholder를 추가하지 않는다.
 - `src/data/team.ts`와 `src/types/team.ts`는 팀원 이름·역할·담당·선택적 프로필 이미지 경로를 관리한다. 현재 `public/team/profiles/park-jaemin.png`와 `jeong-bogeon.png`를 사용하며 로드 실패 또는 경로가 `null`이면 기존 Lv.B symbol을 대체 표시한다. 승인 원본과 교체 절차는 `public/team/profiles/README.md`를 따른다.
 - `src/data/socialLinks.ts`는 공식 X·Instagram·Discord·Steam Developer 링크를 한 번만 관리한다.
-- `src/data/news.ts`는 원문·매체·날짜를 검증한 외부 자료 3건과 네 locale 자체 제목·요약을 정적으로 관리한다.
+- `src/data/news.ts`는 원문·게시 주체·작성자·날짜·본문 직접 언급을 검증한 외부 자료 7건과 네 locale 자체 제목·요약을 정적으로 관리한다. 개인 시연 후기는 `blog-review`, 개인·공식 기관 소개는 `feature`로 구분한다.
 - `src/data/privacy.ts`와 `src/types/privacy.ts`는 네 locale Privacy의 메타데이터와 동일 순서 19개 section을 관리한다. `src/data/terms.ts`와 `src/types/terms.ts`는 한국어 기준 원문과 네 locale Terms의 동일 순서 16개 section을 관리한다. 두 문서는 `src/components/legal/LegalTableOfContents.astro`와 `src/styles/privacy.css`의 Legal·print 레이아웃만 안전하게 공유하고 본문 컴포넌트는 분리한다.
 - Privacy에는 사용자 확인 운영 사실인 Netlify 분석 기능 3종 미사용, Mush Dash의 Epic Online Services(EOS) 온라인 기능과 UserCloud, 자체 서버·DB·텔레메트리·자동 크래시 전송 미사용, 이메일 보관·아동 정책·Lv.B 담당부서를 반영한다. UserCloud 공개 범주는 `E:\MushDash` 현재 작업 트리의 SaveManager·server/local data struct 감사 결과만 사용하며 세부 파일·field 근거는 `../docs/PRIVACY_USERCLOUD_AUDIT.md`, 공개하지 않는 이메일 권리 요청 절차는 `../docs/PRIVACY_REQUEST_RUNBOOK.md`에서 관리한다.
 - `src/i18n/`은 네 언어 문구와 locale 보존 route를 관리한다.
@@ -61,7 +62,7 @@ Contact는 JavaScript·Functions·SMTP·외부 이메일 API 없이 locale별 �
 
 Contact 문의 범위는 비즈니스, 파트너십, 행사·전시, 크리에이터·Steam 큐레이터, 언론·인터뷰, 일반 회사 문의의 여섯 종류다. 게임 키 문의는 개별 검토하며 제공을 보장하지 않고, 언론 문의도 같은 비즈니스 이메일 CTA를 사용한다.
 
-News & Press는 네 locale route와 Header·Footer 링크를 제공한다. 모든 항목은 외부 원문으로 연결되는 최신순 단일 목록에 한 번씩 표시하며 기사 본문·이미지·Featured 분리·자동 수집 기능은 포함하지 않는다. 기사 추가 기준은 `../docs/NEWS.md`를 따른다.
+News & Press는 네 locale route와 Header·Footer 링크를 제공한다. 모든 항목은 외부 원문으로 연결되는 최신순 단일 목록에 한 번씩 표시하며 기사 본문·이미지·Featured 분리·자동 수집 기능은 포함하지 않는다. 같은 공식 캠페인의 SNS 재게시는 중복 등록하지 않고, BIC 공식 listing은 참가 근거로만 사용한다. 기사 추가 기준은 `../docs/NEWS.md`를 따른다.
 
 현재 News는 Lv.B 자체 기사 상세·본문 발행이 아니라 외부 자료 링크 목록이므로 sitemap만 사용하고 RSS는 만들지 않는다. 자체 공지나 개발일지의 상세 route와 본문을 직접 발행하게 될 때 RSS를 재검토한다.
 

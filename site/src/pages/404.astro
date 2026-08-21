@@ -4,8 +4,6 @@ import ButtonLink from '../components/ui/ButtonLink.astro';
 import '../styles/global.css';
 import '../styles/not-found.css';
 
-const site = new URL('https://lvb.kr');
-const socialImage = new URL('/brand/lvb-og.png', site);
 ---
 
 <!doctype html>
@@ -22,7 +20,6 @@ const socialImage = new URL('/brand/lvb-og.png', site);
     <meta property="og:site_name" content="Lv.B" />
     <meta property="og:title" content="Page not found — Lv.B" />
     <meta property="og:description" content="The requested Lv.B page could not be found. Return home or explore our games." />
-    <meta property="og:image" content={socialImage} />
     <title>Page not found — Lv.B</title>
   </head>
   <body class="not-found-body">

@@ -196,6 +196,8 @@ export interface Translation {
     kindLabels: {
       interview: string;
       'press-coverage': string;
+      'blog-review': string;
+      feature: string;
     };
     sourceCta: string;
     followEyebrow: string;
@@ -213,8 +215,8 @@ export interface Translation {
 
 export const en: Translation = {
   meta: {
-    homeTitle: 'Lv.B — Independent Games from Korea',
-    homeDescription: 'Discover MushHero and Mush Dash from Lv.B, an indie game studio based in Busan, South Korea.',
+    homeTitle: 'Lv.B — Indie Game Studio in Busan, Korea',
+    homeDescription: 'Lv.B is a Busan indie game studio creating MushHero and Mush Dash.',
     gamesTitle: 'Our Games — Lv.B',
     gamesDescription: 'Explore MushHero and Mush Dash, two distinctive multiplayer worlds created by indie game studio Lv.B.',
     aboutTitle: 'About Lv.B — Independent Game Studio',
@@ -226,7 +228,7 @@ export const en: Translation = {
     mushDashTitle: 'Mush Dash — Online Party Racing | Lv.B',
     mushDashDescription: 'Race through deadly obstacle courses with up to seven players in Mush Dash, an online party racing game available in Early Access.',
     newsTitle: 'News & Press — Lv.B',
-    newsDescription: 'Read verified interviews and press coverage about Lv.B, MushHero and Mush Dash.'
+    newsDescription: 'Read verified interviews, coverage and features about Lv.B, MushHero and Mush Dash.'
   },
   nav: {
     games: 'Games',
@@ -402,12 +404,14 @@ export const en: Translation = {
   news: {
     heroEyebrow: 'News & Press',
     heroTitle: 'Latest from Lv.B.',
-    heroDescription: 'Verified interviews and press coverage about our studio and games.',
+    heroDescription: 'Verified interviews, coverage and features about our studio and games.',
     allEyebrow: 'All coverage',
     allTitle: 'News & Press',
     kindLabels: {
       interview: 'Interview',
-      'press-coverage': 'Press coverage'
+      'press-coverage': 'Press coverage',
+      'blog-review': 'Play review',
+      feature: 'Feature'
     },
     sourceCta: 'Read original',
     followEyebrow: 'Official channels',

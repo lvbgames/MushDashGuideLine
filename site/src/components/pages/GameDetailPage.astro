@@ -41,6 +41,7 @@ if (!ogImage) {
   title={slug === 'mushhero' ? translation.meta.mushHeroTitle : translation.meta.mushDashTitle}
   description={slug === 'mushhero' ? translation.meta.mushHeroDescription : translation.meta.mushDashDescription}
   ogImage={ogImage}
+  ogImageAlt={content.screenshotAlts[0]}
 >
   <SiteHeader locale={locale} currentPath={Astro.url.pathname} route={route} translation={translation} />
   <main class="game-detail-page" data-game={slug}>

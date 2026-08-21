@@ -2,8 +2,8 @@ import type { Translation } from './en';
 
 export const zhCn: Translation = {
   meta: {
-    homeTitle: 'Lv.B — 韩国独立游戏工作室',
-    homeDescription: '了解来自韩国釜山独立游戏工作室 Lv.B 的 MushHero 与 Mush Dash。',
+    homeTitle: 'Lv.B — 韩国釜山独立游戏工作室',
+    homeDescription: 'Lv.B是一家位于韩国釜山、开发MushHero和Mush Dash的独立游戏工作室。',
     gamesTitle: '游戏 — Lv.B',
     gamesDescription: '了解 Lv.B 打造的两个风格鲜明的多人游戏世界：MushHero 与 Mush Dash。',
     aboutTitle: '关于 Lv.B — 独立游戏工作室',
@@ -15,7 +15,7 @@ export const zhCn: Translation = {
     mushDashTitle: 'Mush Dash — 在线派对竞速 | Lv.B',
     mushDashDescription: '了解 Mush Dash：最多七名玩家在危险的障碍赛道上竞速，游戏目前处于抢先体验阶段。',
     newsTitle: '动态与报道 — Lv.B',
-    newsDescription: '查看有关 Lv.B、MushHero 与 Mush Dash 的已核实访谈及媒体报道。'
+    newsDescription: '查看有关 Lv.B、MushHero 与 Mush Dash 的已核实访谈、媒体报道与专题内容。'
   },
   nav: {
     games: '游戏',
@@ -194,12 +194,14 @@ export const zhCn: Translation = {
   news: {
     heroEyebrow: '动态与报道',
     heroTitle: 'Lv.B 的最新动态。',
-    heroDescription: '汇集有关工作室与游戏的已核实访谈及媒体报道。',
+    heroDescription: '汇集有关工作室与游戏的已核实访谈、媒体报道与专题内容。',
     allEyebrow: '全部报道',
     allTitle: '动态与报道',
     kindLabels: {
       interview: '访谈',
-      'press-coverage': '媒体报道'
+      'press-coverage': '媒体报道',
+      'blog-review': '试玩报告',
+      feature: '专题'
     },
     sourceCta: '阅读原文',
     followEyebrow: '官方频道',

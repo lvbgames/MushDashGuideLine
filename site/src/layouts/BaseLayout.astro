@@ -10,10 +10,11 @@ interface Props {
   title: string;
   description: string;
   ogImage: string;
+  ogImageAlt: string;
   robots?: string;
 }
 
-const { locale, route, title, description, ogImage, robots } = Astro.props;
+const { locale, route, title, description, ogImage, ogImageAlt, robots } = Astro.props;
 const site = Astro.site ?? new URL('https://lvb.kr');
 const canonical = new URL(getLocalePath(locale, route), site);
 const isRootHome = locale === 'en' && route === 'home';
@@ -53,12 +54,14 @@ const localeMap: Record<Locale, string> = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:locale" content={localeMap[locale]} />
     {locales.filter((target) => target !== locale).map((target) => <meta property="og:locale:alternate" content={localeMap[target]} />)}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
     {isRootHome && <RootStructuredData />}
   </head>
   <body>

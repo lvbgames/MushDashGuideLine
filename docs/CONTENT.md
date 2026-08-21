@@ -29,11 +29,12 @@
 | Discord | Verified External Link | `https://discord.gg/yuphyAWWUr`; 게임 피드백·버그·기술지원 |
 | Steam Developer Page | Verified External Link | `https://store.steampowered.com/search/?developer=Lv.B` |
 | 공식 YouTube | Missing | `youtubeTrailerUrl`이 `null`이면 영상 UI 전체를 숨김 |
-| News & Press | Verified External Link / Draft / User Review | 원문·매체·날짜를 확인한 인터뷰 1건과 BIC 2024 보도 2건을 최신순 단일 목록에 한 번씩 표시. 네 locale 제목·자체 요약은 User Review, 기사 이미지·본문 복제·자동 수집 없음. 자체 기사 상세와 본문 발행이 없어 현재는 sitemap만 사용하고 RSS는 보류 |
+| News & Press | Verified External Link / Draft / User Review | 원문·게시 주체·작성자·날짜·본문 직접 언급을 확인한 7건을 최신순 단일 목록에 한 번씩 표시. 기존 인터뷰 1건·BIC 2024 보도 2건에 BIC 2026 언론 보도·개인 시연 후기·일본 개인 소개·부산글로벌게임센터 공식 소개 4건을 추가했다. 네 locale 제목·자체 요약은 User Review이며 외부 이미지·본문 복제·자동 수집은 없다. 자체 기사 상세와 본문 발행이 없어 현재는 sitemap만 사용하고 RSS는 보류 |
 | Privacy 4개 언어 | Draft / User Review | 네 언어 19개 동일 section에 Netlify 분석 기능 3종 미사용, Mush Dash Epic Online Services(EOS)·Lobby·Session·P2P·UserCloud의 검증된 gameplay·transaction 범주, 계정 식별자와 payload 구분, 로컬 설정 분리, 자동 만료·게임 제거·연결 해제 자동 삭제 없음, 자체 서버·DB·텔레메트리·자동 크래시 전송 미사용, 이메일 1년 보관과 예외, 만 14세 미만 정책, Lv.B 담당부서를 반영. `/privacy/` 및 세 locale route는 `noindex, follow`이고 sitemap에서 제외 |
 | 게임 이용약관 4개 언어 | Draft / User Review | 한국어 기준 원문과 EN·JA·ZH-CN의 동일한 16개 조항. Steam·Epic Games Store·EOS, 플랫폼 계정, Lobby·Session·P2P, 로컬 저장·EOS UserCloud, 조건부 플랫폼 구매와 법령상 소비자 권리, 필요·비례적인 금지행위 대응을 반영. 시행일과 실제 동의·고지 방식은 미확정이며 `/terms/` 및 세 locale route는 `noindex, follow`, sitemap 제외 |
 | Naver 사이트 소유확인 | Verified Public Metadata | `site/src/config/site.ts`의 공개 verification 값을 `BaseLayout.astro`가 일반 Astro 페이지 `<head>`에 정적 meta로 출력. 과거 HTML 확인 파일 방식은 폐기 |
 | 루트 구조화 데이터 | Verified Public Metadata | `site/src/data/structuredData.ts`가 기존 site config·회사·연락처·공식 SNS 데이터를 조합해 `/`에만 WebSite와 Organization을 단일 `@graph`로 출력. 주 이름은 `Lv.B`, 대체 이름은 `레벨비`이며 추측한 법인·설립·대표·직원·평점 정보는 추가하지 않음. `sameAs` 4개 중 Naver 지원 연관 채널은 X·Instagram, Discord·Steam Developer Page는 기타 공식 프로필이며 검색 노출을 보장하지 않음 |
+| 검색·공유 메타데이터 | Verified Public Metadata / Missing dedicated artwork | 색인 페이지 title·description은 locale별 `site/src/i18n/translations/*.ts`의 `meta`가 단일 원본이며 `BaseLayout.astro`가 canonical·hreflang·Open Graph·Twitter를 출력한다. 공유 이미지는 `games.ts`의 검증된 1920×1080 Steam 스크린샷을 사용하고 locale별 기존 게임 이미지 alt를 재사용한다. 전용 Lv.B·MushHero·Mush Dash 1200×630 이미지는 아직 없음 |
 
 게임 데이터는 `site/src/data/games.ts`에서 고정 관리하며 브라우저·빌드 중 runtime scraping을 하지 않는다. 기존 사이트의 코드·문구·자산은 `legacy-site/` 보관물일 뿐 신규 구현의 기반이 아니다.
 
