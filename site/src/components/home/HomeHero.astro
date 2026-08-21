@@ -12,7 +12,8 @@ interface Props {
 }
 
 const { game, translation, detailPath } = Astro.props;
-const heroImage = game.screenshots[0] ?? game.heroImage;
+const heroImages = [...game.screenshots.slice(0, 3)];
+if (heroImages.length === 0 && game.heroImage) heroImages.push(game.heroImage);
 const statusLabels = {
   upcoming: translation.common.coming2027,
   'early-access': translation.common.earlyAccess,
@@ -21,18 +22,22 @@ const statusLabels = {
 ---
 
 <section class="home-hero" aria-labelledby="home-hero-title">
-  {heroImage && (
-    <img
-      class="home-hero__image"
-      src={heroImage.src}
-      width={heroImage.width}
-      height={heroImage.height}
-      alt=""
-      loading="eager"
-      decoding="async"
-      fetchpriority="high"
-    />
-  )}
+  <div class="home-hero__media" data-hero-rotator>
+    {heroImages.map((image, index) => (
+      <img
+        class:list={['home-hero__image', { 'is-active': index === 0 }]}
+        src={index === 0 ? image.src : undefined}
+        data-src={index > 0 ? image.src : undefined}
+        data-hero-slide
+        width={image.width}
+        height={image.height}
+        alt=""
+        loading={index === 0 ? 'eager' : 'lazy'}
+        decoding="async"
+        fetchpriority={index === 0 ? 'high' : 'low'}
+      />
+    ))}
+  </div>
   <div class="home-hero__veil" aria-hidden="true"></div>
   <Container className="home-hero__inner">
     <div class="home-hero__content">
@@ -50,6 +55,79 @@ const statusLabels = {
         )}
         <ButtonLink href={detailPath} variant="quiet">{translation.home.heroSecondary}</ButtonLink>
       </div>
+      {heroImages.length > 1 && (
+        <div class="home-hero__media-controls" data-hero-controls hidden>
+          <div class="home-hero__dots" role="group" aria-label={translation.home.heroMedia.showImage}>
+            {heroImages.map((_, index) => (
+              <button type="button" data-hero-dot data-hero-index={index} aria-label={`${translation.home.heroMedia.showImage} ${index + 1}`} aria-pressed={index === 0 ? 'true' : 'false'}>
+                <span aria-hidden="true"></span>
+              </button>
+            ))}
+          </div>
+          <button class="home-hero__playback" type="button" data-hero-playback data-pause-label={translation.home.heroMedia.pause} data-play-label={translation.home.heroMedia.play} aria-label={translation.home.heroMedia.pause}>
+            <span aria-hidden="true">Ⅱ</span>
+          </button>
+          <span class="screen-reader" aria-live="polite" data-hero-live></span>
+        </div>
+      )}
     </div>
   </Container>
 </section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-hero-rotator]').forEach((media) => {
+    const root = media.closest<HTMLElement>('.home-hero');
+    const slides = Array.from(media.querySelectorAll<HTMLImageElement>('[data-hero-slide]'));
+    const controls = root?.querySelector<HTMLElement>('[data-hero-controls]');
+    const dots = Array.from(root?.querySelectorAll<HTMLButtonElement>('[data-hero-dot]') ?? []);
+    const playback = root?.querySelector<HTMLButtonElement>('[data-hero-playback]');
+    const live = root?.querySelector<HTMLElement>('[data-hero-live]');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let index = 0;
+    let timer: number | undefined;
+    let userPaused = reducedMotion.matches;
+    let interactionPaused = false;
+
+    if (!root || slides.length < 2 || !controls || !playback) return;
+    controls.hidden = false;
+
+    const loadSecondary = () => slides.slice(1).forEach((slide) => {
+      if (!slide.src && slide.dataset.src) slide.src = slide.dataset.src;
+    });
+    const show = (nextIndex: number, announce = false) => {
+      index = (nextIndex + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => slide.classList.toggle('is-active', slideIndex === index));
+      dots.forEach((dot, dotIndex) => dot.setAttribute('aria-pressed', dotIndex === index ? 'true' : 'false'));
+      if (announce && live) live.textContent = `${index + 1} / ${slides.length}`;
+    };
+    const stopTimer = () => {
+      if (timer !== undefined) window.clearInterval(timer);
+      timer = undefined;
+    };
+    const syncPlayback = () => {
+      stopTimer();
+      const paused = userPaused || interactionPaused || document.hidden || reducedMotion.matches;
+      playback.setAttribute('aria-label', paused ? playback.dataset.playLabel ?? '' : playback.dataset.pauseLabel ?? '');
+      const icon = playback.querySelector<HTMLElement>('[aria-hidden]');
+      if (icon) icon.textContent = paused ? '▶' : 'Ⅱ';
+      if (!paused) timer = window.setInterval(() => show(index + 1), 6000);
+    };
+
+    dots.forEach((dot) => dot.addEventListener('click', () => {
+      show(Number(dot.dataset.heroIndex ?? 0), true);
+      syncPlayback();
+    }));
+    playback.addEventListener('click', () => { userPaused = !userPaused; syncPlayback(); });
+    root.addEventListener('mouseenter', () => { interactionPaused = true; syncPlayback(); });
+    root.addEventListener('mouseleave', () => { interactionPaused = false; syncPlayback(); });
+    root.addEventListener('focusin', () => { interactionPaused = true; syncPlayback(); });
+    root.addEventListener('focusout', (event) => {
+      if (!root.contains(event.relatedTarget as Node | null)) { interactionPaused = false; syncPlayback(); }
+    });
+    document.addEventListener('visibilitychange', syncPlayback);
+    reducedMotion.addEventListener('change', syncPlayback);
+    if (document.readyState === 'complete') window.setTimeout(loadSecondary, 0);
+    else window.addEventListener('load', () => window.setTimeout(loadSecondary, 0), { once: true });
+    syncPlayback();
+  });
+</script>

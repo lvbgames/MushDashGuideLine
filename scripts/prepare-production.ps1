@@ -506,11 +506,32 @@ $requiredFiles = @(
   'dist\games\index.html',
   'dist\about\index.html',
   'dist\news\index.html',
+  'dist\press\index.html',
+  'dist\ko\press\index.html',
+  'dist\ja\press\index.html',
+  'dist\zh-cn\press\index.html',
+  'dist\news\bic-2026-mushhero-first-public-playtest\index.html',
+  'dist\ko\news\bic-2026-mushhero-first-public-playtest\index.html',
+  'dist\ja\news\bic-2026-mushhero-first-public-playtest\index.html',
+  'dist\zh-cn\news\bic-2026-mushhero-first-public-playtest\index.html',
   'dist\contact\index.html',
   'dist\games\mushhero\index.html',
   'dist\games\mushdash\index.html',
   'dist\team\profiles\park-jaemin.png',
   'dist\team\profiles\jeong-bogeon.png',
+  'dist\team\profiles\park-jaemin-640.webp',
+  'dist\team\profiles\park-jaemin-1024.webp',
+  'dist\team\profiles\jeong-bogeon-640.webp',
+  'dist\team\profiles\jeong-bogeon-1024.webp',
+  'dist\press\assets\mushhero\mushhero-01.jpg',
+  'dist\press\assets\mushhero\mushhero-02.jpg',
+  'dist\press\assets\mushhero\mushhero-03.jpg',
+  'dist\press\assets\mushdash\mushdash-01.jpg',
+  'dist\press\assets\mushdash\mushdash-02.jpg',
+  'dist\press\assets\mushdash\mushdash-03.jpg',
+  'dist\press\downloads\lvb-brand-assets.zip',
+  'dist\press\downloads\mushhero-press-kit.zip',
+  'dist\press\downloads\mushdash-press-kit.zip',
   'dist\robots.txt',
   'dist\sitemap-index.xml',
   'dist\sitemap-0.xml'
@@ -522,14 +543,129 @@ foreach ($relativePath in $requiredFiles) {
 
 $htmlFiles = @(Get-ChildItem -LiteralPath (Join-Path $siteRoot 'dist') -Recurse -File -Filter '*.html')
 $regularHtml = @($htmlFiles | Where-Object { $_.Name -ne '404.html' })
-Assert-Equal $htmlFiles.Count 37 'Total production HTML count'
-Assert-Equal $regularHtml.Count 36 'Regular production HTML count'
+Assert-Equal $htmlFiles.Count 45 'Total production HTML count'
+Assert-Equal $regularHtml.Count 44 'Regular production HTML count'
 
 $sitemap = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'dist\sitemap-0.xml')
 $sitemapCount = ([regex]::Matches($sitemap, '<url>')).Count
-Assert-Equal $sitemapCount 28 'Sitemap URL count'
+Assert-Equal $sitemapCount 36 'Sitemap URL count'
 if ($sitemap -match '/privacy/') { throw 'Privacy routes must be excluded from the sitemap.' }
 if ($sitemap -match '/terms/') { throw 'Terms routes must be excluded from the sitemap.' }
+foreach ($requiredSitemapPath in @('/press/', '/ko/press/', '/ja/press/', '/zh-cn/press/', '/news/bic-2026-mushhero-first-public-playtest/', '/ko/news/bic-2026-mushhero-first-public-playtest/', '/ja/news/bic-2026-mushhero-first-public-playtest/', '/zh-cn/news/bic-2026-mushhero-first-public-playtest/')) {
+  if ($sitemap -notmatch [regex]::Escape($requiredSitemapPath)) {
+    throw "Indexed route is missing from the sitemap: $requiredSitemapPath"
+  }
+}
+
+$jsonLdPattern = '<script[^>]+type="application/ld\+json"[^>]*>([\s\S]*?)</script>'
+$rootJsonMatches = [regex]::Matches($indexHtml, $jsonLdPattern)
+Assert-Equal $rootJsonMatches.Count 1 'Root JSON-LD script count'
+$rootStructuredData = $rootJsonMatches[0].Groups[1].Value | ConvertFrom-Json
+Assert-Equal $rootStructuredData.'@graph'.Count 2 'Root JSON-LD graph node count'
+
+$articleRoutes = @(
+  [PSCustomObject]@{ Locale = 'en'; Path = 'dist\news\bic-2026-mushhero-first-public-playtest\index.html'; Canonical = 'https://lvb.kr/news/bic-2026-mushhero-first-public-playtest/' },
+  [PSCustomObject]@{ Locale = 'ko'; Path = 'dist\ko\news\bic-2026-mushhero-first-public-playtest\index.html'; Canonical = 'https://lvb.kr/ko/news/bic-2026-mushhero-first-public-playtest/' },
+  [PSCustomObject]@{ Locale = 'ja'; Path = 'dist\ja\news\bic-2026-mushhero-first-public-playtest\index.html'; Canonical = 'https://lvb.kr/ja/news/bic-2026-mushhero-first-public-playtest/' },
+  [PSCustomObject]@{ Locale = 'zh-cn'; Path = 'dist\zh-cn\news\bic-2026-mushhero-first-public-playtest\index.html'; Canonical = 'https://lvb.kr/zh-cn/news/bic-2026-mushhero-first-public-playtest/' }
+)
+$articleFullPaths = @()
+foreach ($route in $articleRoutes) {
+  $articlePath = Join-Path $siteRoot $route.Path
+  $articleFullPaths += (Resolve-Path -LiteralPath $articlePath).Path
+  $articleHtml = Get-Content -Raw -Encoding utf8 $articlePath
+  $articleJsonMatches = [regex]::Matches($articleHtml, $jsonLdPattern)
+  Assert-Equal $articleJsonMatches.Count 1 "Article JSON-LD script count: $($route.Locale)"
+  $articleData = $articleJsonMatches[0].Groups[1].Value | ConvertFrom-Json
+  Assert-Equal $articleData.'@type' 'Article' "Article JSON-LD type: $($route.Locale)"
+  Assert-Equal $articleData.datePublished '2026-08-21' "Article published date: $($route.Locale)"
+  Assert-Equal $articleData.dateModified '2026-08-21' "Article modified date: $($route.Locale)"
+  Assert-Equal $articleData.mainEntityOfPage.'@id' $route.Canonical "Article main entity: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($articleHtml, '<meta property="og:type" content="article">').Count) 1 "Article Open Graph type: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($articleHtml, '<link rel="canonical" href="' + [regex]::Escape($route.Canonical) + '">').Count) 1 "Article canonical: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($articleHtml, 'rel="alternate" hreflang=').Count) 5 "Article hreflang count: $($route.Locale)"
+}
+
+foreach ($htmlFile in $htmlFiles) {
+  $isRoot = $htmlFile.FullName -eq (Resolve-Path -LiteralPath $indexPath).Path
+  $isArticle = $articleFullPaths -contains $htmlFile.FullName
+  if (-not $isRoot -and -not $isArticle) {
+    $pageHtml = Get-Content -Raw -Encoding utf8 $htmlFile.FullName
+    Assert-Equal ([regex]::Matches($pageHtml, $jsonLdPattern).Count) 0 "Unexpected JSON-LD: $($htmlFile.FullName)"
+  }
+}
+
+foreach ($newsListPath in @('dist\news\index.html', 'dist\ko\news\index.html', 'dist\ja\news\index.html', 'dist\zh-cn\news\index.html')) {
+  $newsListHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $newsListPath)
+  Assert-Equal ([regex]::Matches($newsListHtml, '<article class="news-card"').Count) 8 "News item count: $newsListPath"
+  Assert-Equal ([regex]::Matches($newsListHtml, 'class="news-card__internal-link"').Count) 1 "Internal News link count: $newsListPath"
+  Assert-Equal ([regex]::Matches($newsListHtml, 'class="external-link" href="https?://[^\"]+" target="_blank" rel="noopener noreferrer"').Count -ge 7) $true "External News link security: $newsListPath"
+}
+
+$pressScreenshotFiles = @(
+  [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-01.jpg'; Hash = '484B07E40D88556C53425222C1FCE4A9953DAA8A21AEA83CE33964060E106077' },
+  [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-02.jpg'; Hash = '13741FE3995FBC4FB8D84453BAB191B700AAF0823C4DA3D44E62CD3ED7CD37AF' },
+  [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-03.jpg'; Hash = '3CE54AC177C4A2D4CC7578B39904E97CB5C62CD995532DA8B4BDBBE193C50E90' },
+  [PSCustomObject]@{ Path = 'press\assets\mushdash\mushdash-01.jpg'; Hash = '6B22EE5A5218B4EFA03ED05F86ABC5D5104995CD84CCE53B8877F7511165C4E4' },
+  [PSCustomObject]@{ Path = 'press\assets\mushdash\mushdash-02.jpg'; Hash = '3F7E7C093C0430F7E87DB2ECF9E3C64E88D8DE081C2A6843F15774EC434D55F9' },
+  [PSCustomObject]@{ Path = 'press\assets\mushdash\mushdash-03.jpg'; Hash = '10D6AD2513F92DE008B61BA969B4FD8D7C293D90199E151383E6B01FB698BADB' }
+)
+foreach ($asset in $pressScreenshotFiles) {
+  $publicAsset = Join-Path $siteRoot "public\$($asset.Path)"
+  $distAsset = Join-Path $siteRoot "dist\$($asset.Path)"
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $publicAsset).Hash $asset.Hash "Press screenshot source hash: $($asset.Path)"
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $distAsset).Hash $asset.Hash "Built Press screenshot hash: $($asset.Path)"
+}
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$pressArchives = @(
+  [PSCustomObject]@{ Name = 'lvb-brand-assets.zip'; Hash = 'B9281432DD14EDB034B3691D32262F9A07A86B9055B911C0EA1DE8427D3A696B'; Entries = @('brand/lvb-logo.png', 'brand/lvb-symbol.png', 'USAGE.txt') },
+  [PSCustomObject]@{ Name = 'mushhero-press-kit.zip'; Hash = 'F46E37BFFF886D72187F470DA998E000FE64B9F99C8622FCAF9B701B07560496'; Entries = @('brand/lvb-logo.png', 'brand/lvb-symbol.png', 'screenshots/mushhero-01.jpg', 'screenshots/mushhero-02.jpg', 'screenshots/mushhero-03.jpg', 'FACT_SHEET_EN.txt', 'FACT_SHEET_JA.txt', 'FACT_SHEET_KO.txt', 'FACT_SHEET_ZH-CN.txt') },
+  [PSCustomObject]@{ Name = 'mushdash-press-kit.zip'; Hash = '61BBE31E60C9E68B7513139D02D94998A2782E94E1605D29D9FF77D4025800ED'; Entries = @('brand/lvb-logo.png', 'brand/lvb-symbol.png', 'screenshots/mushdash-01.jpg', 'screenshots/mushdash-02.jpg', 'screenshots/mushdash-03.jpg', 'FACT_SHEET_EN.txt', 'FACT_SHEET_JA.txt', 'FACT_SHEET_KO.txt', 'FACT_SHEET_ZH-CN.txt') }
+)
+foreach ($archiveSpec in $pressArchives) {
+  $publicArchive = Join-Path $siteRoot "public\press\downloads\$($archiveSpec.Name)"
+  $distArchive = Join-Path $siteRoot "dist\press\downloads\$($archiveSpec.Name)"
+  if ((Get-Item -LiteralPath $publicArchive).Length -le 0) { throw "Press archive is empty: $($archiveSpec.Name)" }
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $publicArchive).Hash $archiveSpec.Hash "Press archive hash: $($archiveSpec.Name)"
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $distArchive).Hash $archiveSpec.Hash "Built Press archive hash: $($archiveSpec.Name)"
+  $archive = [System.IO.Compression.ZipFile]::OpenRead($publicArchive)
+  try {
+    $actualEntries = @($archive.Entries | Where-Object { -not $_.FullName.EndsWith('/') } | ForEach-Object { $_.FullName })
+    Assert-Equal ($actualEntries -join '|') ($archiveSpec.Entries -join '|') "Press archive entries: $($archiveSpec.Name)"
+    foreach ($entry in $archive.Entries) {
+      if ($entry.Length -le 0) { continue }
+      $entryStream = $entry.Open()
+      try { $entryStream.CopyTo([System.IO.Stream]::Null) } finally { $entryStream.Dispose() }
+    }
+  } finally {
+    $archive.Dispose()
+  }
+}
+
+foreach ($pressPath in @('dist\press\index.html', 'dist\ko\press\index.html', 'dist\ja\press\index.html', 'dist\zh-cn\press\index.html')) {
+  $pressHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $pressPath)
+  Assert-Equal ([regex]::Matches($pressHtml, 'class="press-download-card"').Count) 3 "Press download card count: $pressPath"
+  Assert-Equal ([regex]::Matches($pressHtml, 'href="/press/downloads/[^"]+\.zip" download="[^"]+\.zip"').Count) 3 "Press ZIP download links: $pressPath"
+  Assert-Equal ([regex]::Matches($pressHtml, 'href="/brand/[^"]+\.png" download="[^"]+\.png"').Count) 2 "Press brand downloads: $pressPath"
+  Assert-Equal ([regex]::Matches($pressHtml, 'class="media-gallery__item"').Count) 6 "Press gallery item count: $pressPath"
+  Assert-Equal ([regex]::Matches($pressHtml, 'src="/press/assets/(?:mushhero|mushdash)/[^"]+\.jpg"').Count) 6 "Press local screenshot count: $pressPath"
+}
+
+Assert-Equal ([regex]::Matches($indexHtml, '<img[^>]+data-hero-slide').Count) 3 'Home Hero slide count'
+Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-dot').Count) 3 'Home Hero pagination count'
+Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-playback').Count) 1 'Home Hero playback control count'
+Assert-Equal ([regex]::Matches($indexHtml, 'loading="eager" decoding="async" fetchpriority="high"').Count -ge 1) $true 'Home Hero eager image'
+foreach ($gameDetailPath in @('dist\games\mushhero\index.html', 'dist\games\mushdash\index.html')) {
+  $gameDetailHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $gameDetailPath)
+  Assert-Equal ([regex]::Matches($gameDetailHtml, 'class="media-gallery__item"').Count) 3 "Game gallery item count: $gameDetailPath"
+  Assert-Equal ([regex]::Matches($gameDetailHtml, '<dialog class="media-lightbox"').Count) 1 "Game lightbox count: $gameDetailPath"
+  Assert-Equal ([regex]::Matches($gameDetailHtml, '<iframe').Count) 0 "Unverified video iframe count: $gameDetailPath"
+}
+foreach ($legalPath in @('dist\privacy\index.html', 'dist\terms\index.html')) {
+  $legalHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $legalPath)
+  Assert-Equal ([regex]::Matches($legalHtml, '<(?:main|article|div|section)[^>]*\sdata-motion-page(?:\s|=|>)').Count) 0 "Legal motion opt-in count: $legalPath"
+}
 
 $profilePairs = @(
   [PSCustomObject]@{
@@ -553,6 +689,22 @@ foreach ($pair in $profilePairs) {
   $distHash = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $repoRoot $pair.Dist)).Hash
   Assert-Equal $publicHash $pair.SourceHash "Public profile hash: $($pair.Public)"
   Assert-Equal $distHash $pair.SourceHash "Built profile hash: $($pair.Dist)"
+}
+
+$profileVariants = @(
+  [PSCustomObject]@{ Original = 'park-jaemin.png'; Variant = 'park-jaemin-640.webp' },
+  [PSCustomObject]@{ Original = 'park-jaemin.png'; Variant = 'park-jaemin-1024.webp' },
+  [PSCustomObject]@{ Original = 'jeong-bogeon.png'; Variant = 'jeong-bogeon-640.webp' },
+  [PSCustomObject]@{ Original = 'jeong-bogeon.png'; Variant = 'jeong-bogeon-1024.webp' }
+)
+foreach ($variant in $profileVariants) {
+  $originalPath = Join-Path $siteRoot "public\team\profiles\$($variant.Original)"
+  $publicVariantPath = Join-Path $siteRoot "public\team\profiles\$($variant.Variant)"
+  $distVariantPath = Join-Path $siteRoot "dist\team\profiles\$($variant.Variant)"
+  if ((Get-Item -LiteralPath $publicVariantPath).Length -ge (Get-Item -LiteralPath $originalPath).Length) {
+    throw "Optimized profile is not smaller than its PNG original: $($variant.Variant)"
+  }
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $publicVariantPath).Hash (Get-FileHash -Algorithm SHA256 -LiteralPath $distVariantPath).Hash "Built WebP hash: $($variant.Variant)"
 }
 
 $teamSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\team.ts')

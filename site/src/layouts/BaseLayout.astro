@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import RootStructuredData from '../components/seo/RootStructuredData.astro';
+import MotionEnhancements from '../components/ui/MotionEnhancements.astro';
 import { siteConfig } from '../config/site';
 import { getLocalePath, locales, type Locale, type SiteRoute } from '../i18n/config';
 
@@ -11,12 +12,30 @@ interface Props {
   description: string;
   ogImage: string;
   ogImageAlt: string;
+  routeParam?: string;
+  ogType?: 'website' | 'article';
+  articleMeta?: {
+    publishedTime: string;
+    modifiedTime: string;
+    author: string;
+  };
   robots?: string;
 }
 
-const { locale, route, title, description, ogImage, ogImageAlt, robots } = Astro.props;
+const {
+  locale,
+  route,
+  title,
+  description,
+  ogImage,
+  ogImageAlt,
+  routeParam,
+  ogType = 'website',
+  articleMeta,
+  robots
+} = Astro.props;
 const site = Astro.site ?? new URL('https://lvb.kr');
-const canonical = new URL(getLocalePath(locale, route), site);
+const canonical = new URL(getLocalePath(locale, route, routeParam), site);
 const isRootHome = locale === 'en' && route === 'home';
 const hreflangMap: Record<Locale, string> = {
   en: 'en',
@@ -46,9 +65,9 @@ const localeMap: Record<Locale, string> = {
     <link rel="icon" type="image/png" sizes="128x128" href="/brand/lvb-symbol-128.png" />
     <link rel="apple-touch-icon" href="/brand/lvb-symbol-128.png" />
     <link rel="canonical" href={canonical} />
-    {locales.map((target) => <link rel="alternate" hreflang={hreflangMap[target]} href={new URL(getLocalePath(target, route), site)} />)}
-    <link rel="alternate" hreflang="x-default" href={new URL(getLocalePath('en', route), site)} />
-    <meta property="og:type" content="website" />
+    {locales.map((target) => <link rel="alternate" hreflang={hreflangMap[target]} href={new URL(getLocalePath(target, route, routeParam), site)} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(getLocalePath('en', route, routeParam), site)} />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={siteConfig.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -57,14 +76,23 @@ const localeMap: Record<Locale, string> = {
     <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:locale" content={localeMap[locale]} />
     {locales.filter((target) => target !== locale).map((target) => <meta property="og:locale:alternate" content={localeMap[target]} />)}
+    {ogType === 'article' && articleMeta && (
+      <>
+        <meta property="article:published_time" content={articleMeta.publishedTime} />
+        <meta property="article:modified_time" content={articleMeta.modifiedTime} />
+        <meta property="article:author" content={articleMeta.author} />
+      </>
+    )}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:image:alt" content={ogImageAlt} />
     {isRootHome && <RootStructuredData />}
+    <slot name="head" />
   </head>
   <body>
     <slot />
+    <MotionEnhancements />
   </body>
 </html>

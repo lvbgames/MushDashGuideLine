@@ -26,6 +26,6 @@ Our Games는 Games Hero, MushHero 주력 영역, Mush Dash Early Access 영역, 
 
 Contact의 비즈니스 문의는 정적 `mailto:`를 유지한다. 문의 범위는 Business Inquiry, Partnership, Events & Exhibitions, Creators & Steam Curators, Press & Interviews, General Company Inquiry다. 크리에이터·큐레이터 게임 키 요청은 개별 검토하며 제공을 보장하지 않는다. Bug Report·Game Feedback·Technical Support는 공식 Discord로 안내한다.
 
-News & Press는 검증된 외부 자료의 제목·매체·날짜·원문 링크와 네 locale 자체 요약만 제공한다. 기사 본문·이미지를 복제하거나 자동 수집하지 않으며 운영 기준은 `NEWS.md`를 따른다.
+News & Press는 검증된 외부 자료 7건과 Lv.B가 직접 발행하는 짧은 Studio Update를 한 목록에 제공한다. 외부 기사 본문·이미지를 복제하거나 자동 수집하지 않으며 내부 글도 검증된 Lv.B 사실만 사용한다. 운영 기준은 `NEWS.md`를 따른다. Press Kit은 기존 검증 데이터와 공개 브랜드·게임 자산을 조합한다.
 
 공식 YouTube URL이 없으면 영상 UI를 렌더링하지 않는다.

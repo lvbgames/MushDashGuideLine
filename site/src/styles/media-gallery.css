@@ -1,0 +1,77 @@
+.media-gallery { position: relative; }
+.media-gallery__controls { display: flex; gap: var(--space-2); justify-content: flex-end; margin-bottom: var(--space-4); }
+.media-gallery__controls button,
+.media-lightbox button {
+  display: inline-grid;
+  width: 3rem;
+  min-height: 3rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-card);
+  color: var(--color-text);
+  cursor: pointer;
+  place-items: center;
+  transition: border-color var(--motion-fast), color var(--motion-fast), transform var(--motion-fast);
+}
+.media-gallery__controls button:disabled { cursor: default; opacity: .38; }
+.media-gallery__track {
+  display: flex;
+  gap: var(--space-4);
+  padding: 0 0 var(--space-4);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-color: var(--color-border-strong) transparent;
+  scrollbar-width: thin;
+  scroll-snap-type: inline mandatory;
+}
+.media-gallery__item {
+  flex: 0 0 min(88%, 36rem);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  scroll-snap-align: start;
+  transition: border-color var(--motion-fast), transform var(--motion-fast);
+}
+.media-gallery__trigger { display: block; overflow: hidden; color: inherit; }
+.media-gallery__trigger img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform var(--motion-normal) var(--motion-ease-out); }
+.media-gallery__download { display: flex; min-height: 3rem; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-4); color: var(--color-brand-accent); font-size: .82rem; font-weight: 800; text-decoration: none; }
+.media-lightbox { width: min(94vw, 82rem); max-width: none; padding: 0; border: 1px solid var(--color-border-strong); border-radius: var(--radius-lg); background: var(--color-page); color: var(--color-text); }
+.media-lightbox::backdrop { background: rgb(0 0 0 / .82); }
+.media-lightbox__surface { display: grid; gap: var(--space-3); padding: var(--space-4); }
+.media-lightbox__toolbar,
+.media-lightbox__navigation { display: flex; align-items: center; justify-content: space-between; }
+.media-lightbox__toolbar { color: var(--color-text-secondary); font-size: .85rem; font-weight: 800; }
+.media-lightbox figure { display: grid; min-height: 12rem; margin: 0; place-items: center; }
+.media-lightbox figure img { width: auto; max-width: 100%; max-height: 72vh; object-fit: contain; }
+.click-video { padding-inline: var(--space-4); }
+.click-video__poster { position: relative; display: grid; width: min(100%, var(--content-max)); padding: 0; margin-inline: auto; overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-card); cursor: pointer; place-items: center; }
+.click-video__poster img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.click-video__poster span { position: absolute; display: grid; width: 4rem; aspect-ratio: 1; border-radius: 50%; background: var(--color-brand-accent); color: var(--color-brand-accent-contrast); place-items: center; }
+.click-video iframe { display: block; width: min(100%, var(--content-max)); aspect-ratio: 16 / 9; margin-inline: auto; border: 0; border-radius: var(--radius-lg); }
+
+@media (min-width: 48rem) {
+  .media-gallery__item { flex-basis: min(48%, 38rem); }
+}
+
+@media (min-width: 64rem) {
+  .media-gallery__item { flex-basis: calc((100% - 1rem) / 2); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .media-gallery__item:hover,
+  .media-gallery__item:focus-within { border-color: var(--color-border-strong); transform: translateY(-.1875rem); }
+  .media-gallery__item:hover img,
+  .media-gallery__item:focus-within img { transform: scale(1.025); }
+  .media-gallery__controls button:not(:disabled):hover,
+  .media-lightbox button:hover { border-color: var(--color-brand-accent); color: var(--color-brand-accent); transform: translateY(-.125rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-gallery__track { scroll-behavior: auto; }
+  .media-gallery__item,
+  .media-gallery__trigger img,
+  .media-gallery__controls button,
+  .media-lightbox button { transform: none !important; }
+}

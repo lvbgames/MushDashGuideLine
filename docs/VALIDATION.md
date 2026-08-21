@@ -22,7 +22,7 @@
 - `robots.txt`는 공개 sitemap index를 가리켜야 하며 404는 `noindex`이고 복잡한 locale 자동 감지나 JavaScript를 사용하지 않아야 한다.
 - `site/public/robots.txt`와 빌드된 `site/dist/robots.txt`는 UTF-8 BOM 없는 동일 byte여야 한다. wildcard와 `Yeti` 각각에 `Allow: /`가 있어야 하고 절대 HTTPS sitemap URL을 포함하며, root `Disallow`, HTML 태그, `/robots.txt` redirect·rewrite는 없어야 한다.
 - Home 빌드 HTML의 `<head>`에는 `siteConfig.naverSiteVerification`과 일치하는 Naver 소유확인 meta가 정확히 한 번 있어야 하며, 과거 Naver HTML 확인 파일은 `public/`과 `dist/` 모두에 없어야 한다.
-- `dist/index.html`의 `<head>`에는 `application/ld+json` script가 정확히 한 번 있어야 하고 다른 HTML에는 없어야 한다. JSON 파싱, 단일 `@graph`, WebSite·Organization 각 1개, publisher의 Organization `@id` 연결, 절대 logo URL, `addressCountry: KR`, 공식 `sameAs` 4개를 검사한다.
+- `dist/index.html`의 `<head>`에는 WebSite·Organization `application/ld+json` script가 정확히 한 번 있어야 한다. Lv.B 자체 Article 네 locale에는 Article script가 각각 한 번, 그 외 HTML에는 0개여야 한다. JSON 파싱, root 단일 `@graph`, Article headline·description·image·날짜·Organization author/publisher·mainEntityOfPage·inLanguage를 검사한다.
 - JSON-LD 직렬화 소스는 `<`를 `\u003c`로 치환해 `</script>` 조기 종료를 방지하고 사용자 입력·runtime 외부 응답을 삽입하지 않아야 한다. `sameAs`는 전체 공식 프로필 4개와 Naver 지원 채널 X·Instagram 2개를 구분한다.
 
 ## 페이지 품질과 메타데이터
@@ -34,6 +34,7 @@
 - Contact의 수신 주소와 locale별 subject·body를 percent-decoding해 손상 여부를 확인하고, 사용하지 않는 form·success 코드가 없는지 검사한다.
 - 신규 Astro 페이지의 외부 새 탭 링크는 보안 속성을 검사한다.
 - News 데이터는 source URL·slug 중복 0건, `publishedAt` 내림차순, locale별 제목·요약 존재, 외부 링크 보안 속성을 검사한다. 개인 블로그는 언론 보도로 분류하지 않고 동일 캠페인의 SNS 재게시를 중복 노출하지 않는다.
+- 내부 News는 locale별 같은 slug 상세 route, 같은 탭 링크, Article OG·JSON-LD를 사용하고 외부 원문 표현·아이콘을 사용하지 않는지 검사한다. Press Kit은 네 locale canonical·hreflang·sitemap, 공개 브랜드 원본, lazy screenshot, 최근 외부 News 재사용과 기존 press mailto를 확인한다.
 - Privacy 4개 HTML에서 `noindex, follow`, 자기 canonical, en·ko·ja·zh-CN·x-default, H1·main 각 1개, JSON-LD 0개, 19개 section ID의 일치·순서, locale별 Footer와 LanguageSwitcher 경로를 검사한다.
 - Terms 4개 HTML에서 `noindex, follow`, 자기 canonical, en·ko·ja·zh-CN·x-default, H1·main 각 1개, JSON-LD 0개, 16개 section ID의 일치·순서, locale별 Footer와 LanguageSwitcher 경로를 검사한다. `Last updated`와 `Effective date`는 locale별 표기로 각각 한 번 표시하고 두 `<time>`의 `datetime` 값은 모두 `2026-08-12`여야 한다.
 - Privacy와 Terms의 locale별 상호 링크, Footer active 상태와 `/terms.html` → `/terms/` forced 301을 검사한다. Terms의 Nintendo, 고정 Steam 환불 시간, 미확인 DLC·시즌패스, 지속 업데이트 보장, 전면 면책, 전속 관할, 확인되지 않은 영구정지 문구는 0건이어야 한다.
@@ -53,6 +54,12 @@
 - 키보드 focus-visible, 모바일 메뉴 열기·Escape 닫기·초점 복귀, 주요 터치 대상 48px 수준을 확인한다.
 - `prefers-reduced-motion`에서 스크롤·전환·애니메이션이 축소되는지 확인한다.
 - 브라우저 콘솔 error·warning과 실패한 이미지 로드를 확인한다.
+- About 프로필은 640·1024 WebP srcset과 승인 PNG fallback, public·dist WebP byte 일치, 4:5 crop을 검사하고 원본 PNG SHA를 유지한다.
+- JavaScript 비활성 상태에서 첫 Home Hero, 모든 본문, 내비게이션, News, 게임 스크린샷 원본 링크와 Press ZIP/개별 다운로드가 남는지 확인한다. reveal의 CSS 기본 상태는 visible이어야 한다.
+- Home rotator는 공식 이미지 3개, 첫 이미지 eager/high priority, dot 3개, Pause/Play accessible name과 hover·focus·document hidden·reduced-motion 정지를 확인한다.
+- 공통 MediaGallery는 native scroll-snap, 이전·다음 label과 경계 disabled, mobile touch scroll, dialog Close·화살표·Escape·backdrop·trigger focus 복귀를 확인한다.
+- Press는 정적 ZIP 3개와 로컬 스크린샷 6개, 개별 PNG/JPG 다운로드, boilerplate Clipboard 상태, public/dist SHA와 ZIP entry integrity를 확인한다. 현재 nullable video URL이 `null`이면 iframe·poster placeholder·영상 UI는 0개여야 한다.
+- Home·MushHero·Press·About mobile Lighthouse는 각각 90·90·90·95 이상, 모든 대상 CLS 0.02 이하·TBT 100ms 이하를 유지하고 report JSON과 Chrome 임시 profile은 저장소에 추가하지 않는다.
 
 ## Naver SEO 운영 감사
 
@@ -61,7 +68,7 @@
 - 운영 확인 명령은 `curl.exe -sS -D - https://lvb.kr/robots.txt`, `curl.exe -sS -D - -A "Mozilla/5.0 (compatible; Yeti/1.1; +https://naver.me/spd)" https://lvb.kr/robots.txt`, `curl.exe -sS -D - -o NUL http://lvb.kr/robots.txt`를 사용한다.
 - HTTP와 `www`는 대표 HTTPS 호스트로 301/308인지, 정규 페이지는 200인지, custom 404는 실제 404인지 확인한다.
 - 색인 페이지에 `noindex`·`nofollow`·X-Robots-Tag 제한이 없는지 확인하고 404의 `noindex, follow`는 허용한다.
-- sitemap의 모든 `loc`는 `https://lvb.kr/` 절대 URL이어야 하며 28개 route가 모두 200인지 확인한다.
+- sitemap의 모든 `loc`는 `https://lvb.kr/` 절대 URL이어야 하며 현재 36개 색인 route를 확인한다.
 - `index.html` 직접 URL은 `netlify.toml`의 깊이별 forced 301 규칙이 대표 trailing-slash URL을 가리키는지 확인하고, 실제 동작은 배포 후 재검사한다.
 - title·description 중복, 자기 canonical, H1 하나, 정적 main/nav/footer, frame·meta refresh·JavaScript redirect, 빈·hash-only·javascript href, broken 내부 링크, 내부 nofollow, 이미지 alt·크기·asset을 전체 생성 HTML에서 기계적으로 수집한다.
 - News가 외부 기사 목록이고 자체 상세 본문이 없으면 RSS를 만들지 않으며, 자체 공지·개발일지 상세 route와 본문 발행이 생길 때 재검토한다.

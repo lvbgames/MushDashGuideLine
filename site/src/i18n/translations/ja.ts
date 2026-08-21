@@ -41,12 +41,18 @@ export const ja: Translation = {
     privacy: 'プライバシー',
     terms: 'ゲーム利用規約',
     opensNewTab: '新しいタブで開きます',
-    mediaUnavailable: 'ゲーム画像を読み込めません'
+    mediaUnavailable: 'ゲーム画像を読み込めません',
+    previousImage: '前の画像',
+    nextImage: '次の画像',
+    openImage: '画像を拡大表示',
+    closeImage: '画像ビューアーを閉じる',
+    playVideo: '動画を再生'
   },
   home: {
     heroEyebrow: 'Lv.Bの次回作',
     heroDescription: '力を合わせて守り、ビルドを育て、プレイするたびに新しい戦略を見つけよう。',
     heroSecondary: 'MushHeroを詳しく見る',
+    heroMedia: { pause: 'メイン画像を一時停止', play: 'メイン画像を再生', showImage: 'メイン画像を表示' },
     featuredEyebrow: '協力型ローグライトディフェンス',
     featuredTitle: '迫るウェーブに、毎回新しい答えを。',
     featuredTitleLines: ['迫るウェーブに、', '毎回新しい答えを。'],
@@ -199,12 +205,14 @@ export const ja: Translation = {
     allEyebrow: '掲載一覧',
     allTitle: 'ニュース＆プレス',
     kindLabels: {
+      'studio-update': 'スタジオニュース',
       interview: 'インタビュー',
       'press-coverage': 'メディア掲載',
       'blog-review': '試遊レポート',
       feature: '特集'
     },
     sourceCta: '原文を読む',
+    internalCta: '記事を読む',
     followEyebrow: '公式チャンネル',
     followTitle: 'Lv.Bをフォロー',
     followDescription: 'スタジオやゲームの最新情報は、Lv.Bの公式チャンネルでご覧いただけます。'

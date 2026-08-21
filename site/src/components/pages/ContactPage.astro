@@ -1,6 +1,8 @@
 ---
 import { contactPolicy } from '../../data/contact';
 import { games } from '../../data/games';
+import { pressTranslations } from '../../data/press';
+import { getLocalePath } from '../../i18n/config';
 import type { Locale } from '../../i18n/config';
 import { getTranslation } from '../../i18n/translations';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -15,9 +17,11 @@ interface Props {
 
 const { locale } = Astro.props;
 const translation = getTranslation(locale);
+const pressTranslation = pressTranslations[locale];
 const ogImage = games.find((game) => game.slug === 'mushhero')?.screenshots[0]?.src;
 const mailtoHref = `mailto:${contactPolicy.businessEmail}?subject=${encodeURIComponent(translation.contact.mailtoSubject)}&body=${encodeURIComponent(translation.contact.mailtoBodyTemplate)}`;
 const emailHref = `mailto:${contactPolicy.businessEmail}`;
+const pressPath = getLocalePath(locale, 'press');
 
 if (!ogImage) {
   throw new Error('Contact page requires a verified Open Graph image.');
@@ -33,14 +37,14 @@ if (!ogImage) {
   ogImageAlt={translation.gamesPage.gameImageAlts.mushhero}
 >
   <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="contact" translation={translation} />
-  <main class="contact-page">
+  <main class="contact-page" data-motion-page>
     <Container className="contact-page__inner">
-      <header class="contact-page__header">
+      <header class="contact-page__header" data-reveal>
         <p class="eyebrow">{translation.contact.eyebrow}</p>
         <h1>{translation.contact.title}</h1>
         <p>{translation.contact.description}</p>
       </header>
-      <div class="contact-page__layout">
+      <div class="contact-page__layout" data-reveal>
         <section class="contact-page__categories" aria-labelledby="contact-categories-title">
           <h2 id="contact-categories-title">{translation.contact.categoriesTitle}</h2>
           <ul>
@@ -61,7 +65,7 @@ if (!ogImage) {
           <p class="contact-email-card__notice">{translation.contact.emailNotice}</p>
         </section>
       </div>
-      <section class="contact-page__guidance" aria-labelledby="contact-guidance-title">
+      <section class="contact-page__guidance" aria-labelledby="contact-guidance-title" data-reveal>
         <h2 id="contact-guidance-title">{translation.contact.guidanceTitle}</h2>
         <div class="contact-page__guidance-grid">
           <article>
@@ -72,12 +76,15 @@ if (!ogImage) {
           <article>
             <h3>{translation.contact.pressTitle}</h3>
             <p>{translation.contact.pressDescription}</p>
-            <a href={mailtoHref}>{translation.contact.pressCta}</a>
+            <div class="contact-page__guidance-actions">
+              <a href={mailtoHref}>{translation.contact.pressCta}</a>
+              <a href={pressPath}>{pressTranslation.pressKitCta}</a>
+            </div>
           </article>
         </div>
       </section>
       {contactPolicy.discordUrl && (
-        <section class="contact-page__support" aria-labelledby="contact-support-title">
+        <section class="contact-page__support" aria-labelledby="contact-support-title" data-reveal>
           <h2 id="contact-support-title">{translation.contact.supportTitle}</h2>
           <p>{translation.contact.supportNote}</p>
           <ButtonLink href={contactPolicy.discordUrl} variant="quiet" external externalLabel={translation.common.opensNewTab}>

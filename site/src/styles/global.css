@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "./motion.css";
+@import "./media-gallery.css";
 @import "./home.css";
 @import "./game-detail.css";
 @import "./about.css";
@@ -567,6 +569,7 @@ h3 {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-card);
+  transition: border-color var(--motion-fast), transform var(--motion-fast) var(--motion-ease-out);
 }
 
 .game-overview--primary {
@@ -767,6 +770,7 @@ h3 {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-card);
+  transition: border-color var(--motion-fast), transform var(--motion-fast) var(--motion-ease-out);
 }
 
 .social-link-card .external-link {
@@ -837,8 +841,10 @@ h3 {
 }
 
 .social-link-card__action::after {
+  display: inline-block;
   margin-left: var(--space-2);
   content: "↗";
+  transition: transform var(--motion-fast) var(--motion-ease-out);
 }
 
 .social-links--inline {
@@ -986,8 +992,16 @@ h3 {
 }
 
 .contact-page__guidance a::after {
+  display: inline-block;
   margin-left: var(--space-2);
   content: "→";
+  transition: transform var(--motion-fast) var(--motion-ease-out);
+}
+
+.contact-page__guidance-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
 }
 
 .contact-email-card {
@@ -1113,7 +1127,7 @@ h3 {
   }
 
   .button-link:hover {
-    transform: translateY(-0.125rem);
+    transform: translateY(-0.1875rem);
   }
 
   .button-link--primary:hover {
@@ -1129,6 +1143,26 @@ h3 {
   .social-links--list .external-link:hover {
     background: var(--color-card);
     color: var(--color-brand-cream);
+  }
+
+  .game-overview:hover,
+  .game-overview:focus-within,
+  .social-link-card:hover,
+  .social-link-card:focus-within {
+    border-color: var(--color-border-strong);
+    transform: translateY(-.1875rem);
+  }
+
+  .social-links--list .social-link-card:hover,
+  .social-links--list .social-link-card:focus-within {
+    transform: none;
+  }
+
+  .social-link-card:hover .social-link-card__action::after,
+  .social-link-card:focus-within .social-link-card__action::after,
+  .contact-page__guidance a:hover::after,
+  .contact-page__guidance a:focus-visible::after {
+    transform: translateX(.25rem);
   }
 
   .screenshot-gallery img {

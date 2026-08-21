@@ -1,6 +1,7 @@
 ---
 import { getLocalePath, type Locale, type SiteRoute } from '../../i18n/config';
 import { newsItems } from '../../data/news';
+import { pressTranslations } from '../../data/press';
 import { socialLinks } from '../../data/socialLinks';
 import type { Translation } from '../../i18n/translations/en';
 import Container from '../ui/Container.astro';
@@ -20,6 +21,7 @@ const newsPath = getLocalePath(locale, 'news');
 const contactPath = getLocalePath(locale, 'contact');
 const privacyPath = getLocalePath(locale, 'privacy');
 const termsPath = getLocalePath(locale, 'terms');
+const pressPath = getLocalePath(locale, 'press');
 const gamesCurrent = route === 'games' || route === 'mushhero' || route === 'mushdash';
 const year = new Date().getFullYear();
 ---
@@ -36,8 +38,9 @@ const year = new Date().getFullYear();
     <nav aria-label={translation.footer.navigationLabel}>
       <a href={gamesPath} aria-current={gamesCurrent ? 'page' : undefined}>{translation.nav.games}</a>
       <a href={aboutPath} aria-current={route === 'about' ? 'page' : undefined}>{translation.nav.about}</a>
-      {newsItems.length > 0 && <a href={newsPath} aria-current={route === 'news' ? 'page' : undefined}>{translation.nav.news}</a>}
+      {newsItems.length > 0 && <a href={newsPath} aria-current={route === 'news' || route === 'news-article' ? 'page' : undefined}>{translation.nav.news}</a>}
       <a href={contactPath} aria-current={route === 'contact' ? 'page' : undefined}>{translation.nav.contact}</a>
+      <a href={pressPath} aria-current={route === 'press' ? 'page' : undefined}>{pressTranslations[locale].navLabel}</a>
       <a href={privacyPath} aria-current={route === 'privacy' ? 'page' : undefined}>{translation.common.privacy}</a>
       <a href={termsPath} aria-current={route === 'terms' ? 'page' : undefined}>{translation.common.terms}</a>
     </nav>

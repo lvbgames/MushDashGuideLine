@@ -42,7 +42,7 @@ if (!ogImage) {
   ogImageAlt={translation.gamesPage.gameImageAlts.mushhero}
 >
   <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="home" translation={translation} />
-  <main>
+  <main data-motion-page>
     <HomeHero game={mushHero} translation={translation} detailPath={getLocalePath(locale, 'mushhero')} />
     <FeaturedGameSection game={mushHero} translation={translation} />
     <GamesOverview featured={mushHero} secondary={mushDash} translation={translation} />

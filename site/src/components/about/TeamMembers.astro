@@ -26,16 +26,25 @@ const { members, translation } = Astro.props;
               decoding="async"
             />
             {member.profileImage && (
-              <img
-                class="about-team-card__portrait"
-                src={member.profileImage}
-                width="1254"
-                height="1254"
-                alt={translation.about.team.profileAlt.replace('{name}', member.name)}
-                loading="lazy"
-                decoding="async"
-                onerror="this.remove()"
-              />
+              <picture class="about-team-card__portrait-picture">
+                {member.profileImageWebp.length > 0 && (
+                  <source
+                    type="image/webp"
+                    srcset={member.profileImageWebp.map((image) => `${image.src} ${image.width}w`).join(', ')}
+                    sizes="(min-width: 64rem) 24vw, (min-width: 48rem) calc((100vw - 5rem) / 2), calc(100vw - 2rem)"
+                  />
+                )}
+                <img
+                  class="about-team-card__portrait"
+                  src={member.profileImage}
+                  width="1254"
+                  height="1254"
+                  alt={translation.about.team.profileAlt.replace('{name}', member.name)}
+                  loading="lazy"
+                  decoding="async"
+                  onerror="this.parentElement?.remove()"
+                />
+              </picture>
             )}
           </div>
           <div class="about-team-card__body">

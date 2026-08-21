@@ -13,9 +13,20 @@ export function isLocale(value: string): value is Locale {
   return (locales as readonly string[]).includes(value);
 }
 
-export type SiteRoute = 'home' | 'games' | 'about' | 'contact' | 'news' | 'privacy' | 'terms' | 'mushhero' | 'mushdash';
+export type SiteRoute =
+  | 'home'
+  | 'games'
+  | 'about'
+  | 'contact'
+  | 'news'
+  | 'news-article'
+  | 'press'
+  | 'privacy'
+  | 'terms'
+  | 'mushhero'
+  | 'mushdash';
 
-export function getLocalePath(locale: Locale, route: SiteRoute = 'home'): string {
+export function getLocalePath(locale: Locale, route: SiteRoute = 'home', routeParam?: string): string {
   const prefix = locale === defaultLocale ? '' : `/${locale}`;
 
   if (route === 'home') {
@@ -32,6 +43,17 @@ export function getLocalePath(locale: Locale, route: SiteRoute = 'home'): string
 
   if (route === 'news') {
     return `${prefix}/news/`;
+  }
+
+  if (route === 'news-article') {
+    if (!routeParam) {
+      throw new Error('News article routes require a slug.');
+    }
+    return `${prefix}/news/${routeParam}/`;
+  }
+
+  if (route === 'press') {
+    return `${prefix}/press/`;
   }
 
   if (route === 'privacy') {

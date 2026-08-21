@@ -9,6 +9,7 @@ import GameFeatureGrid from '../game-detail/GameFeatureGrid.astro';
 import GameOverview from '../game-detail/GameOverview.astro';
 import GamePurchaseCta from '../game-detail/GamePurchaseCta.astro';
 import GameScreenshotSection from '../game-detail/GameScreenshotSection.astro';
+import ClickToLoadVideo from '../media/ClickToLoadVideo.astro';
 import MoreGamesSection from '../game-detail/MoreGamesSection.astro';
 import SiteFooter from '../layout/SiteFooter.astro';
 import SiteHeader from '../layout/SiteHeader.astro';
@@ -44,11 +45,14 @@ if (!ogImage) {
   ogImageAlt={content.screenshotAlts[0]}
 >
   <SiteHeader locale={locale} currentPath={Astro.url.pathname} route={route} translation={translation} />
-  <main class="game-detail-page" data-game={slug}>
+  <main class="game-detail-page" data-game={slug} data-motion-page>
     <GameDetailHero game={game} locale={locale} content={content} common={translation.common} />
     <GameOverview content={content} />
     <GameFeatureGrid content={content} />
     <GameScreenshotSection game={game} content={content} common={translation.common} />
+    {game.youtubeTrailerUrl && game.videoPoster && (
+      <ClickToLoadVideo url={game.youtubeTrailerUrl} poster={game.videoPoster} title={game.title} playLabel={translation.common.playVideo} />
+    )}
     <GamePurchaseCta game={game} content={content} common={translation.common} />
     <MoreGamesSection
       game={otherGame}

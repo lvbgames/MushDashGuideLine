@@ -1,0 +1,36 @@
+---
+import type { GameImage } from '../../types/game';
+
+interface Props {
+  url: string;
+  poster: GameImage;
+  title: string;
+  playLabel: string;
+}
+
+const { url, poster, title, playLabel } = Astro.props;
+---
+
+<section class="click-video page-section" aria-label={title} data-click-video data-video-url={url}>
+  <button class="click-video__poster" type="button" aria-label={`${playLabel}: ${title}`} data-video-play>
+    <img src={poster.src} width={poster.width} height={poster.height} alt="" loading="lazy" decoding="async" />
+    <span aria-hidden="true">▶</span>
+  </button>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-click-video]').forEach((root) => {
+    const button = root.querySelector<HTMLButtonElement>('[data-video-play]');
+    const url = root.dataset.videoUrl;
+    if (!button || !url) return;
+    button.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = url;
+      iframe.title = button.getAttribute('aria-label') ?? 'Game video';
+      iframe.loading = 'lazy';
+      iframe.allow = 'accelerometer; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      button.replaceWith(iframe);
+    }, { once: true });
+  });
+</script>

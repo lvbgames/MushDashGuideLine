@@ -11,10 +11,11 @@ interface Props {
   locale: Locale;
   currentPath: string;
   route: SiteRoute;
+  routeParam?: string;
   translation: Translation;
 }
 
-const { locale, currentPath, route, translation } = Astro.props;
+const { locale, currentPath, route, routeParam, translation } = Astro.props;
 const localeRoot = getLocalePath(locale, 'home');
 const gamesPath = getLocalePath(locale, 'games');
 const aboutPath = getLocalePath(locale, 'about');
@@ -25,7 +26,7 @@ const links = [
   { label: translation.nav.games, href: gamesPath, current: gamesCurrent },
   { label: translation.nav.about, href: aboutPath, current: route === 'about' },
   ...(newsItems.length > 0
-    ? [{ label: translation.nav.news, href: newsPath, current: route === 'news' }]
+    ? [{ label: translation.nav.news, href: newsPath, current: route === 'news' || route === 'news-article' }]
     : []),
   ...(socialLinks.some((link) => link.enabled && link.url)
     ? [{ label: translation.nav.follow, href: `${localeRoot}#community`, current: false }]
@@ -43,9 +44,9 @@ const links = [
     <nav class="desktop-navigation" aria-label={translation.nav.primaryLabel}>
       {links.map((link) => <a href={link.href} aria-current={link.current ? 'page' : undefined}>{link.label}</a>)}
     </nav>
-    <LanguageSwitcher locale={locale} currentPath={currentPath} route={route} label={translation.nav.language} className="desktop-language" />
+    <LanguageSwitcher locale={locale} currentPath={currentPath} route={route} routeParam={routeParam} label={translation.nav.language} className="desktop-language" />
     <MobileNavigation links={links} navigationLabel={translation.nav.mobileLabel} toggleLabel={translation.nav.toggleMenu}>
-      <LanguageSwitcher locale={locale} currentPath={currentPath} route={route} label={translation.nav.language} className="mobile-language" />
+      <LanguageSwitcher locale={locale} currentPath={currentPath} route={route} routeParam={routeParam} label={translation.nav.language} className="mobile-language" />
     </MobileNavigation>
   </Container>
 </header>

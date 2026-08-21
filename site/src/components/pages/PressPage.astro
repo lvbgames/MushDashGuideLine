@@ -1,0 +1,268 @@
+---
+import { company } from '../../data/company';
+import { contactPolicy } from '../../data/contact';
+import { games } from '../../data/games';
+import { newsItems } from '../../data/news';
+import { pressAssets, pressDownloads, pressScreenshots, pressTranslations } from '../../data/press';
+import { siteConfig } from '../../config/site';
+import type { Locale } from '../../i18n/config';
+import { getTranslation } from '../../i18n/translations';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/press.css';
+import GameStoreButtons from '../game/GameStoreButtons.astro';
+import NewsItemCard from '../news/NewsItemCard.astro';
+import SiteFooter from '../layout/SiteFooter.astro';
+import SiteHeader from '../layout/SiteHeader.astro';
+import ButtonLink from '../ui/ButtonLink.astro';
+import Container from '../ui/Container.astro';
+import MediaGallery from '../media/MediaGallery.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const translation = getTranslation(locale);
+const press = pressTranslations[locale];
+const mushHero = games.find((game) => game.slug === 'mushhero');
+const ogImage = mushHero?.screenshots[0]?.src;
+const recentPress = newsItems
+  .filter((item) => item.type === 'external')
+  .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+  .slice(0, 4);
+const mailtoHref = `mailto:${contactPolicy.businessEmail}?subject=${encodeURIComponent(translation.contact.mailtoSubject)}&body=${encodeURIComponent(translation.contact.mailtoBodyTemplate)}`;
+const releaseLabels = {
+  upcoming: translation.common.coming2027,
+  'early-access': translation.common.earlyAccess,
+  available: translation.common.available
+} as const;
+const numberLocale = locale === 'zh-cn' ? 'zh-CN' : locale;
+const formatBytes = (bytes: number) => bytes >= 1024 * 1024
+  ? `${new Intl.NumberFormat(numberLocale, { maximumFractionDigits: 1 }).format(bytes / (1024 * 1024))} MB`
+  : `${new Intl.NumberFormat(numberLocale, { maximumFractionDigits: 0 }).format(bytes / 1024)} KB`;
+const galleryItems = pressScreenshots.map((asset) => {
+  const game = games.find((entry) => entry.slug === asset.game);
+  const gameIndex = pressScreenshots.filter((entry) => entry.game === asset.game).findIndex((entry) => entry.path === asset.path);
+  const detail = asset.game === 'mushhero' ? translation.mushHero : translation.mushDash;
+  return {
+    src: asset.path,
+    width: asset.width,
+    height: asset.height,
+    alt: detail.screenshotAlts[gameIndex] ?? game?.title ?? asset.game,
+    downloadHref: asset.path,
+    downloadName: asset.path.split('/').at(-1)
+  };
+});
+
+if (!ogImage) {
+  throw new Error('Press Kit requires a verified MushHero image.');
+}
+---
+
+<BaseLayout
+  locale={locale}
+  route="press"
+  title={press.metaTitle}
+  description={press.metaDescription}
+  ogImage={ogImage}
+  ogImageAlt={translation.gamesPage.gameImageAlts.mushhero}
+>
+  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="press" translation={translation} />
+  <main class="press-page" data-motion-page>
+    <section class="press-hero" aria-labelledby="press-title">
+      <Container>
+        <p class="eyebrow">{press.heroEyebrow}</p>
+        <h1 id="press-title">{press.heroTitle}</h1>
+        <p>{press.heroDescription}</p>
+      </Container>
+    </section>
+
+    <section class="press-about page-section" aria-labelledby="press-about-title">
+      <Container className="press-about__inner">
+        <div>
+          <p class="eyebrow">{press.aboutEyebrow}</p>
+          <h2 id="press-about-title">{press.aboutTitle}</h2>
+          <p data-press-boilerplate>{translation.about.heroDescription}</p>
+          <button
+            class="press-copy-button"
+            type="button"
+            data-press-copy
+            data-copy-label={press.copyBoilerplate}
+            data-copied-label={press.copiedBoilerplate}
+            data-error-label={press.copyFailed}
+          >{press.copyBoilerplate}</button>
+          <span class="screen-reader" aria-live="polite" data-press-copy-status></span>
+        </div>
+        <div class="press-about__identity" aria-label={`${company.name} / ${company.alternateName}`}>
+          <img src="/brand/lvb-logo.png" width="1876" height="769" alt="Lv.B" loading="lazy" decoding="async" />
+        </div>
+      </Container>
+    </section>
+
+    <section class="press-games page-section" aria-labelledby="press-games-title">
+      <Container>
+        <div class="press-section-heading">
+          <p class="eyebrow">{press.gamesEyebrow}</p>
+          <h2 id="press-games-title">{press.gamesTitle}</h2>
+        </div>
+        <div class="press-games__grid">
+          {games.map((game) => {
+            const image = game.screenshots[0] ?? game.heroImage;
+            const gameCopy = game.slug === 'mushhero' ? translation.gamesPage.featuredDescription : translation.gamesPage.releasedDescription;
+            const imageAlt = translation.gamesPage.gameImageAlts[game.slug];
+            return (
+              <article class:list={['press-game', `press-game--${game.slug}`]}>
+                {image && <img src={image.src} width={image.width} height={image.height} alt={imageAlt} loading="lazy" decoding="async" />}
+                <div class="press-game__body">
+                  <div class="press-game__meta">
+                    <span>{press.gameGenres[game.slug]}</span>
+                    <span>{releaseLabels[game.releaseStatus]}</span>
+                  </div>
+                  <h3>{game.title}</h3>
+                  <p>{gameCopy}</p>
+                  <GameStoreButtons game={game} labels={translation.common} steamPrimary={game.slug === 'mushhero'} />
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </Container>
+    </section>
+
+    <section class="press-brand page-section" aria-labelledby="press-brand-title">
+      <Container>
+        <div class="press-section-heading">
+          <p class="eyebrow">{press.brandEyebrow}</p>
+          <h2 id="press-brand-title">{press.brandTitle}</h2>
+          <p>{press.brandDescription}</p>
+        </div>
+        <div class="press-brand__grid">
+          {pressAssets.map((asset) => (
+            <article class="press-brand-card">
+              <div class="press-brand-card__preview">
+                <img src={asset.path} width={asset.width} height={asset.height} alt={press.assetLabels[asset.id]} loading="lazy" decoding="async" />
+              </div>
+              <div class="press-brand-card__meta">
+                <div>
+                  <h3>{press.assetLabels[asset.id]}</h3>
+                  <p>{asset.width} × {asset.height} PNG</p>
+                </div>
+                <a href={asset.path} download={asset.downloadName}>
+                  {press.downloadPng}<span aria-hidden="true"> ↓</span>
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </Container>
+    </section>
+
+    <section class="press-downloads page-section" aria-labelledby="press-downloads-title">
+      <Container>
+        <div class="press-section-heading">
+          <p class="eyebrow">{press.downloadsEyebrow}</p>
+          <h2 id="press-downloads-title">{press.downloadsTitle}</h2>
+        </div>
+        <div class="press-downloads__grid">
+          {pressDownloads.map((download) => (
+            <article class="press-download-card">
+              <p>{download.contents}</p>
+              <h3>{press.downloadLabels[download.id]}</h3>
+              <p>{press.downloadDescriptions[download.id]}</p>
+              <div class="press-download-card__meta">
+                <span>{download.fileName}</span>
+                <span>{formatBytes(download.bytes)}</span>
+              </div>
+              <a href={download.path} download={download.fileName}>{press.downloadZip}<span aria-hidden="true"> ↓</span></a>
+            </article>
+          ))}
+        </div>
+      </Container>
+    </section>
+
+    <section class="press-screenshots page-section" aria-labelledby="press-screenshots-title">
+      <Container>
+        <div class="press-section-heading">
+          <p class="eyebrow">{press.screenshotsEyebrow}</p>
+          <h2 id="press-screenshots-title">{press.screenshotsTitle}</h2>
+        </div>
+        <MediaGallery
+          items={galleryItems}
+          label={press.screenshotsTitle}
+          previousLabel={translation.common.previousImage}
+          nextLabel={translation.common.nextImage}
+          openLabel={translation.common.openImage}
+          closeLabel={translation.common.closeImage}
+          downloadLabel={press.downloadOriginal}
+        />
+      </Container>
+    </section>
+
+    <section class="press-facts page-section" aria-labelledby="press-facts-title">
+      <Container>
+        <div class="press-section-heading">
+          <p class="eyebrow">{press.factsEyebrow}</p>
+          <h2 id="press-facts-title">{press.factsTitle}</h2>
+        </div>
+        <dl>
+          <div><dt>{press.factLabels.studio}</dt><dd>{company.name} ({company.alternateName})</dd></div>
+          <div><dt>{press.factLabels.basedIn}</dt><dd>{press.basedInValue}</dd></div>
+          <div><dt>{press.factLabels.currentGames}</dt><dd>{games.map((game) => game.title).join(', ')}</dd></div>
+          <div><dt>{press.factLabels.website}</dt><dd><a href={siteConfig.url}>{siteConfig.url.replace('https://', '')}</a></dd></div>
+          <div><dt>{press.factLabels.contact}</dt><dd><a href={`mailto:${contactPolicy.businessEmail}`}>{contactPolicy.businessEmail}</a></dd></div>
+        </dl>
+      </Container>
+    </section>
+
+    <section class="press-recent page-section" aria-labelledby="press-recent-title">
+      <Container>
+        <div class="press-section-heading">
+          <p class="eyebrow">{press.recentEyebrow}</p>
+          <h2 id="press-recent-title">{press.recentTitle}</h2>
+        </div>
+        <div class="news-list">
+          {recentPress.map((item) => (
+            <NewsItemCard item={item} locale={locale} translation={translation} titleId={`press-${item.slug}`} />
+          ))}
+        </div>
+      </Container>
+    </section>
+
+    <section class="press-contact page-section" aria-labelledby="press-contact-title">
+      <Container className="press-contact__inner">
+        <div>
+          <p class="eyebrow">{press.contactEyebrow}</p>
+          <h2 id="press-contact-title">{press.contactTitle}</h2>
+          <p>{press.contactDescription}</p>
+        </div>
+        <div>
+          <ButtonLink href={mailtoHref}>{press.contactCta}</ButtonLink>
+          <a class="press-contact__email" href={`mailto:${contactPolicy.businessEmail}`}>{contactPolicy.businessEmail}</a>
+        </div>
+      </Container>
+    </section>
+  </main>
+  <SiteFooter locale={locale} route="press" translation={translation} />
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-press-copy]').forEach((button) => {
+    const boilerplate = document.querySelector<HTMLElement>('[data-press-boilerplate]');
+    const status = document.querySelector<HTMLElement>('[data-press-copy-status]');
+    if (!boilerplate) return;
+
+    button.addEventListener('click', async () => {
+      const text = boilerplate.textContent?.trim() ?? '';
+      try {
+        if (!navigator.clipboard?.writeText) throw new Error('Clipboard API unavailable');
+        await navigator.clipboard.writeText(text);
+        button.textContent = button.dataset.copiedLabel ?? '';
+        if (status) status.textContent = button.dataset.copiedLabel ?? '';
+      } catch {
+        button.textContent = button.dataset.errorLabel ?? '';
+        if (status) status.textContent = button.dataset.errorLabel ?? '';
+      }
+      window.setTimeout(() => { button.textContent = button.dataset.copyLabel ?? ''; }, 1800);
+    });
+  });
+</script>

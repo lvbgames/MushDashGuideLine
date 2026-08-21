@@ -21,6 +21,8 @@ Homepage/
 - `site/src/components/pages/GameDetailPage.astro`: MushHero와 Mush Dash가 공유하는 상세 페이지 조립.
 - `site/src/components/pages/ContactPage.astro`: 문의 범위와 locale별 정적 mailto CTA.
 - `site/src/components/pages/NewsPage.astro`: 최신순 단일 News & Press 목록과 SNS Follow CTA를 공유하는 네 locale 페이지.
+- `site/src/components/pages/PressPage.astro`: 검증 데이터와 공개 자산을 조합하는 네 locale Press Kit.
+- `site/src/components/pages/NewsArticlePage.astro`, `site/src/components/seo/ArticleStructuredData.astro`: Lv.B 자체 글 본문과 article 전용 SEO·JSON-LD.
 - `site/src/components/pages/PrivacyPage.astro`, `site/src/components/privacy/`: 네 locale이 공유하는 Privacy Hero·본문 조립.
 - `site/src/components/pages/TermsPage.astro`, `site/src/components/terms/`, `site/src/components/legal/`: 네 locale Terms Hero·본문과 Privacy/Terms 공통 목차 조립.
 - `site/src/components/news/NewsItemCard.astro`: locale별 제목·요약과 외부 원문 링크를 출력하는 텍스트 카드.
@@ -35,7 +37,8 @@ Homepage/
 - `site/src/data/company.ts`: UI 브랜드명, 한국어 공식 스튜디오 주소, Google Maps 공유 iframe URL과 안전하게 인코딩한 검색 URL.
 - `site/src/data/team.ts`, `site/src/types/team.ts`: 팀원 이름·역할·담당·선택적 프로필 이미지 경로의 단일 원본과 타입.
 - `site/src/data/socialLinks.ts`: 검증된 X·Instagram·Discord·Steam Developer 링크의 단일 원본.
-- `site/src/data/news.ts`, `site/src/types/news.ts`: 원문을 검증한 인터뷰·보도 자료 3건의 type-safe 정적 큐레이션.
+- `site/src/data/news.ts`, `site/src/types/news.ts`: 외부 자료와 Lv.B 자체 글을 구분하는 type-safe 정적 큐레이션.
+- `site/src/data/press.ts`, `site/src/types/press.ts`: Press Kit locale 문구와 공개 브랜드 자산 metadata.
 - `site/src/data/privacy.ts`, `site/src/types/privacy.ts`: 동일 순서 19개 section과 네 언어 Privacy metadata·본문의 typed source.
 - `site/src/data/terms.ts`, `site/src/types/terms.ts`: 한국어 기준 원문과 동일 순서 16개 section을 유지하는 네 언어 Terms typed source.
 - `site/src/i18n/`: route 생성과 네 언어 번역 데이터.
@@ -66,6 +69,11 @@ Homepage/
 ## News & Press 라우트
 
 - `/news/`, `/ko/news/`, `/ja/news/`, `/zh-cn/news/`
+- 자체 글: `/news/bic-2026-mushhero-first-public-playtest/`와 세 locale prefix route
+
+## Press Kit 라우트
+
+- `/press/`, `/ko/press/`, `/ja/press/`, `/zh-cn/press/`
 
 ## 예외 라우트
 

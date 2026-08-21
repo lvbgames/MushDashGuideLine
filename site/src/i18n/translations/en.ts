@@ -68,11 +68,21 @@ export interface Translation {
     terms: string;
     opensNewTab: string;
     mediaUnavailable: string;
+    previousImage: string;
+    nextImage: string;
+    openImage: string;
+    closeImage: string;
+    playVideo: string;
   };
   home: {
     heroEyebrow: string;
     heroDescription: string;
     heroSecondary: string;
+    heroMedia: {
+      pause: string;
+      play: string;
+      showImage: string;
+    };
     featuredEyebrow: string;
     featuredTitle: string;
     featuredTitleLines?: readonly string[];
@@ -194,12 +204,14 @@ export interface Translation {
     allEyebrow: string;
     allTitle: string;
     kindLabels: {
+      'studio-update': string;
       interview: string;
       'press-coverage': string;
       'blog-review': string;
       feature: string;
     };
     sourceCta: string;
+    internalCta: string;
     followEyebrow: string;
     followTitle: string;
     followDescription: string;
@@ -254,12 +266,18 @@ export const en: Translation = {
     privacy: 'Privacy',
     terms: 'Terms',
     opensNewTab: 'opens in a new tab',
-    mediaUnavailable: 'Game image unavailable'
+    mediaUnavailable: 'Game image unavailable',
+    previousImage: 'Previous image',
+    nextImage: 'Next image',
+    openImage: 'Open larger image',
+    closeImage: 'Close image viewer',
+    playVideo: 'Play video'
   },
   home: {
     heroEyebrow: 'Next from Lv.B',
     heroDescription: 'Defend together, shape your build and discover a different strategy every run.',
     heroSecondary: 'View MushHero',
+    heroMedia: { pause: 'Pause hero images', play: 'Play hero images', showImage: 'Show hero image' },
     featuredEyebrow: 'Cooperative roguelite defense',
     featuredTitle: 'Build a new answer to every wave.',
     featuredDescription: 'Fight through waves of monsters and powerful bosses together. Randomized weapons, evolving skills and branching progression make each run your own.',
@@ -408,12 +426,14 @@ export const en: Translation = {
     allEyebrow: 'All coverage',
     allTitle: 'News & Press',
     kindLabels: {
+      'studio-update': 'Studio Update',
       interview: 'Interview',
       'press-coverage': 'Press coverage',
       'blog-review': 'Play review',
       feature: 'Feature'
     },
     sourceCta: 'Read original',
+    internalCta: 'Read update',
     followEyebrow: 'Official channels',
     followTitle: 'Follow Lv.B',
     followDescription: 'Get studio updates, game news and community support from our official channels.'

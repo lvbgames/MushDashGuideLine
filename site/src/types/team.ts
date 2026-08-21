@@ -12,4 +12,5 @@ export interface TeamMember {
   role: TeamRole;
   responsibilities: readonly TeamResponsibility[];
   profileImage: string | null;
+  profileImageWebp: readonly { src: string; width: 640 | 1024 }[];
 }

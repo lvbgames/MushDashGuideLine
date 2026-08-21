@@ -27,8 +27,9 @@
 
 .news-card {
   display: grid;
-  gap: var(--space-4);
-  padding-block: var(--space-7);
+  row-gap: clamp(var(--space-5), 4vw, var(--space-6));
+  column-gap: var(--space-4);
+  padding-block: clamp(1.75rem, 5vw, 2.5rem);
   border-top: 1px solid var(--color-border);
 }
 
@@ -59,6 +60,7 @@
   margin: 0;
   letter-spacing: -0.04em;
   line-height: 1.08;
+  transition: color var(--motion-fast), transform var(--motion-fast) var(--motion-ease-out);
 }
 
 .news-card h3 {
@@ -71,7 +73,8 @@
   color: var(--color-text-secondary);
 }
 
-.news-card .external-link {
+.news-card .external-link,
+.news-card__internal-link {
   display: inline-flex;
   width: fit-content;
   min-height: 3rem;
@@ -81,9 +84,24 @@
   text-decoration: none;
 }
 
+.news-card__internal-link {
+  color: var(--color-brand-accent);
+  font-weight: 800;
+  text-decoration: none;
+}
+
 .news-card__source::after {
+  display: inline-block;
   margin-left: var(--space-2);
   content: "↗";
+  transition: transform var(--motion-fast) var(--motion-ease-out);
+}
+
+.news-card__internal-cta::after {
+  display: inline-block;
+  margin-left: var(--space-2);
+  content: "→";
+  transition: transform var(--motion-fast) var(--motion-ease-out);
 }
 
 .news-archive {
@@ -126,8 +144,27 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .news-card .external-link:hover {
+  .news-card .external-link:hover,
+  .news-card__internal-link:hover {
     color: var(--color-brand-cream);
+  }
+
+  .news-card:hover h3,
+  .news-card:focus-within h3 {
+    color: var(--color-brand-cream);
+    transform: translateX(.25rem);
+  }
+
+  .news-card:hover .news-card__source::after,
+  .news-card:focus-within .news-card__source::after,
+  .news-card:hover .news-card__internal-cta::after,
+  .news-card:focus-within .news-card__internal-cta::after {
+    transform: translateX(.25rem);
+  }
+
+  .news-card:hover .news-card__kind,
+  .news-card:focus-within .news-card__kind {
+    border-color: var(--color-brand-accent);
   }
 }
 
@@ -144,7 +181,8 @@
 
   .news-card h3,
   .news-card > p,
-  .news-card .external-link {
+  .news-card .external-link,
+  .news-card__internal-link {
     grid-column: 2;
   }
 

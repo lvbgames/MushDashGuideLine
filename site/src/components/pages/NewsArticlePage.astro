@@ -1,0 +1,81 @@
+---
+import type { Locale } from '../../i18n/config';
+import { getTranslation } from '../../i18n/translations';
+import type { InternalNewsItem } from '../../types/news';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/news-article.css';
+import ArticleStructuredData from '../seo/ArticleStructuredData.astro';
+import SiteFooter from '../layout/SiteFooter.astro';
+import SiteHeader from '../layout/SiteHeader.astro';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  locale: Locale;
+  article: InternalNewsItem;
+}
+
+const { locale, article } = Astro.props;
+const translation = getTranslation(locale);
+const body = article.localizedBody[locale];
+const dateLocale: Record<Locale, string> = { en: 'en-US', ko: 'ko-KR', ja: 'ja-JP', 'zh-cn': 'zh-CN' };
+const formattedDate = new Intl.DateTimeFormat(dateLocale[locale], {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}).format(new Date(`${article.publishedAt}T00:00:00Z`));
+const title = `${article.localizedTitle[locale]} — Lv.B`;
+---
+
+<BaseLayout
+  locale={locale}
+  route="news-article"
+  routeParam={article.slug}
+  title={title}
+  description={article.localizedSummary[locale]}
+  ogImage={article.heroImage.src}
+  ogImageAlt={translation.gamesPage.gameImageAlts.mushhero}
+  ogType="article"
+  articleMeta={{ publishedTime: article.publishedAt, modifiedTime: article.updatedAt, author: article.author }}
+>
+  <ArticleStructuredData slot="head" article={article} locale={locale} />
+  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="news-article" routeParam={article.slug} translation={translation} />
+  <main class="news-article-page" data-motion-page>
+    <article>
+      <header class="news-article-hero">
+        <Container className="news-article-hero__inner">
+          <div class="news-article-hero__copy">
+            <p class="eyebrow">{translation.news.kindLabels[article.kind]}</p>
+            <h1>{article.localizedTitle[locale]}</h1>
+            <p>{article.localizedSummary[locale]}</p>
+            <div class="news-article-hero__meta">
+              <span>{article.author}</span>
+              <time datetime={article.publishedAt}>{formattedDate}</time>
+            </div>
+          </div>
+          <figure>
+            <img
+              src={article.heroImage.src}
+              width={article.heroImage.width}
+              height={article.heroImage.height}
+              alt={translation.gamesPage.gameImageAlts.mushhero}
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </figure>
+        </Container>
+      </header>
+
+      <Container className="news-article-content">
+        <p class="news-article-content__intro">{body.intro}</p>
+        {body.sections.map((section) => (
+          <section id={section.id} aria-labelledby={`${section.id}-title`}>
+            <h2 id={`${section.id}-title`}>{section.title}</h2>
+            {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+          </section>
+        ))}
+      </Container>
+    </article>
+  </main>
+  <SiteFooter locale={locale} route="news-article" translation={translation} />
+</BaseLayout>

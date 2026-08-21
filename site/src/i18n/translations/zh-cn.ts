@@ -41,12 +41,18 @@ export const zhCn: Translation = {
     privacy: '隐私',
     terms: '游戏服务条款',
     opensNewTab: '在新标签页中打开',
-    mediaUnavailable: '无法加载游戏图片'
+    mediaUnavailable: '无法加载游戏图片',
+    previousImage: '上一张图片',
+    nextImage: '下一张图片',
+    openImage: '查看大图',
+    closeImage: '关闭图片查看器',
+    playVideo: '播放视频'
   },
   home: {
     heroEyebrow: 'Lv.B 全新作品',
     heroDescription: '并肩防守，打造专属构筑，在每次挑战中发现新的策略。',
     heroSecondary: '了解 MushHero',
+    heroMedia: { pause: '暂停主视觉图片', play: '播放主视觉图片', showImage: '显示主视觉图片' },
     featuredEyebrow: '合作 Roguelite 防守游戏',
     featuredTitle: '用全新的策略迎接每一波挑战。',
     featuredTitleLines: ['用全新的策略', '迎接每一波挑战。'],
@@ -198,12 +204,14 @@ export const zhCn: Translation = {
     allEyebrow: '全部报道',
     allTitle: '动态与报道',
     kindLabels: {
+      'studio-update': '工作室动态',
       interview: '访谈',
       'press-coverage': '媒体报道',
       'blog-review': '试玩报告',
       feature: '专题'
     },
     sourceCta: '阅读原文',
+    internalCta: '阅读动态',
     followEyebrow: '官方频道',
     followTitle: '关注 Lv.B',
     followDescription: '通过 Lv.B 官方频道获取工作室动态、游戏资讯与社区支持。'

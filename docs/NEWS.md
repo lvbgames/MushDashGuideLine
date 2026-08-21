@@ -4,11 +4,11 @@ News는 실시간 scraping이나 기사 본문 복제 없이 `site/src/data/news
 
 ## 현재 상태
 
-- `site/src/types/news.ts`와 `site/src/data/news.ts`에 검증된 외부 자료 7건을 정적으로 등록했다.
+- `site/src/types/news.ts`와 `site/src/data/news.ts`에 검증된 외부 자료 7건과 Lv.B 자체 Studio Update 1건을 정적으로 등록했다.
 - `/news/`, `/ko/news/`, `/ja/news/`, `/zh-cn/news/`와 locale별 Header·Footer News 링크를 공개한다.
 - 등록 자료: 인터뷰 1건, 언론 보도 3건, BIC 2026 개인 시연 후기 1건, 개인·공식 기관 소개 2건.
-- 모든 항목은 `publishedAt` 내림차순의 단일 목록에서 동일한 정보 구조로 한 번씩 표시한다. Featured 분리나 첫 항목 시각 강조는 사용하지 않는다.
-- 자동 수집·RSS·검색·scraping 기능은 없으며 기사 상세 route도 만들지 않는다.
+- 모든 항목은 `publishedAt` 내림차순의 단일 목록에서 같은 카드 위계로 한 번씩 표시한다. 외부 글은 원문 새 탭, 내부 글은 같은 locale 상세 route로 연결한다.
+- 자동 수집·검색·scraping 기능은 없다. RSS는 자체 글 운영량과 배포 요구가 확정될 때 별도 검토한다.
 
 ## 항목 추가
 
@@ -31,3 +31,10 @@ News는 실시간 scraping이나 기사 본문 복제 없이 `site/src/data/news
 - 중복 기사와 동일 이벤트의 반복 노출 여부를 검토하고, 별도 가치가 확인될 때만 함께 유지한다.
 - 항목이 다시 0개가 되면 Header·Footer News 링크와 빈 News UI를 노출하지 않는다.
 - 향후 자동 검색은 홈페이지 기능이 아니라 별도 모니터링 작업으로 분리한다.
+
+## Lv.B 자체 글 추가
+
+- `type: internal`, 공통 slug·category·publishedAt·updatedAt·author·검증된 hero image와 네 locale title·summary·body를 하나의 데이터 항목에 추가한다.
+- 정적 `[slug].astro` route가 네 locale 상세 페이지를 생성하며 목록은 날짜로 자동 정렬한다.
+- 자체 글은 Article Open Graph와 Article JSON-LD를 사용하고 외부 원문 CTA·새 탭 아이콘을 사용하지 않는다.
+- 사실·일정·성과를 추측하지 않고 외부 기사 문장을 복제하지 않는다.

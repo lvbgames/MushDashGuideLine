@@ -41,12 +41,18 @@ export const ko: Translation = {
     privacy: '개인정보 처리방침',
     terms: '게임 이용약관',
     opensNewTab: '새 탭에서 열림',
-    mediaUnavailable: '게임 이미지를 불러올 수 없습니다'
+    mediaUnavailable: '게임 이미지를 불러올 수 없습니다',
+    previousImage: '이전 이미지',
+    nextImage: '다음 이미지',
+    openImage: '큰 이미지로 보기',
+    closeImage: '이미지 뷰어 닫기',
+    playVideo: '영상 재생'
   },
   home: {
     heroEyebrow: 'Lv.B의 차기작',
     heroDescription: '함께 전선을 지키고, 나만의 빌드를 완성해 매번 새로운 전략을 만들어 보세요.',
     heroSecondary: 'MushHero 살펴보기',
+    heroMedia: { pause: '대표 이미지 일시정지', play: '대표 이미지 재생', showImage: '대표 이미지 보기' },
     featuredEyebrow: '협동 로그라이트 디펜스',
     featuredTitle: '몰려오는 적에 맞서 매번 새로운 해법을 찾아보세요.',
     featuredTitleLines: ['몰려오는 적에 맞서', '매번 새로운 해법을', '찾아보세요.'],
@@ -198,12 +204,14 @@ export const ko: Translation = {
     allEyebrow: '전체 자료',
     allTitle: 'News & Press',
     kindLabels: {
+      'studio-update': '스튜디오 소식',
       interview: '인터뷰',
       'press-coverage': '언론 보도',
       'blog-review': '플레이 후기',
       feature: '소개'
     },
     sourceCta: '원문 보기',
+    internalCta: '소식 읽기',
     followEyebrow: '공식 채널',
     followTitle: 'Lv.B 소식 받기',
     followDescription: '공식 채널에서 스튜디오와 게임의 새로운 소식을 만나보세요.'

@@ -1,0 +1,16 @@
+---
+import NewsArticlePage from '../../../components/pages/NewsArticlePage.astro';
+import { newsItems } from '../../../data/news';
+import type { InternalNewsItem } from '../../../types/news';
+
+export function getStaticPaths() {
+  return newsItems
+    .filter((item): item is InternalNewsItem => item.type === 'internal')
+    .map((article) => ({ params: { slug: article.slug }, props: { article } }));
+}
+
+interface Props { article: InternalNewsItem; }
+const { article } = Astro.props;
+---
+
+<NewsArticlePage locale="zh-cn" article={article} />

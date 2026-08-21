@@ -4,6 +4,7 @@ import type { Game } from '../../types/game';
 import GameMedia from '../game/GameMedia.astro';
 import Container from '../ui/Container.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
+import MediaGallery from '../media/MediaGallery.astro';
 
 interface Props {
   game: Game;
@@ -18,7 +19,7 @@ const screenshots = game.screenshots.map((image, index) => ({
   index
 }));
 const featured = screenshots[1] ?? screenshots[0];
-const gallery = screenshots.filter((entry) => entry.index !== featured?.index);
+const gallery = screenshots;
 ---
 
 {featured && (
@@ -36,13 +37,14 @@ const gallery = screenshots.filter((entry) => entry.index !== featured?.index);
   <section class="game-detail-gallery page-section" aria-labelledby="screenshot-gallery-title">
     <Container>
       <SectionHeading id="screenshot-gallery-title" eyebrow={content.galleryEyebrow} title={content.galleryTitle} />
-      <div class="game-detail-gallery__grid">
-        {gallery.map((entry) => (
-          <figure>
-            <GameMedia image={entry.image} alt={entry.alt} fallbackText={common.mediaUnavailable} />
-          </figure>
-        ))}
-      </div>
+      <MediaGallery
+        items={gallery.map((entry) => ({ ...entry.image, alt: entry.alt }))}
+        label={content.galleryTitle}
+        previousLabel={common.previousImage}
+        nextLabel={common.nextImage}
+        openLabel={common.openImage}
+        closeLabel={common.closeImage}
+      />
     </Container>
   </section>
 )}

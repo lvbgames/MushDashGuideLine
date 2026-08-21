@@ -1,0 +1,29 @@
+:root {
+  --motion-fast: 180ms;
+  --motion-normal: 320ms;
+  --motion-slow: 460ms;
+  --motion-distance: 1rem;
+  --motion-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.motion-enabled .motion-reveal {
+  transition: opacity var(--motion-slow) var(--motion-ease-out), transform var(--motion-slow) var(--motion-ease-out);
+}
+
+.motion-enabled .motion-reveal:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(var(--motion-distance));
+}
+
+.motion-enabled .motion-reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-reveal,
+  .motion-reveal.is-revealed {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

@@ -1,0 +1,36 @@
+---
+import { siteConfig } from '../../config/site';
+import { getLocalePath, type Locale } from '../../i18n/config';
+import type { InternalNewsItem } from '../../types/news';
+
+interface Props {
+  article: InternalNewsItem;
+  locale: Locale;
+}
+
+const { article, locale } = Astro.props;
+const site = Astro.site ?? new URL(siteConfig.url);
+const canonical = new URL(getLocalePath(locale, 'news-article', article.slug), site).href;
+const languageMap: Record<Locale, string> = { en: 'en', ko: 'ko', ja: 'ja', 'zh-cn': 'zh-CN' };
+const organization = {
+  '@type': 'Organization',
+  '@id': `${siteConfig.url}/#organization`,
+  name: siteConfig.name
+};
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: article.localizedTitle[locale],
+  description: article.localizedSummary[locale],
+  image: article.heroImage.src,
+  datePublished: article.publishedAt,
+  dateModified: article.updatedAt,
+  author: organization,
+  publisher: organization,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+  inLanguage: languageMap[locale]
+};
+const serialized = JSON.stringify(structuredData).replaceAll('<', '\\u003c');
+---
+
+<script is:inline type="application/ld+json" set:html={serialized} />

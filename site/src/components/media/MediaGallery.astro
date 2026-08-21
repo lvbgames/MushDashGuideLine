@@ -1,0 +1,164 @@
+---
+interface GalleryItem {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  downloadHref?: string;
+  downloadName?: string;
+}
+
+interface Props {
+  items: readonly GalleryItem[];
+  label: string;
+  previousLabel: string;
+  nextLabel: string;
+  openLabel: string;
+  closeLabel: string;
+  downloadLabel?: string;
+}
+
+const { items, label, previousLabel, nextLabel, openLabel, closeLabel, downloadLabel } = Astro.props;
+---
+
+{items.length > 0 && (
+  <div class="media-gallery" data-media-gallery>
+    <div class="media-gallery__controls" data-gallery-controls hidden>
+      <button type="button" data-gallery-previous aria-label={previousLabel}>←</button>
+      <button type="button" data-gallery-next aria-label={nextLabel}>→</button>
+    </div>
+    <div class="media-gallery__track" data-gallery-track role="region" aria-label={label} tabindex="0">
+      {items.map((item, index) => (
+        <figure class="media-gallery__item" data-gallery-item>
+          <a
+            class="media-gallery__trigger"
+            href={item.src}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-gallery-open
+            data-gallery-index={index}
+            aria-label={`${openLabel}: ${item.alt}`}
+          >
+            <img src={item.src} width={item.width} height={item.height} alt={item.alt} loading="lazy" decoding="async" />
+          </a>
+          {item.downloadHref && downloadLabel && (
+            <a class="media-gallery__download" href={item.downloadHref} download={item.downloadName}>
+              {downloadLabel}<span aria-hidden="true"> ↓</span>
+            </a>
+          )}
+        </figure>
+      ))}
+    </div>
+    <p class="screen-reader" aria-live="polite" data-gallery-live></p>
+    <dialog class="media-lightbox" data-gallery-dialog aria-label={label}>
+      <div class="media-lightbox__surface">
+        <div class="media-lightbox__toolbar">
+          <span data-lightbox-count aria-live="polite"></span>
+          <button type="button" data-lightbox-close aria-label={closeLabel}>×</button>
+        </div>
+        <figure data-lightbox-figure></figure>
+        <div class="media-lightbox__navigation">
+          <button type="button" data-lightbox-previous aria-label={previousLabel}>←</button>
+          <button type="button" data-lightbox-next aria-label={nextLabel}>→</button>
+        </div>
+      </div>
+    </dialog>
+  </div>
+)}
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-media-gallery]').forEach((gallery) => {
+    const track = gallery.querySelector<HTMLElement>('[data-gallery-track]');
+    const items = Array.from(gallery.querySelectorAll<HTMLElement>('[data-gallery-item]'));
+    const controls = gallery.querySelector<HTMLElement>('[data-gallery-controls]');
+    const previous = gallery.querySelector<HTMLButtonElement>('[data-gallery-previous]');
+    const next = gallery.querySelector<HTMLButtonElement>('[data-gallery-next]');
+    const dialog = gallery.querySelector<HTMLDialogElement>('[data-gallery-dialog]');
+    const lightboxFigure = gallery.querySelector<HTMLElement>('[data-lightbox-figure]');
+    const count = gallery.querySelector<HTMLElement>('[data-lightbox-count]');
+    const live = gallery.querySelector<HTMLElement>('[data-gallery-live]');
+    const lightboxPrevious = gallery.querySelector<HTMLButtonElement>('[data-lightbox-previous]');
+    const lightboxNext = gallery.querySelector<HTMLButtonElement>('[data-lightbox-next]');
+    const close = gallery.querySelector<HTMLButtonElement>('[data-lightbox-close]');
+    let currentIndex = 0;
+    let returnFocus: HTMLElement | null = null;
+    let lightboxImage: HTMLImageElement | null = null;
+
+    if (!track || items.length === 0) return;
+
+    const updateTrackControls = () => {
+      const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+      if (previous) previous.disabled = track.scrollLeft <= 2;
+      if (next) next.disabled = track.scrollLeft >= maxScroll - 2;
+    };
+
+    const scrollByItem = (direction: number) => {
+      const itemWidth = items[0]?.getBoundingClientRect().width ?? track.clientWidth;
+      track.scrollBy({ left: direction * (itemWidth + 16), behavior: 'smooth' });
+    };
+
+    if (controls && items.length > 1) {
+      controls.hidden = false;
+      previous?.addEventListener('click', () => scrollByItem(-1));
+      next?.addEventListener('click', () => scrollByItem(1));
+      track.addEventListener('scroll', updateTrackControls, { passive: true });
+      window.addEventListener('resize', updateTrackControls, { passive: true });
+      updateTrackControls();
+    }
+
+    if (!dialog || !lightboxFigure || typeof dialog.showModal !== 'function') return;
+
+    const showItem = (index: number) => {
+      currentIndex = (index + items.length) % items.length;
+      const trigger = items[currentIndex]?.querySelector<HTMLAnchorElement>('[data-gallery-open]');
+      const image = trigger?.querySelector<HTMLImageElement>('img');
+      if (!trigger || !image) return;
+      if (!lightboxImage) {
+        lightboxImage = document.createElement('img');
+        lightboxImage.dataset.lightboxImage = '';
+        lightboxFigure.append(lightboxImage);
+      }
+      lightboxImage.src = trigger.href;
+      lightboxImage.alt = image.alt;
+      if (count) count.textContent = `${currentIndex + 1} / ${items.length}`;
+      if (live) live.textContent = `${currentIndex + 1} / ${items.length}`;
+    };
+
+    gallery.querySelectorAll<HTMLAnchorElement>('[data-gallery-open]').forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        returnFocus = trigger;
+        showItem(Number(trigger.dataset.galleryIndex ?? 0));
+        dialog.showModal();
+        close?.focus();
+      });
+    });
+
+    const closeDialog = () => dialog.close();
+    close?.addEventListener('click', closeDialog);
+    lightboxPrevious?.addEventListener('click', () => showItem(currentIndex - 1));
+    lightboxNext?.addEventListener('click', () => showItem(currentIndex + 1));
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) closeDialog();
+    });
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        showItem(currentIndex - 1);
+      }
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        showItem(currentIndex + 1);
+      }
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeDialog();
+      }
+    });
+    dialog.addEventListener('close', () => {
+      lightboxImage?.remove();
+      lightboxImage = null;
+      returnFocus?.focus();
+    });
+  });
+</script>
