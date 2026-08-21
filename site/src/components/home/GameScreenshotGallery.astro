@@ -1,5 +1,6 @@
 ---
 import type { GameImage } from '../../types/game';
+import { getHomeImageSrcSet } from '../../data/homeMedia';
 
 interface Props {
   images: readonly GameImage[];
@@ -12,17 +13,22 @@ const { images, label, gameTitle } = Astro.props;
 
 {images.length > 0 && (
   <div class="screenshot-gallery" role="group" aria-label={label}>
-    {images.slice(0, 3).map((image, index) => (
-      <figure>
-        <img
-          src={image.src}
-          width={image.width}
-          height={image.height}
-          alt={`${gameTitle} — ${index + 1}`}
-          loading="lazy"
-          decoding="async"
-        />
-      </figure>
-    ))}
+    {images.slice(0, 3).map((image, index) => {
+      const srcset = getHomeImageSrcSet(image.src);
+      return (
+        <figure>
+          <img
+            src={image.src}
+            srcset={srcset}
+            sizes={srcset ? '(min-width: 64rem) 33vw, 82vw' : undefined}
+            width={image.width}
+            height={image.height}
+            alt={`${gameTitle} — ${index + 1}`}
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      );
+    })}
   </div>
 )}

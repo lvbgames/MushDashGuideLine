@@ -56,8 +56,9 @@
 - 브라우저 콘솔 error·warning과 실패한 이미지 로드를 확인한다.
 - About 프로필은 640·1024 WebP srcset과 승인 PNG fallback, public·dist WebP byte 일치, 4:5 crop을 검사하고 원본 PNG SHA를 유지한다.
 - JavaScript 비활성 상태에서 첫 Home Hero, 모든 본문, 내비게이션, News, 게임 스크린샷 원본 링크와 Press ZIP/개별 다운로드가 남는지 확인한다. reveal의 CSS 기본 상태는 visible이어야 한다.
-- Home rotator는 공식 이미지 3개, 첫 이미지 eager/high priority, dot 3개, Pause/Play accessible name과 hover·focus·document hidden·reduced-motion 정지를 확인한다.
-- Home의 MushHero·Mush Dash 쇼케이스는 각각 로컬 공식 이미지가 정확히 2개이고 desktop 교차 2열·mobile 1열에서 잘림과 가로 overflow가 없는지 확인한다.
+- Home Hero는 MushHero·Mush Dash game tab 2개, 선택 상태와 좌우/Home/End 키보드 이동, 게임별 텍스트·Store·상세 CTA의 일치를 확인한다.
+- 각 Hero 게임은 로컬 공식 이미지 2개, 이전·다음·dot 2개와 현재 index를 제공하고 flex track viewport에서 한 번에 한 장만 표시한다. 첫 MushHero 이미지만 eager/high priority이며 다른 세 이미지는 선택 시 로드되는지 확인한다.
+- Home Hero는 390·768px 1열, 1024·1440px 분리된 text/media 2열에서 overlap·clipping·가로 overflow가 없어야 한다. Hero 아래 대형 Game Showcase 출력과 관련 dead CSS는 0건이어야 한다.
 - 공통 MediaGallery는 native scroll-snap, 이전·다음 label과 경계 disabled, mobile touch scroll, dialog Close·화살표·Escape·backdrop·trigger focus 복귀를 확인한다.
 - Press는 정적 ZIP 3개와 로컬 스크린샷 6개, 개별 PNG/JPG 다운로드, boilerplate Clipboard 상태, public/dist SHA와 ZIP entry integrity를 확인한다. Hero divider 아래 여백과 제목·설명 간격, Recent Press 관련 UI·번역·스타일 0건도 확인한다. 현재 nullable video URL이 `null`이면 iframe·poster placeholder·영상 UI는 0개여야 한다.
 - Home·MushHero·Press·About mobile Lighthouse는 각각 90·90·90·95 이상, 모든 대상 CLS 0.02 이하·TBT 100ms 이하를 유지하고 report JSON과 Chrome 임시 profile은 저장소에 추가하지 않는다.

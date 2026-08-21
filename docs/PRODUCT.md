@@ -18,7 +18,7 @@
 
 MushHero를 가장 중요하게, Mush Dash보다 크게 강조한다. 현재 공개 페이지는 Home, Our Games, MushHero, Mush Dash, About, Contact, News & Press와 404다. Privacy와 검토 중인 게임 이용약관은 네 locale Astro route로 제공하되 `noindex, follow`이며 sitemap에서 제외한다.
 
-Home은 MushHero Hero와 특징·스크린샷, Our Games와 Mush Dash, 회사 소개, 공식 커뮤니티, 비즈니스 문의 순서다.
+Home은 MushHero·Mush Dash 통합 Hero, MushHero 특징·스크린샷, Our Games, Mush Dash, 회사 소개, 공식 커뮤니티, 비즈니스 문의 순서다. Hero의 game tab과 이미지 Carousel은 수동 조작을 기본으로 한다.
 
 About은 회사 소개, 멀티플레이·독창적인 세계관·쉬운 시작, 제작 방향, 소규모 팀 소개, 스튜디오 위치, Business Contact 순서다. 직접 출시나 Self-Publishing을 회사의 핵심 정체성으로 표현하지 않는다.
 

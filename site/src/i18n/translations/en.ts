@@ -79,8 +79,6 @@ export interface Translation {
     heroDescription: string;
     heroSecondary: string;
     heroMedia: {
-      pause: string;
-      play: string;
       showImage: string;
     };
     featuredEyebrow: string;
@@ -277,7 +275,7 @@ export const en: Translation = {
     heroEyebrow: 'Next from Lv.B',
     heroDescription: 'Defend together, shape your build and discover a different strategy every run.',
     heroSecondary: 'View MushHero',
-    heroMedia: { pause: 'Pause hero images', play: 'Play hero images', showImage: 'Show hero image' },
+    heroMedia: { showImage: 'Show hero image' },
     featuredEyebrow: 'Cooperative roguelite defense',
     featuredTitle: 'Build a new answer to every wave.',
     featuredDescription: 'Fight through waves of monsters and powerful bosses together. Randomized weapons, evolving skills and branching progression make each run your own.',

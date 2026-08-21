@@ -52,7 +52,7 @@ export const ja: Translation = {
     heroEyebrow: 'Lv.Bの次回作',
     heroDescription: '力を合わせて守り、ビルドを育て、プレイするたびに新しい戦略を見つけよう。',
     heroSecondary: 'MushHeroを詳しく見る',
-    heroMedia: { pause: 'メイン画像を一時停止', play: 'メイン画像を再生', showImage: 'メイン画像を表示' },
+    heroMedia: { showImage: 'メイン画像を表示' },
     featuredEyebrow: '協力型ローグライトディフェンス',
     featuredTitle: '迫るウェーブに、毎回新しい答えを。',
     featuredTitleLines: ['迫るウェーブに、', '毎回新しい答えを。'],

@@ -14,7 +14,7 @@
 | Mush Dash 분류 | Verified Store Data | Platformer(Epic taxonomy). 상세 태그는 사용자 관점의 별도 필드로 관리 |
 | Mush Dash 미디어 | Verified Media | `games.ts`의 검증 source와 `site/public/press/assets/mushdash/`의 원본 byte 보존 1920×1080 스크린샷 3개를 사용 |
 | Mush Dash 영상 | Missing | 확인된 안정적 trailer URL이 없어 영상 영역을 만들지 않음 |
-| Home English/Korean/Japanese/Simplified Chinese | Draft / User Review | 게임 사실 기반 문구, MushHero·Mush Dash 동등 쇼케이스와 게임별 로컬 공식 이미지 2장. Press JPG 원본을 fallback으로 보존하고 Home 전용 640/1280 WebP 파생본을 전송 |
+| Home English/Korean/Japanese/Simplified Chinese | Draft / User Review | 게임 사실 기반 문구, 최상단 통합 Hero의 MushHero·Mush Dash 수동 tab과 게임별 로컬 공식 이미지 2장 Carousel. 한 번에 한 장만 표시하고 첫 MushHero 이미지만 eager 전송하며 Press JPG 원본과 Home 전용 640/1280 WebP 파생본을 사용 |
 | Our Games 4개 언어 | Draft / User Review | MushHero 주력·2027 예정, Mush Dash Early Access 출시작, 독창적인 세계·멀티플레이·오래 남는 경험 |
 | About 4개 언어 | Draft / User Review | 부산 기반·멀티플레이·독창적인 세계관·쉬운 시작·소규모 팀·스튜디오 위치 |
 | 팀 정보 | Draft / User Review | 박재민(대표: 프로그래밍·프로젝트 매니지먼트·마케팅), 정보건(3D 아티스트: 3D 아트). 이름은 네 locale 모두 한국어 표기 유지 |

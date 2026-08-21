@@ -1,141 +1,238 @@
 ---
 import type { Game } from '../../types/game';
+import type { Locale } from '../../i18n/config';
 import type { Translation } from '../../i18n/translations/en';
 import { getHomeImageSrcSet } from '../../data/homeMedia';
 import ButtonLink from '../ui/ButtonLink.astro';
 import Container from '../ui/Container.astro';
 import GameStatusBadge from '../game/GameStatusBadge.astro';
+import GameStoreButtons from '../game/GameStoreButtons.astro';
+import HeadlineText from '../ui/HeadlineText.astro';
 
 interface Props {
-  game: Game;
+  mushHero: Game;
+  mushDash: Game;
+  locale: Locale;
   translation: Translation;
-  detailPath: string;
+  mushHeroPath: string;
+  mushDashPath: string;
 }
 
-const { game, translation, detailPath } = Astro.props;
-const heroImages = [...game.screenshots.slice(0, 3)];
-if (heroImages.length === 0 && game.heroImage) heroImages.push(game.heroImage);
+const { mushHero, mushDash, locale, translation, mushHeroPath, mushDashPath } = Astro.props;
 const statusLabels = {
   upcoming: translation.common.coming2027,
   'early-access': translation.common.earlyAccess,
   available: translation.common.available
 };
+const heroGames = [
+  {
+    game: mushHero,
+    genre: translation.home.featuredEyebrow,
+    headline: translation.home.featuredTitle,
+    headlineLines: translation.home.featuredTitleLines,
+    description: translation.home.heroDescription,
+    detailLabel: translation.home.heroSecondary,
+    detailPath: mushHeroPath,
+    imageAlts: translation.mushHero.screenshotAlts,
+    galleryLabel: translation.mushHero.galleryTitle
+  },
+  {
+    game: mushDash,
+    genre: mushDash.detailTags[locale]?.[0] ?? mushDash.genres[0],
+    headline: translation.home.dashTitle,
+    headlineLines: undefined,
+    description: translation.home.dashDescription,
+    detailLabel: translation.home.dashDetailCta,
+    detailPath: mushDashPath,
+    imageAlts: translation.mushDash.screenshotAlts,
+    galleryLabel: translation.mushDash.galleryTitle
+  }
+] as const;
+
+heroGames.forEach(({ game }) => {
+  if (game.screenshots.length < 2) throw new Error(`Home Hero requires two verified ${game.title} images.`);
+});
 ---
 
-<section class="home-hero" aria-labelledby="home-hero-title">
-  <div class="home-hero__media" data-hero-rotator>
-    {heroImages.map((image, index) => {
-      const srcset = getHomeImageSrcSet(image.src);
-      return (
-        <img
-          class:list={['home-hero__image', { 'is-active': index === 0 }]}
-          src={index === 0 ? image.src : undefined}
-          srcset={index === 0 ? srcset : undefined}
-          sizes={index === 0 && srcset ? '100vw' : undefined}
-          data-src={index > 0 ? image.src : undefined}
-          data-srcset={index > 0 ? srcset : undefined}
-          data-hero-slide
-          width={image.width}
-          height={image.height}
-          alt=""
-          loading={index === 0 ? 'eager' : 'lazy'}
-          decoding="async"
-          fetchpriority={index === 0 ? 'high' : 'low'}
-        />
-      );
-    })}
-  </div>
-  <div class="home-hero__veil" aria-hidden="true"></div>
+<section class="home-hero" aria-labelledby="home-hero-title" data-home-hero data-current-game="mushhero">
   <Container className="home-hero__inner">
-    <div class="home-hero__content">
-      <div class="home-hero__meta">
-        <p class="eyebrow">{translation.home.heroEyebrow}</p>
-        <GameStatusBadge game={game} labels={statusLabels} />
-      </div>
-      <h1 id="home-hero-title">{game.title}</h1>
-      <p class="home-hero__description">{translation.home.heroDescription}</p>
-      <div class="home-hero__actions">
-        {game.steamStoreUrl && (
-          <ButtonLink href={game.steamStoreUrl} external externalLabel={translation.common.opensNewTab}>
-            {translation.common.wishlistSteam}
-          </ButtonLink>
-        )}
-        <ButtonLink href={detailPath} variant="quiet">{translation.home.heroSecondary}</ButtonLink>
-      </div>
-      {heroImages.length > 1 && (
-        <div class="home-hero__media-controls" data-hero-controls hidden>
-          <div class="home-hero__dots" role="group" aria-label={translation.home.heroMedia.showImage}>
-            {heroImages.map((_, index) => (
-              <button type="button" data-hero-dot data-hero-index={index} aria-label={`${translation.home.heroMedia.showImage} ${index + 1}`} aria-pressed={index === 0 ? 'true' : 'false'}>
-                <span aria-hidden="true"></span>
-              </button>
-            ))}
-          </div>
-          <button class="home-hero__playback" type="button" data-hero-playback data-pause-label={translation.home.heroMedia.pause} data-play-label={translation.home.heroMedia.play} aria-label={translation.home.heroMedia.pause}>
-            <span aria-hidden="true">Ⅱ</span>
-          </button>
-          <span class="screen-reader" aria-live="polite" data-hero-live></span>
-        </div>
-      )}
+    <h1 id="home-hero-title" class="screen-reader">{translation.home.gamesTitle}: MushHero, Mush Dash</h1>
+
+    <div class="home-hero__selector" role="tablist" aria-label={translation.home.gamesTitle} data-hero-game-selector>
+      {heroGames.map(({ game }, gameIndex) => (
+        <button
+          id={`home-hero-tab-${game.slug}`}
+          type="button"
+          role="tab"
+          aria-controls={`home-hero-panel-${game.slug}`}
+          aria-selected={gameIndex === 0 ? 'true' : 'false'}
+          tabindex={gameIndex === 0 ? 0 : -1}
+          data-hero-game-tab
+          data-game-index={gameIndex}
+        >
+          <span>{game.title}</span>
+          <span class="home-hero__selector-state" aria-hidden="true"></span>
+        </button>
+      ))}
     </div>
+
+    <div class="home-hero__panels">
+      {heroGames.map(({ game, genre, headline, headlineLines, description, detailLabel, detailPath, imageAlts, galleryLabel }, gameIndex) => {
+        const images = game.screenshots.slice(0, 2);
+        return (
+          <div
+            id={`home-hero-panel-${game.slug}`}
+            class:list={['home-hero__panel', `home-hero__panel--${game.slug}`, { 'is-active': gameIndex === 0 }]}
+            role="tabpanel"
+            aria-labelledby={`home-hero-tab-${game.slug}`}
+            hidden={gameIndex !== 0}
+            data-hero-game-panel
+            data-hero-game={game.slug}
+          >
+            <div class="home-hero__content">
+              <div class="home-hero__meta">
+                <p class="eyebrow">{genre}</p>
+                <GameStatusBadge game={game} labels={statusLabels} />
+              </div>
+              <p class="home-hero__game-title">{game.title}</p>
+              <h2><HeadlineText text={headline} lines={headlineLines} /></h2>
+              <p class="home-hero__description">{description}</p>
+              <div class="home-hero__actions">
+                <GameStoreButtons game={game} labels={translation.common} steamPrimary />
+                <ButtonLink href={detailPath} variant="quiet">{detailLabel}</ButtonLink>
+              </div>
+            </div>
+
+            <div class="home-hero__media" aria-label={galleryLabel}>
+              <div class="home-hero__viewport">
+                <div class="home-hero__track" data-hero-track>
+                  {images.map((image, imageIndex) => {
+                    const srcset = getHomeImageSrcSet(image.src);
+                    const isInitialImage = gameIndex === 0 && imageIndex === 0;
+                    return (
+                      <div class="home-hero__slide" data-hero-slide aria-hidden={imageIndex === 0 ? 'false' : 'true'}>
+                        <img
+                          src={isInitialImage ? image.src : undefined}
+                          srcset={isInitialImage ? srcset : undefined}
+                          sizes={isInitialImage && srcset ? '(min-width: 64rem) 55vw, 100vw' : undefined}
+                          data-src={!isInitialImage ? image.src : undefined}
+                          data-srcset={!isInitialImage ? srcset : undefined}
+                          width={image.width}
+                          height={image.height}
+                          alt={imageAlts[imageIndex] ?? `${game.title} ${imageIndex + 1}`}
+                          loading={isInitialImage ? 'eager' : 'lazy'}
+                          decoding="async"
+                          fetchpriority={isInitialImage ? 'high' : 'low'}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div class="home-hero__media-controls" data-hero-controls hidden>
+                <button type="button" class="home-hero__arrow" data-hero-previous aria-label={`${game.title}: ${translation.common.previousImage}`}>
+                  <span aria-hidden="true">←</span>
+                </button>
+                <div class="home-hero__dots" role="group" aria-label={`${game.title}: ${translation.home.heroMedia.showImage}`}>
+                  {images.map((_, imageIndex) => (
+                    <button
+                      type="button"
+                      data-hero-dot
+                      data-image-index={imageIndex}
+                      aria-label={`${translation.home.heroMedia.showImage} ${imageIndex + 1}`}
+                      aria-pressed={imageIndex === 0 ? 'true' : 'false'}
+                    ><span aria-hidden="true"></span></button>
+                  ))}
+                </div>
+                <span class="home-hero__counter" aria-live="polite" data-hero-counter>1 / 2</span>
+                <button type="button" class="home-hero__arrow" data-hero-next aria-label={`${game.title}: ${translation.common.nextImage}`}>
+                  <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+    <span class="screen-reader" aria-live="polite" data-hero-game-live></span>
   </Container>
 </section>
 
 <script>
-  document.querySelectorAll<HTMLElement>('[data-hero-rotator]').forEach((media) => {
-    const root = media.closest<HTMLElement>('.home-hero');
-    const slides = Array.from(media.querySelectorAll<HTMLImageElement>('[data-hero-slide]'));
-    const controls = root?.querySelector<HTMLElement>('[data-hero-controls]');
-    const dots = Array.from(root?.querySelectorAll<HTMLButtonElement>('[data-hero-dot]') ?? []);
-    const playback = root?.querySelector<HTMLButtonElement>('[data-hero-playback]');
-    const live = root?.querySelector<HTMLElement>('[data-hero-live]');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let index = 0;
-    let timer: number | undefined;
-    let userPaused = reducedMotion.matches;
-    let interactionPaused = false;
+  document.querySelectorAll<HTMLElement>('[data-home-hero]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-hero-game-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-hero-game-panel]'));
+    const gameLive = root.querySelector<HTMLElement>('[data-hero-game-live]');
 
-    if (!root || slides.length < 2 || !controls || !playback) return;
-    controls.hidden = false;
+    if (tabs.length !== panels.length || tabs.length === 0) return;
 
-    const loadSecondary = () => slides.slice(1).forEach((slide) => {
-      if (!slide.src && slide.dataset.src) slide.src = slide.dataset.src;
-      if (!slide.srcset && slide.dataset.srcset) slide.srcset = slide.dataset.srcset;
+    const loadImage = (image: HTMLImageElement | null) => {
+      if (!image) return;
+      if (!image.src && image.dataset.src) image.src = image.dataset.src;
+      if (!image.srcset && image.dataset.srcset) image.srcset = image.dataset.srcset;
+    };
+
+    const setupCarousel = (panel: HTMLElement) => {
+      const track = panel.querySelector<HTMLElement>('[data-hero-track]');
+      const slides = Array.from(panel.querySelectorAll<HTMLElement>('[data-hero-slide]'));
+      const dots = Array.from(panel.querySelectorAll<HTMLButtonElement>('[data-hero-dot]'));
+      const previous = panel.querySelector<HTMLButtonElement>('[data-hero-previous]');
+      const next = panel.querySelector<HTMLButtonElement>('[data-hero-next]');
+      const counter = panel.querySelector<HTMLElement>('[data-hero-counter]');
+      const controls = panel.querySelector<HTMLElement>('[data-hero-controls]');
+      let imageIndex = 0;
+
+      if (!track || slides.length !== 2 || dots.length !== 2 || !previous || !next || !counter || !controls) return null;
+      controls.hidden = false;
+
+      const showImage = (nextIndex: number, announce = true, shouldLoad = true) => {
+        imageIndex = (nextIndex + slides.length) % slides.length;
+        if (shouldLoad) loadImage(slides[imageIndex]?.querySelector('img') ?? null);
+        track.style.setProperty('--hero-image-index', String(imageIndex));
+        slides.forEach((slide, index) => slide.setAttribute('aria-hidden', index === imageIndex ? 'false' : 'true'));
+        dots.forEach((dot, index) => dot.setAttribute('aria-pressed', index === imageIndex ? 'true' : 'false'));
+        counter.textContent = `${imageIndex + 1} / ${slides.length}`;
+        counter.setAttribute('aria-live', announce ? 'polite' : 'off');
+      };
+
+      previous.addEventListener('click', () => showImage(imageIndex - 1));
+      next.addEventListener('click', () => showImage(imageIndex + 1));
+      dots.forEach((dot) => dot.addEventListener('click', () => showImage(Number(dot.dataset.imageIndex ?? 0))));
+      showImage(0, false, false);
+      return { loadCurrent: () => loadImage(slides[imageIndex]?.querySelector('img') ?? null) };
+    };
+
+    const carousels = panels.map(setupCarousel);
+    const selectGame = (gameIndex: number, moveFocus = false) => {
+      const selectedIndex = (gameIndex + tabs.length) % tabs.length;
+      tabs.forEach((tab, index) => {
+        const isSelected = index === selectedIndex;
+        tab.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+        tab.tabIndex = isSelected ? 0 : -1;
+      });
+      panels.forEach((panel, index) => {
+        const isSelected = index === selectedIndex;
+        panel.hidden = !isSelected;
+        panel.classList.toggle('is-active', isSelected);
+      });
+      root.dataset.currentGame = panels[selectedIndex]?.dataset.heroGame ?? '';
+      carousels[selectedIndex]?.loadCurrent();
+      if (gameLive) gameLive.textContent = tabs[selectedIndex]?.innerText.trim() ?? '';
+      if (moveFocus) tabs[selectedIndex]?.focus();
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => selectGame(index));
+      tab.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        if (event.key === 'Home') selectGame(0, true);
+        else if (event.key === 'End') selectGame(tabs.length - 1, true);
+        else selectGame(index + (event.key === 'ArrowRight' ? 1 : -1), true);
+      });
     });
-    const show = (nextIndex: number, announce = false) => {
-      index = (nextIndex + slides.length) % slides.length;
-      slides.forEach((slide, slideIndex) => slide.classList.toggle('is-active', slideIndex === index));
-      dots.forEach((dot, dotIndex) => dot.setAttribute('aria-pressed', dotIndex === index ? 'true' : 'false'));
-      if (announce && live) live.textContent = `${index + 1} / ${slides.length}`;
-    };
-    const stopTimer = () => {
-      if (timer !== undefined) window.clearInterval(timer);
-      timer = undefined;
-    };
-    const syncPlayback = () => {
-      stopTimer();
-      const paused = userPaused || interactionPaused || document.hidden || reducedMotion.matches;
-      playback.setAttribute('aria-label', paused ? playback.dataset.playLabel ?? '' : playback.dataset.pauseLabel ?? '');
-      const icon = playback.querySelector<HTMLElement>('[aria-hidden]');
-      if (icon) icon.textContent = paused ? '▶' : 'Ⅱ';
-      if (!paused) timer = window.setInterval(() => show(index + 1), 6000);
-    };
 
-    dots.forEach((dot) => dot.addEventListener('click', () => {
-      show(Number(dot.dataset.heroIndex ?? 0), true);
-      syncPlayback();
-    }));
-    playback.addEventListener('click', () => { userPaused = !userPaused; syncPlayback(); });
-    root.addEventListener('mouseenter', () => { interactionPaused = true; syncPlayback(); });
-    root.addEventListener('mouseleave', () => { interactionPaused = false; syncPlayback(); });
-    root.addEventListener('focusin', () => { interactionPaused = true; syncPlayback(); });
-    root.addEventListener('focusout', (event) => {
-      if (!root.contains(event.relatedTarget as Node | null)) { interactionPaused = false; syncPlayback(); }
-    });
-    document.addEventListener('visibilitychange', syncPlayback);
-    reducedMotion.addEventListener('change', syncPlayback);
-    if (document.readyState === 'complete') window.setTimeout(loadSecondary, 0);
-    else window.addEventListener('load', () => window.setTimeout(loadSecondary, 0), { once: true });
-    syncPlayback();
+    selectGame(0);
   });
 </script>

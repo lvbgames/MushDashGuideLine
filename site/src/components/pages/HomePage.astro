@@ -9,8 +9,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import AboutPreview from '../home/AboutPreview.astro';
 import CommunityPreview from '../home/CommunityPreview.astro';
 import ContactPreview from '../home/ContactPreview.astro';
-import GameShowcaseSection from '../home/GameShowcaseSection.astro';
+import FeaturedGameSection from '../home/FeaturedGameSection.astro';
+import GamesOverview from '../home/GamesOverview.astro';
 import HomeHero from '../home/HomeHero.astro';
+import MushDashSection from '../home/MushDashSection.astro';
 import SiteFooter from '../layout/SiteFooter.astro';
 import SiteHeader from '../layout/SiteHeader.astro';
 
@@ -40,11 +42,12 @@ const getLocalScreenshots = (slug: GameSlug): readonly GameImage[] => pressScree
     sourcePage: asset.sourceUrl,
     lastVerifiedAt: '2026-08-21'
   }));
-const withLocalScreenshots = (game: Game): Game => ({ ...game, screenshots: getLocalScreenshots(game.slug) });
+const withLocalScreenshots = (game: Game): Game => {
+  const screenshots = getLocalScreenshots(game.slug);
+  return { ...game, heroImage: screenshots[0] ?? null, screenshots };
+};
 const homeMushHero = withLocalScreenshots(mushHero);
 const homeMushDash = withLocalScreenshots(mushDash);
-const mushHeroShowcaseImages = homeMushHero.screenshots.slice(0, 2);
-const mushDashShowcaseImages = homeMushDash.screenshots.slice(0, 2);
 const ogImagePath = homeMushHero.screenshots[0]?.src;
 if (!ogImagePath) {
   throw new Error('Home requires a verified Open Graph image.');
@@ -62,19 +65,17 @@ const ogImage = new URL(ogImagePath, Astro.site ?? 'https://lvb.kr').href;
 >
   <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="home" translation={translation} />
   <main data-motion-page>
-    <HomeHero game={homeMushHero} translation={translation} detailPath={getLocalePath(locale, 'mushhero')} />
-    <GameShowcaseSection
-      game={homeMushHero}
-      images={mushHeroShowcaseImages}
+    <HomeHero
+      mushHero={homeMushHero}
+      mushDash={homeMushDash}
+      locale={locale}
       translation={translation}
-      detailPath={getLocalePath(locale, 'mushhero')}
+      mushHeroPath={getLocalePath(locale, 'mushhero')}
+      mushDashPath={getLocalePath(locale, 'mushdash')}
     />
-    <GameShowcaseSection
-      game={homeMushDash}
-      images={mushDashShowcaseImages}
-      translation={translation}
-      detailPath={getLocalePath(locale, 'mushdash')}
-    />
+    <FeaturedGameSection game={homeMushHero} translation={translation} />
+    <GamesOverview featured={homeMushHero} secondary={homeMushDash} translation={translation} />
+    <MushDashSection game={homeMushDash} translation={translation} detailPath={getLocalePath(locale, 'mushdash')} />
     <AboutPreview translation={translation} aboutPath={getLocalePath(locale, 'about')} />
     <CommunityPreview links={socialLinks} translation={translation} />
     <ContactPreview locale={locale} translation={translation} />
