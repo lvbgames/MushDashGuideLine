@@ -52,7 +52,11 @@ export const ko: Translation = {
     heroEyebrow: 'Lv.B의 차기작',
     heroDescription: '함께 전선을 지키고, 나만의 빌드를 완성해 매번 새로운 전략을 만들어 보세요.',
     heroSecondary: 'MushHero 살펴보기',
-    heroMedia: { showImage: '대표 이미지 보기' },
+    heroMedia: {
+      showImage: '대표 이미지 보기',
+      pauseSlideshow: '슬라이드쇼 일시정지',
+      playSlideshow: '슬라이드쇼 재생'
+    },
     featuredEyebrow: '협동 로그라이트 디펜스',
     featuredTitle: '몰려오는 적에 맞서 매번 새로운 해법을 찾아보세요.',
     featuredTitleLines: ['몰려오는 적에 맞서', '매번 새로운 해법을', '찾아보세요.'],

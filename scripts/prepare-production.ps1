@@ -672,13 +672,15 @@ foreach ($pressPath in @('dist\press\index.html', 'dist\ko\press\index.html', 'd
   Assert-Equal ([regex]::Matches($pressHtml, 'press-recent|press-recent-title|class="news-card"').Count) 0 "Removed Press recent coverage UI: $pressPath"
 }
 
-Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-game-tab').Count) 2 'Home Hero game selector count'
-Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-game-panel[^>]+data-hero-game="mushhero"').Count) 1 'Home MushHero Hero panel count'
-Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-game-panel[^>]+data-hero-game="mushdash"').Count) 1 'Home Mush Dash Hero panel count'
-Assert-Equal ([regex]::Matches($indexHtml, '<div class="home-hero__slide" data-hero-slide').Count) 4 'Home Hero slide count'
-Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-previous').Count) 2 'Home Hero previous control count'
-Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-next').Count) 2 'Home Hero next control count'
+Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-game-tab').Count) 0 'Removed Home Hero game selector count'
+Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-background-slide').Count) 4 'Home Hero background slide count'
+Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-background-slide[^>]+data-slide-game="mushhero"').Count) 2 'Home MushHero background slide count'
+Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-background-slide[^>]+data-slide-game="mushdash"').Count) 2 'Home Mush Dash background slide count'
+Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-content-panel').Count) 2 'Home Hero game content count'
+Assert-Equal ([regex]::Matches($indexHtml, 'data-hero-previous|data-hero-next|data-hero-counter').Count) 0 'Removed Home Hero legacy carousel controls'
 Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-dot').Count) 4 'Home Hero pagination count'
+Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-playback').Count) 1 'Home Hero playback control count'
+Assert-Equal ([regex]::Matches($indexHtml, 'data-home-hero[^>]+data-hero-autoplay="true"').Count) 1 'Home Hero autoplay marker'
 Assert-Equal ([regex]::Matches($indexHtml, '<img[^>]+src="/press/assets/mushhero/mushhero-01\.jpg"[^>]+loading="eager"[^>]+fetchpriority="high"').Count) 1 'Home Hero eager image'
 Assert-Equal ([regex]::Matches($indexHtml, '<img[^>]+data-src="/press/assets/(?:mushhero|mushdash)/[^"]+\.jpg"').Count) 3 'Home deferred Hero image count'
 Assert-Equal ([regex]::Matches($indexHtml, 'data-home-game-showcase|home-game-showcase').Count) 0 'Removed Home game showcase output'
@@ -689,9 +691,17 @@ Assert-Equal ([regex]::Matches($indexHtml, '<img[^>]+(?:src|data-src)="https://'
 Assert-Equal ([regex]::Matches($indexHtml, '/home/assets/(?:mushhero|mushdash)-\d{2}-640\.webp 640w, /home/assets/(?:mushhero|mushdash)-\d{2}-1280\.webp 1280w').Count) 7 'Home responsive image source-set count'
 $homeStyles = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\styles\home.css')
 Assert-Equal ([regex]::Matches($homeStyles, 'home-game-showcase').Count) 0 'Removed Home game showcase styles'
-Assert-Equal ([regex]::Matches($homeStyles, '(?s)\.home-hero__slide\s*\{[^}]*position:\s*absolute').Count) 0 'Home Hero absolute slide overlap risk'
-Assert-Equal ([regex]::Matches($homeStyles, '(?s)\.home-hero__viewport\s*\{[^}]*overflow:\s*hidden').Count) 1 'Home Hero media viewport clipping'
-Assert-Equal ([regex]::Matches($homeStyles, '(?s)\.home-hero__track\s*\{[^}]*display:\s*flex').Count) 1 'Home Hero non-overlapping track layout'
+Assert-Equal ([regex]::Matches($homeStyles, 'home-hero__selector|home-hero__track|home-hero__viewport|home-hero__arrow|home-hero__counter').Count) 0 'Removed Home Hero selector and legacy carousel styles'
+Assert-Equal ([regex]::Matches($homeStyles, '(?s)\.home-hero\s*\{[^}]*overflow:\s*clip').Count) 1 'Home Hero full-bleed overflow clipping'
+Assert-Equal ([regex]::Matches($homeStyles, '(?s)\.home-hero__background\s*\{[^}]*opacity:\s*0').Count) 1 'Home Hero background crossfade base'
+Assert-Equal ([regex]::Matches($homeStyles, '(?s)\.home-hero__background img\s*\{[^}]*width:\s*100%[^}]*height:\s*100%[^}]*object-fit:\s*cover').Count) 1 'Home Hero full-bleed background image sizing'
+Assert-Equal ([regex]::Matches($homeStyles, 'margin-top:\s*clamp\(1\.75rem,\s*calc\(1\.25rem\s*\+\s*1\.5vw\),\s*2\.25rem\)').Count) 1 'Home Hero CTA-to-indicator responsive spacing'
+$homeHeroSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\components\home\HomeHero.astro')
+Assert-Equal ([regex]::Matches($homeHeroSource, 'const autoPlayDelay = 6500;').Count) 1 'Home Hero autoplay interval'
+Assert-Equal ([regex]::Matches($homeHeroSource, "matchMedia\('\(prefers-reduced-motion: reduce\)'\)").Count) 1 'Home Hero reduced-motion autoplay guard'
+Assert-Equal ([regex]::Matches($homeHeroSource, "root\.addEventListener\('pointerenter'").Count) 1 'Home Hero pointer pause'
+Assert-Equal ([regex]::Matches($homeHeroSource, "root\.addEventListener\('focusin'").Count) 1 'Home Hero focus pause'
+Assert-Equal ([regex]::Matches($homeHeroSource, 'preloadLeadTime').Count) 2 'Home Hero progressive preload strategy'
 foreach ($gameDetailPath in @('dist\games\mushhero\index.html', 'dist\games\mushdash\index.html')) {
   $gameDetailHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $gameDetailPath)
   Assert-Equal ([regex]::Matches($gameDetailHtml, 'class="media-gallery__item"').Count) 3 "Game gallery item count: $gameDetailPath"

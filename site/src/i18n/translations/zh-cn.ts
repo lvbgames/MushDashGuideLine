@@ -52,7 +52,11 @@ export const zhCn: Translation = {
     heroEyebrow: 'Lv.B 全新作品',
     heroDescription: '并肩防守，打造专属构筑，在每次挑战中发现新的策略。',
     heroSecondary: '了解 MushHero',
-    heroMedia: { showImage: '显示主视觉图片' },
+    heroMedia: {
+      showImage: '显示主视觉图片',
+      pauseSlideshow: '暂停幻灯片播放',
+      playSlideshow: '播放幻灯片'
+    },
     featuredEyebrow: '合作 Roguelite 防守游戏',
     featuredTitle: '用全新的策略迎接每一波挑战。',
     featuredTitleLines: ['用全新的策略', '迎接每一波挑战。'],
