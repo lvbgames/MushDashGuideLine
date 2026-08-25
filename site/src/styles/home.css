@@ -18,13 +18,13 @@
 
 .home-hero::before {
   background:
-    linear-gradient(180deg, rgb(15 13 12 / .18) 0%, rgb(15 13 12 / .5) 36%, rgb(15 13 12 / .96) 76%, rgb(15 13 12 / .99) 100%),
-    linear-gradient(90deg, rgb(15 13 12 / .86) 0%, rgb(15 13 12 / .5) 56%, rgb(15 13 12 / .14) 100%);
+    linear-gradient(180deg, rgb(var(--color-brand-bg-rgb) / .16) 0%, rgb(var(--color-brand-bg-rgb) / .42) 36%, rgb(var(--color-brand-bg-rgb) / .92) 76%, rgb(var(--color-brand-bg-rgb) / .97) 100%),
+    linear-gradient(90deg, rgb(var(--color-brand-bg-rgb) / .86) 0%, rgb(var(--color-brand-bg-rgb) / .42) 56%, rgb(var(--color-brand-bg-rgb) / .07) 100%);
 }
 
 .home-hero::after {
   background:
-    linear-gradient(180deg, rgb(15 13 12 / .32), transparent 22%),
+    linear-gradient(180deg, rgb(var(--color-brand-bg-rgb) / .28), transparent 22%),
     radial-gradient(circle at 18% 74%, rgb(var(--color-brand-accent-rgb) / .08), transparent 34rem);
 }
 
@@ -271,8 +271,8 @@
 @media (min-width: 64rem) {
   .home-hero::before {
     background:
-      linear-gradient(90deg, rgb(15 13 12 / .98) 0%, rgb(15 13 12 / .91) 25%, rgb(15 13 12 / .6) 50%, rgb(15 13 12 / .14) 80%, rgb(15 13 12 / .05) 100%),
-      linear-gradient(180deg, rgb(15 13 12 / .18), transparent 32%, rgb(15 13 12 / .36) 100%);
+      linear-gradient(90deg, rgb(var(--color-brand-bg-rgb) / .98) 0%, rgb(var(--color-brand-bg-rgb) / .9) 25%, rgb(var(--color-brand-bg-rgb) / .54) 50%, rgb(var(--color-brand-bg-rgb) / .08) 80%, rgb(var(--color-brand-bg-rgb) / .02) 100%),
+      linear-gradient(180deg, rgb(var(--color-brand-bg-rgb) / .16), transparent 32%, rgb(var(--color-brand-bg-rgb) / .3) 100%);
   }
 
   .home-hero__content-stage {

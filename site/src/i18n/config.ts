@@ -42,6 +42,10 @@ export function getLocalePath(locale: Locale, route: SiteRoute = 'home', routePa
   }
 
   if (route === 'news') {
+    if (routeParam && routeParam !== '1') {
+      return `${prefix}/news/page/${routeParam}/`;
+    }
+
     return `${prefix}/news/`;
   }
 

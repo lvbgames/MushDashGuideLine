@@ -3,19 +3,19 @@ import type { Translation } from './en';
 export const ja: Translation = {
   meta: {
     homeTitle: 'Lv.B — 韓国・釜山のインディーゲームスタジオ',
-    homeDescription: 'Lv.Bは韓国・釜山を拠点にMushHeroとMush Dashを開発するインディーゲームスタジオです。',
+    homeDescription: 'Lv.Bは韓国・釜山を拠点にMushHeroとMushDashを開発するインディーゲームスタジオです。',
     gamesTitle: 'ゲーム — Lv.B',
-    gamesDescription: 'Lv.Bが手がける二つの異なるマルチプレイ世界、MushHeroとMush Dashをご紹介します。',
+    gamesDescription: 'Lv.Bが手がける二つの異なるマルチプレイ世界、MushHeroとMushDashをご紹介します。',
     aboutTitle: 'Lv.Bについて — インディーゲームスタジオ',
     aboutDescription: '韓国・釜山を拠点に、マルチプレイと独自の世界観を大切にするインディーゲームスタジオLv.Bをご紹介します。',
     contactTitle: 'ビジネスお問い合わせ — Lv.B',
     contactDescription: 'ビジネス、パートナーシップ、イベント・展示、クリエイター・Steamキュレーター、メディア取材・インタビューに関するお問い合わせをメールで受け付けています。',
     mushHeroTitle: 'MushHero — 協力型ローグライトディフェンス | Lv.B',
     mushHeroDescription: 'モンスターの群れに仲間と立ち向かい、新しいビルドを作り上げる協力型ローグライトディフェンスゲームMushHero。',
-    mushDashTitle: 'Mush Dash — オンラインパーティーレース | Lv.B',
-    mushDashDescription: '最大7人で危険な障害物コースを駆け抜ける、早期アクセス中のオンラインパーティーレースMush Dash。',
+    mushDashTitle: 'MushDash — オンラインパーティーレース | Lv.B',
+    mushDashDescription: '最大7人で危険な障害物コースを駆け抜ける、早期アクセス中のオンラインパーティーレースMushDash。',
     newsTitle: 'ニュース＆プレス — Lv.B',
-    newsDescription: 'Lv.B、MushHero、Mush Dashに関する確認済みのインタビュー、メディア掲載、特集情報をご紹介します。'
+    newsDescription: 'Lv.B、MushHero、MushDashに関する確認済みのインタビュー、メディア掲載、特集情報をご紹介します。'
   },
   nav: {
     games: 'ゲーム',
@@ -57,6 +57,9 @@ export const ja: Translation = {
       pauseSlideshow: 'スライドショーを一時停止',
       playSlideshow: 'スライドショーを再生'
     },
+    featuredProjectLabel: 'FEATURED PROJECT',
+    featuredGameMeta: '協力型ローグライトディフェンス · 2027年リリース予定',
+    featuredDetailCta: 'MushHeroを詳しく見る',
     featuredEyebrow: '協力型ローグライトディフェンス',
     featuredTitle: '迫るウェーブに、毎回新しい答えを。',
     featuredTitleLines: ['迫るウェーブに、', '毎回新しい答えを。'],
@@ -72,10 +75,9 @@ export const ja: Translation = {
     gamesDescription: 'Lv.Bが生み出す、個性の異なるマルチプレイの世界です。',
     primaryGame: '注目のゲーム',
     releasedGame: 'リリース作品',
-    dashEyebrow: '早期アクセス配信中',
     dashTitle: '走って、罠を読み、王冠をつかもう。',
     dashDescription: '最大7人のオンラインレースで危険な罠を避け、ゴールまでMushroom Coinを集めよう。',
-    dashDetailCta: 'Mush Dashを詳しく見る',
+    dashDetailCta: 'MushDashを詳しく見る',
     aboutEyebrow: '韓国・釜山のインディースタジオ',
     aboutTitle: '笑い合い、ともに成長できるゲームを。',
     aboutDescription: 'Lv.Bは韓国・釜山を拠点とするインディーゲームスタジオです。マルチプレイと独自の世界観を通じて、気軽に始められ、長く心に残るゲーム体験を作っています。',
@@ -102,11 +104,11 @@ export const ja: Translation = {
     featuredEyebrow: '現在の注目プロジェクト',
     featuredDescription: 'MushHeroは、仲間と共にモンスターの群れや強力なボスに立ち向かい、プレイするたびに異なる戦略を作る協力型ローグライトディフェンスゲームです。',
     releasedEyebrow: '早期アクセス作品',
-    releasedDescription: 'Mush Dashは、最大7人で危険な罠を避け、Mushroom Coinを集めながら最後の王冠を目指すオンラインパーティーレースゲームです。',
+    releasedDescription: 'MushDashは、最大7人で危険な罠を避け、Mushroom Coinを集めながら最後の王冠を目指すオンラインパーティーレースゲームです。',
     detailCta: 'ゲーム詳細を見る',
     gameImageAlts: {
       mushhero: '公式ゲーム画面でモンスターへ進むMushHeroのヒーローたち',
-      mushdash: '公式ゲーム画面のMush Dashコースとキノコレーサー'
+      mushdash: '公式ゲーム画面のMushDashコースとキノコレーサー'
     },
     principlesEyebrow: 'ゲーム作りの方針',
     principlesTitle: '一緒に遊ぶから、もっと楽しい。',
@@ -127,21 +129,13 @@ export const ja: Translation = {
     heroTitleLines: ['笑い合い、ともに', '成長できるゲームを。'],
     heroDescription: 'Lv.B（レベルビー）は、韓国・釜山を拠点に活動するインディーゲームスタジオです。マルチプレイと独自の世界観を通じて、仲間と笑い合い、ともに成長できるゲームを制作しています。誰でも気軽に始められ、遊び終えたあとも長く心に残る体験を届けることが、Lv.Bの目標です。',
     logoAlt: 'Lv.B',
-    capabilitiesEyebrow: '私たちの仕事',
-    capabilitiesTitle: 'Lv.Bのゲームを形作る三つの軸。',
-    capabilitiesTitleLines: ['Lv.Bのゲームを', '形作る', '三つの軸。'],
+    capabilitiesEyebrow: 'ゲーム作りの方針',
+    capabilitiesTitle: 'Lv.Bがゲームを作る三つの軸。',
+    capabilitiesTitleLines: ['Lv.Bがゲームを作る', '三つの軸。'],
     capabilities: [
-      { title: 'マルチプレイ', description: '一緒に遊ぶことで、楽しさと意味が深まる体験を設計します。' },
-      { title: '独自の世界観', description: 'ひと目で分かり、長く記憶に残る世界と個性を育てます。' },
-      { title: '気軽なスタート', description: '誰でも入りやすく、遊び続けるほど深さを感じられるゲームを目指します。' }
-    ],
-    approachEyebrow: '私たちのアプローチ',
-    approachTitle: '気軽に始めて、長く心に残る。',
-    approachDescription: '分かりやすい遊び、仲間と共有する瞬間、プレイ後も続く余韻を大切にしています。',
-    approach: [
-      { title: 'すぐに楽しめる', description: '明確なルールと目標で、誰でも迷わず楽しさを見つけられるようにします。' },
-      { title: '一緒ならもっと楽しい', description: '笑い、つながり、ともに成長する瞬間が生まれるマルチプレイを磨きます。' },
-      { title: '記憶に残る', description: '独自の世界と意味のある遊びで、最後のラウンドのあとにも残る体験を作ります。' }
+      { title: '一緒なら、もっと楽しい', description: '一人で遊ぶ以上に、誰かと遊ぶことで楽しさと意味が深まるマルチプレイ体験を作ります。' },
+      { title: '長く心に残る世界', description: 'ひと目で伝わる独自の世界やキャラクター、記憶に残る体験を作ります。' },
+      { title: '気軽に始めて、深く楽しむ', description: '誰でも気軽に始められ、遊ぶほどに新しい面白さと奥深さを見つけられるゲームを目指します。' }
     ],
     team: {
       eyebrow: 'チーム',
@@ -215,8 +209,12 @@ export const ja: Translation = {
       'blog-review': '試遊レポート',
       feature: '特集'
     },
-    sourceCta: '原文を読む',
-    internalCta: '記事を読む',
+    paginationLabel: 'ニュースページ',
+    previousPage: '前へ',
+    nextPage: '次へ',
+    pageLabel: 'ページ',
+    paginationTitle: 'ニュース＆プレス — {page}ページ — Lv.B',
+    paginationDescription: 'Lv.Bに関する確認済みのインタビュー、掲載記事、試遊レポートの{page}ページ目です。',
     followEyebrow: '公式チャンネル',
     followTitle: 'Lv.Bをフォロー',
     followDescription: 'スタジオやゲームの最新情報は、Lv.Bの公式チャンネルでご覧いただけます。'
@@ -253,9 +251,9 @@ export const ja: Translation = {
     purchaseTitle: 'MushHeroの続報をお見逃しなく。',
     purchaseDescription: 'SteamのウィッシュリストにMushHeroを追加して、リリースまでの情報をチェックしてください。',
     moreGamesEyebrow: 'Lv.Bの他の作品',
-    moreGamesTitle: 'Mush Dashをチェック。',
+    moreGamesTitle: 'MushDashをチェック。',
     moreGameDescription: '最大7人のオンラインレースで危険な罠を避け、ゴールまでMushroom Coinを集めよう。',
-    moreGameCta: 'Mush Dashを詳しく見る'
+    moreGameCta: 'MushDashを詳しく見る'
   },
   mushDash: {
     heroEyebrow: '王冠を目指して走れ',
@@ -279,15 +277,15 @@ export const ja: Translation = {
     featuredScreenshotEyebrow: 'コースへ',
     featuredScreenshotTitle: '障害物を抜けるルートを見つけよう。',
     galleryEyebrow: '公式スクリーンショット',
-    galleryTitle: 'Mush Dashのレースをさらに詳しく。',
+    galleryTitle: 'MushDashのレースをさらに詳しく。',
     screenshotAlts: [
-      'Mush Houseのコース選択画面とキノコレーサーが見えるMush Dashのロビー',
-      '巨大なキッチンに広がるMush Dashの障害物コース',
-      '光る足場を跳ね進むMush Dashのキノコレーサー'
+      'Mush Houseのコース選択画面とキノコレーサーが見えるMushDashのロビー',
+      '巨大なキッチンに広がるMushDashの障害物コース',
+      '光る足場を跳ね進むMushDashのキノコレーサー'
     ],
     purchaseEyebrow: '早期アクセス配信中',
-    purchaseTitle: 'Mush Dashのレースに参加しよう。',
-    purchaseDescription: 'SteamまたはEpic Games StoreでMush Dashをプレイし、最後の王冠を目指そう。',
+    purchaseTitle: 'MushDashのレースに参加しよう。',
+    purchaseDescription: 'SteamまたはEpic Games StoreでMushDashをプレイし、最後の王冠を目指そう。',
     moreGamesEyebrow: 'Lv.Bの他の作品',
     moreGamesTitle: 'MushHeroをチェック。',
     moreGameDescription: '仲間とモンスターの群れを防ぎ、プレイするたびに違うローグライト戦略を作ろう。',

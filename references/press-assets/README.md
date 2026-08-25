@@ -6,7 +6,7 @@ This folder is a staging and review workspace for user-approved Lv.B brand and g
 
 - `brand/`: approved Lv.B logo or symbol source files
 - `mushhero/`: approved MushHero screenshots and game artwork
-- `mushdash/`: approved Mush Dash screenshots and game artwork
+- `mushdash/`: approved MushDash screenshots and game artwork
 
 ## Recommended files
 
@@ -21,7 +21,7 @@ This folder is a staging and review workspace for user-approved Lv.B brand and g
 - Published brand files: `site/public/brand/`
 - Asset paths, dimensions, source URLs and SHA-256 values: `site/src/data/press.ts`
 - Press ZIP packages: `site/public/press/downloads/`
-- The integrated Home Hero uses the first two local screenshots for MushHero and Mush Dash from the `pressScreenshots` manifest. Its manual game tabs and manual carousel show one image at a time. The restored MushHero screenshot section may also use the third MushHero screenshot below the Hero.
+- The integrated Home Hero uses the first two local screenshots for MushHero and MushDash from the `pressScreenshots` manifest. Its manual game tabs and manual carousel show one image at a time. The restored MushHero screenshot section may also use the third MushHero screenshot below the Hero.
 - Home serves 640 px and 1280 px WebP derivatives from `site/public/home/assets/`; `site/src/data/homeMedia.ts` maps them to the approved JPG fallback sources. These derivatives are display optimizations, not Press originals.
 
 ## Updating an asset

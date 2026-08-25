@@ -51,7 +51,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\deploy-production.ps1 `
 ## Privacy 배포 게이트
 
 - `docs/PRIVACY_DATA_INVENTORY.md`에 남은 UserCloud 제품별 처리 권한·본인 확인·공개 package provenance와 외부 사업자 법적 관계를 운영자와 필요 시 법률 전문가가 확인한다.
-- `docs/PRIVACY_REQUEST_RUNBOOK.md`에 따라 Steam·Epic별 계정 소유 확인, Mush Dash 범위의 열람·정정·삭제·처리정지 절차와 요청 처리 기록 보유기간을 확정한다. 조직 단위 `Delete User`는 제품별 영향 확인 없이 기본 절차로 사용하지 않는다.
+- `docs/PRIVACY_REQUEST_RUNBOOK.md`에 따라 Steam·Epic별 계정 소유 확인, MushDash 범위의 열람·정정·삭제·처리정지 절차와 요청 처리 기록 보유기간을 확정한다. 조직 단위 `Delete User`는 제품별 영향 확인 없이 기본 절차로 사용하지 않는다.
 - 네 언어 본문을 사용자와 필요 시 법률 전문가가 검토한다.
 - 사용자는 2026-08-03 운영 배포를 승인했으며, 네 언어 Privacy의 최종 수정일과 시행일은 모두 `2026-08-03`으로 확정한다. `site/src/data/privacy.ts` 반영 후 check/build/prepare와 운영 route 검사를 다시 수행한다.
 - 영구 잠금이 필요하면 생성 HTML이 아닌 승인된 정책 source snapshot의 정규화 규칙과 해시를 별도 작업에서 확정한다.

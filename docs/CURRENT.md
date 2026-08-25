@@ -1,6 +1,6 @@
 # Current
 
-- 전체 페이지 구현 상태: 공개 색인 route는 기존 28개에 Press Kit 4개와 첫 Lv.B Studio Update 상세 4개를 더한 36개다. News는 검증된 외부 자료 7건과 `2026-08-21` BIC 2026 MushHero 첫 공개 플레이 테스트 자체 글 1건을 최신순 단일 목록으로 제공한다. Privacy 네 언어 19개 조항·`2026-08-03`, Terms 네 언어 16개 조항·`2026-08-12`와 sitemap 제외 정책은 변경하지 않았다.
-- QA 결과: Home 최상단 Hero를 선택 tab 없는 cinematic full-bleed slideshow로 구성했다. MushHero 공식 이미지 2장 다음 Mush Dash 공식 이미지 2장을 6.5초 간격으로 crossfade하며, 같은 게임의 두 이미지 사이에서는 콘텐츠를 유지하고 게임이 바뀔 때만 문구와 CTA를 전환한다. dot 4개와 작은 재생 제어를 제공하고 hover·focus·비활성 문서에서 일시정지하며 reduced motion에서는 최초 slide를 고정한다. 최초 진입은 MushHero 첫 WebP 한 장만 요청하고 다음 이미지는 전환 전에 순차 준비한다. 이전 Home의 Featured Game → Games Overview → Mush Dash → About → Community → Contact 흐름과 대형 Game Showcase 제거 상태는 유지한다.
-- 배포 전 남은 사용자 확인 항목: full-bleed 배경의 이미지 focal point·gradient 대비, 6.5초 순환 속도와 390·1440px 시각 결과를 최종 확인한다.
-- 다음 권장 작업: 사용자 시각 승인 후 전체 QA 기준으로 별도 배포하고, 배포 후 Home Hero의 게임·Carousel 전환과 초기 이미지 전송을 운영 환경에서 재검증한다.
+- 전체 페이지 구현 상태: 공개 색인 route는 기존 36개에 News page 2 네 locale을 더한 40개다. News는 검증된 외부 자료 11건과 `2026-08-21` BIC 2026 MushHero 첫 공개 플레이 테스트 자체 글 1건을 최신순으로 정렬하고 페이지당 6건씩 정적 제공한다. Privacy 네 언어 19개 조항·`2026-08-03`, Terms 네 언어 16개 조항·`2026-08-12`와 sitemap 제외 정책은 변경하지 않았다.
+- QA 결과: Home은 full-bleed Hero → Featured Game → Our Games → About → Community → Contact 순서다. Featured Game은 `FEATURED PROJECT → MushHero → 장르·2027 상태 → 기존 headline → 설명 → 내부 상세/Steam`의 단일 정보 흐름으로 정리했다. Header와 Hero의 deepest charcoal은 유지하고 page `#1a1714`, surface `#221e19`, raised `#29241e`, warm `#302a22`, muted text `#bdb2a2`로 본문 Warm Charcoal을 한 단계 더 밝게 했다. 사용자 대면 게임명은 `MushHero`·`MushDash`로 통일했고 News는 네 locale page 1·2에서 각각 6개 카드, 작성 정보·날짜의 2줄 metadata, 전체 카드 링크, 2줄 summary, canonical·hreflang·pagination을 제공한다.
+- 배포 전 남은 사용자 확인 항목: Featured Project의 새 정보 위계와 전체 Warm Bright Charcoal 명암을 review capture로 최종 시각 승인한다. Legal mobile disclosure의 실제 screen reader·물리 키보드 확인 항목은 이전과 동일하게 남아 있다.
+- 다음 권장 작업: 사용자 승인 후 전체 QA 기준으로 별도 배포하고, 운영 환경에서 Home Featured Project·Hero 이미지 색감·대표 카드와 Legal 대비를 재검증한다.

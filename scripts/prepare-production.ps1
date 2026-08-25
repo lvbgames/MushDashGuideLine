@@ -506,6 +506,10 @@ $requiredFiles = @(
   'dist\games\index.html',
   'dist\about\index.html',
   'dist\news\index.html',
+  'dist\news\page\2\index.html',
+  'dist\ko\news\page\2\index.html',
+  'dist\ja\news\page\2\index.html',
+  'dist\zh-cn\news\page\2\index.html',
   'dist\press\index.html',
   'dist\ko\press\index.html',
   'dist\ja\press\index.html',
@@ -543,15 +547,15 @@ foreach ($relativePath in $requiredFiles) {
 
 $htmlFiles = @(Get-ChildItem -LiteralPath (Join-Path $siteRoot 'dist') -Recurse -File -Filter '*.html')
 $regularHtml = @($htmlFiles | Where-Object { $_.Name -ne '404.html' })
-Assert-Equal $htmlFiles.Count 45 'Total production HTML count'
-Assert-Equal $regularHtml.Count 44 'Regular production HTML count'
+Assert-Equal $htmlFiles.Count 49 'Total production HTML count'
+Assert-Equal $regularHtml.Count 48 'Regular production HTML count'
 
 $sitemap = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'dist\sitemap-0.xml')
 $sitemapCount = ([regex]::Matches($sitemap, '<url>')).Count
-Assert-Equal $sitemapCount 36 'Sitemap URL count'
+Assert-Equal $sitemapCount 40 'Sitemap URL count'
 if ($sitemap -match '/privacy/') { throw 'Privacy routes must be excluded from the sitemap.' }
 if ($sitemap -match '/terms/') { throw 'Terms routes must be excluded from the sitemap.' }
-foreach ($requiredSitemapPath in @('/press/', '/ko/press/', '/ja/press/', '/zh-cn/press/', '/news/bic-2026-mushhero-first-public-playtest/', '/ko/news/bic-2026-mushhero-first-public-playtest/', '/ja/news/bic-2026-mushhero-first-public-playtest/', '/zh-cn/news/bic-2026-mushhero-first-public-playtest/')) {
+foreach ($requiredSitemapPath in @('/press/', '/ko/press/', '/ja/press/', '/zh-cn/press/', '/news/page/2/', '/ko/news/page/2/', '/ja/news/page/2/', '/zh-cn/news/page/2/', '/news/bic-2026-mushhero-first-public-playtest/', '/ko/news/bic-2026-mushhero-first-public-playtest/', '/ja/news/bic-2026-mushhero-first-public-playtest/', '/zh-cn/news/bic-2026-mushhero-first-public-playtest/')) {
   if ($sitemap -notmatch [regex]::Escape($requiredSitemapPath)) {
     throw "Indexed route is missing from the sitemap: $requiredSitemapPath"
   }
@@ -595,12 +599,73 @@ foreach ($htmlFile in $htmlFiles) {
   }
 }
 
-foreach ($newsListPath in @('dist\news\index.html', 'dist\ko\news\index.html', 'dist\ja\news\index.html', 'dist\zh-cn\news\index.html')) {
-  $newsListHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $newsListPath)
-  Assert-Equal ([regex]::Matches($newsListHtml, '<article class="news-card"').Count) 8 "News item count: $newsListPath"
-  Assert-Equal ([regex]::Matches($newsListHtml, 'class="news-card__internal-link"').Count) 1 "Internal News link count: $newsListPath"
-  Assert-Equal ([regex]::Matches($newsListHtml, 'class="external-link" href="https?://[^\"]+" target="_blank" rel="noopener noreferrer"').Count -ge 7) $true "External News link security: $newsListPath"
+$newsListRoutes = @(
+  [PSCustomObject]@{ Locale = 'en'; Page1 = 'dist\news\index.html'; Page2 = 'dist\news\page\2\index.html'; Canonical1 = 'https://lvb.kr/news/'; Canonical2 = 'https://lvb.kr/news/page/2/'; Next = '/news/page/2/'; Previous = '/news/' },
+  [PSCustomObject]@{ Locale = 'ko'; Page1 = 'dist\ko\news\index.html'; Page2 = 'dist\ko\news\page\2\index.html'; Canonical1 = 'https://lvb.kr/ko/news/'; Canonical2 = 'https://lvb.kr/ko/news/page/2/'; Next = '/ko/news/page/2/'; Previous = '/ko/news/' },
+  [PSCustomObject]@{ Locale = 'ja'; Page1 = 'dist\ja\news\index.html'; Page2 = 'dist\ja\news\page\2\index.html'; Canonical1 = 'https://lvb.kr/ja/news/'; Canonical2 = 'https://lvb.kr/ja/news/page/2/'; Next = '/ja/news/page/2/'; Previous = '/ja/news/' },
+  [PSCustomObject]@{ Locale = 'zh-cn'; Page1 = 'dist\zh-cn\news\index.html'; Page2 = 'dist\zh-cn\news\page\2\index.html'; Canonical1 = 'https://lvb.kr/zh-cn/news/'; Canonical2 = 'https://lvb.kr/zh-cn/news/page/2/'; Next = '/zh-cn/news/page/2/'; Previous = '/zh-cn/news/' }
+)
+$englishNewsHrefs = @()
+$englishNewsDates = @()
+foreach ($route in $newsListRoutes) {
+  $page1Html = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $route.Page1)
+  $page2Html = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $route.Page2)
+  foreach ($pageSpec in @(
+      [PSCustomObject]@{ Name = $route.Page1; Html = $page1Html; Canonical = $route.Canonical1; External = 5; Internal = 1 },
+      [PSCustomObject]@{ Name = $route.Page2; Html = $page2Html; Canonical = $route.Canonical2; External = 6; Internal = 0 }
+    )) {
+    $canonicalPattern = '<link rel="canonical" href="' + [regex]::Escape($pageSpec.Canonical) + '">'
+    Assert-Equal ([regex]::Matches($pageSpec.Html, '<a class="news-card news-card--').Count) 6 "News page size: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card news-card--external"').Count) $pageSpec.External "External News card count: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card news-card--internal"').Count) $pageSpec.Internal "Internal News card count: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card news-card--external" href="https?://[^\"]+" target="_blank" rel="noopener noreferrer"').Count) $pageSpec.External "External News link security: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card news-card--internal" href="/[^"]+"').Count) $pageSpec.Internal "Internal News same-tab link: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, '<nav class="news-pagination"').Count) 1 "News pagination count: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, $canonicalPattern).Count) 1 "News canonical: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, 'rel="alternate" hreflang=').Count) 5 "News hreflang count: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card__byline"').Count) 6 "News metadata first row: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, '<time class="news-card__date" datetime="').Count) 6 "News date second row: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, 'news-card__cta|news-card__internal-cta').Count) 0 "Removed News text CTA: $($pageSpec.Name)"
+  }
+  $nextPattern = 'href="' + [regex]::Escape($route.Next) + '" rel="next"'
+  $previousPattern = 'href="' + [regex]::Escape($route.Previous) + '" rel="prev"'
+  Assert-Equal ([regex]::Matches($page1Html, $nextPattern).Count) 1 "News next link: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($page2Html, $previousPattern).Count) 1 "News previous link: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($page1Html, 'class="news-pagination__page" aria-current="page"').Count) 1 "News page 1 current state: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($page2Html, 'class="news-pagination__page" aria-current="page"').Count) 1 "News page 2 current state: $($route.Locale)"
+  if ($route.Locale -eq 'en') {
+    $newsHrefPattern = '<a class="news-card news-card--[^"]+" href="([^"]+)"'
+    foreach ($html in @($page1Html, $page2Html)) {
+      $englishNewsHrefs += [regex]::Matches($html, $newsHrefPattern) | ForEach-Object { $_.Groups[1].Value }
+      $englishNewsDates += [regex]::Matches($html, '<time class="news-card__date" datetime="([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
+    }
+  }
 }
+Assert-Equal $englishNewsHrefs.Count 12 'News data count'
+Assert-Equal (@($englishNewsHrefs | Sort-Object -Unique).Count) 12 'Unique News destination count'
+Assert-Equal ($englishNewsDates -join '|') (($englishNewsDates | Sort-Object -Descending) -join '|') 'News published date order'
+Assert-Equal (Test-Path -LiteralPath (Join-Path $siteRoot 'dist\news\page\3\index.html')) $false 'Unexpected News page 3 route'
+$newsSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\news.ts')
+Assert-Equal ([regex]::Matches($newsSource, "type:\s*'internal'").Count) 1 'Internal News source count'
+Assert-Equal ([regex]::Matches($newsSource, "type:\s*'external'").Count) 11 'External News source count'
+Assert-Equal ([regex]::Matches($newsSource, "kind:\s*'blog-review'").Count) 5 'Blog review source count'
+foreach ($approvedBlogUrl in @(
+    'https://blog.naver.com/kuromi01/223567525541',
+    'https://blog.naver.com/ko_castle/223969678143',
+    'https://blog.naver.com/djaakek00/223978126463',
+    'https://blog.naver.com/tunacanzorim/223565100540'
+  )) {
+  Assert-Equal ([regex]::Matches($newsSource, [regex]::Escape($approvedBlogUrl)).Count) 1 "Approved Naver blog source: $approvedBlogUrl"
+}
+$newsCardSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\components\news\NewsItemCard.astro')
+Assert-Equal ([regex]::Matches($newsCardSource, '<a[\s\S]*?class:list=\{\[').Count) 1 'Whole News card link source'
+Assert-Equal ([regex]::Matches($newsCardSource, '<a(?:\s|>)', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase).Count) 1 'Nested News card link count'
+Assert-Equal ([regex]::Matches($newsCardSource, 'sourceCta|internalCta').Count) 0 'Removed News CTA translation references'
+Assert-Equal ([regex]::Matches($newsCardSource, 'class="news-card__byline"').Count) 1 'News metadata first-row source'
+Assert-Equal ([regex]::Matches($newsCardSource, 'class="news-card__date"').Count) 1 'News date second-row source'
+$newsStyles = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\styles\news.css')
+Assert-Equal ([regex]::Matches($newsStyles, '-webkit-line-clamp:\s*2').Count) 1 'News summary two-line clamp'
+Assert-Equal ([regex]::Matches($newsStyles, '\.news-card__meta\s*\{[^}]*display:\s*grid', [System.Text.RegularExpressions.RegexOptions]::Singleline).Count) 1 'News two-row metadata layout'
 
 $pressScreenshotFiles = @(
   [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-01.jpg'; Hash = '484B07E40D88556C53425222C1FCE4A9953DAA8A21AEA83CE33964060E106077' },
@@ -675,7 +740,7 @@ foreach ($pressPath in @('dist\press\index.html', 'dist\ko\press\index.html', 'd
 Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-game-tab').Count) 0 'Removed Home Hero game selector count'
 Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-background-slide').Count) 4 'Home Hero background slide count'
 Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-background-slide[^>]+data-slide-game="mushhero"').Count) 2 'Home MushHero background slide count'
-Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-background-slide[^>]+data-slide-game="mushdash"').Count) 2 'Home Mush Dash background slide count'
+Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-background-slide[^>]+data-slide-game="mushdash"').Count) 2 'Home MushDash background slide count'
 Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-content-panel').Count) 2 'Home Hero game content count'
 Assert-Equal ([regex]::Matches($indexHtml, 'data-hero-previous|data-hero-next|data-hero-counter').Count) 0 'Removed Home Hero legacy carousel controls'
 Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-dot').Count) 4 'Home Hero pagination count'
@@ -686,7 +751,29 @@ Assert-Equal ([regex]::Matches($indexHtml, '<img[^>]+data-src="/press/assets/(?:
 Assert-Equal ([regex]::Matches($indexHtml, 'data-home-game-showcase|home-game-showcase').Count) 0 'Removed Home game showcase output'
 Assert-Equal ([regex]::Matches($indexHtml, 'class="featured-game page-section"').Count) 1 'Restored Home featured section'
 Assert-Equal ([regex]::Matches($indexHtml, 'class="games-overview page-section"').Count) 1 'Restored Home games overview'
-Assert-Equal ([regex]::Matches($indexHtml, 'class="mushdash-section page-section"').Count) 1 'Restored Home Mush Dash section'
+Assert-Equal ([regex]::Matches($indexHtml, 'mushdash-section').Count) 0 'Removed duplicate Home MushDash section'
+Assert-Equal (Test-Path -LiteralPath (Join-Path $siteRoot 'src\components\home\MushDashSection.astro')) $false 'Removed Home MushDash component'
+Assert-Equal ([bool]($indexHtml -match 'href="/games/mushdash/"')) $true 'Home MushDash detail route'
+$homeLocalePaths = @(
+  @{ Path = 'dist\index.html'; Detail = '/games/mushhero/' },
+  @{ Path = 'dist\ko\index.html'; Detail = '/ko/games/mushhero/' },
+  @{ Path = 'dist\ja\index.html'; Detail = '/ja/games/mushhero/' },
+  @{ Path = 'dist\zh-cn\index.html'; Detail = '/zh-cn/games/mushhero/' }
+)
+foreach ($homeLocale in $homeLocalePaths) {
+  $homeLocaleHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $homeLocale.Path)
+  Assert-Equal ([regex]::Matches($homeLocaleHtml, '<h2 id="featured-game-title" class="featured-game__title">MushHero</h2>').Count) 1 "Home Featured MushHero title: $($homeLocale.Path)"
+  Assert-Equal ([regex]::Matches($homeLocaleHtml, 'class="featured-game__meta"').Count) 1 "Home Featured genre and release meta: $($homeLocale.Path)"
+  Assert-Equal ([regex]::Matches($homeLocaleHtml, 'class="featured-game__actions"').Count) 1 "Home Featured CTA group: $($homeLocale.Path)"
+  Assert-Equal ([bool]($homeLocaleHtml -match ('href="' + [regex]::Escape($homeLocale.Detail) + '"'))) $true "Home Featured internal detail CTA: $($homeLocale.Path)"
+  Assert-Equal ([bool]($homeLocaleHtml -match 'href="https://store\.steampowered\.com/app/4711200/MushHero/"')) $true "Home Featured Steam CTA: $($homeLocale.Path)"
+}
+$featuredSectionIndex = $indexHtml.IndexOf('class="featured-game page-section"')
+$gamesOverviewIndex = $indexHtml.IndexOf('class="games-overview page-section"')
+$aboutPreviewIndex = $indexHtml.IndexOf('class="about-preview page-section"')
+if ($featuredSectionIndex -lt 0 -or $gamesOverviewIndex -le $featuredSectionIndex -or $aboutPreviewIndex -le $gamesOverviewIndex) {
+  throw 'Home section order must be Hero, Featured Game, Games Overview, About Preview.'
+}
 Assert-Equal ([regex]::Matches($indexHtml, '<img[^>]+(?:src|data-src)="https://').Count) 0 'Home external image hotlink count'
 Assert-Equal ([regex]::Matches($indexHtml, '/home/assets/(?:mushhero|mushdash)-\d{2}-640\.webp 640w, /home/assets/(?:mushhero|mushdash)-\d{2}-1280\.webp 1280w').Count) 7 'Home responsive image source-set count'
 $homeStyles = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\styles\home.css')
@@ -702,6 +789,27 @@ Assert-Equal ([regex]::Matches($homeHeroSource, "matchMedia\('\(prefers-reduced-
 Assert-Equal ([regex]::Matches($homeHeroSource, "root\.addEventListener\('pointerenter'").Count) 1 'Home Hero pointer pause'
 Assert-Equal ([regex]::Matches($homeHeroSource, "root\.addEventListener\('focusin'").Count) 1 'Home Hero focus pause'
 Assert-Equal ([regex]::Matches($homeHeroSource, 'preloadLeadTime').Count) 2 'Home Hero progressive preload strategy'
+$globalStyles = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\styles\global.css')
+Assert-Equal ([regex]::Matches($globalStyles, 'mushdash-section').Count) 0 'Removed Home MushDash section styles'
+Assert-Equal ([regex]::Matches($globalStyles, '(?s)\.about-preview\s*\{[^}]*border-block:\s*1px solid var\(--color-border\)').Count) 1 'Home Games-to-About divider'
+Assert-Equal ([regex]::Matches($globalStyles, '--color-brand-bg:\s*#0f0d0c').Count) 1 'Deepest charcoal token'
+Assert-Equal ([regex]::Matches($globalStyles, '--color-page:\s*#1a1714').Count) 1 'Warm bright charcoal page token'
+Assert-Equal ([regex]::Matches($globalStyles, '--color-brand-surface:\s*#221e19').Count) 1 'Warm bright charcoal surface token'
+Assert-Equal ([regex]::Matches($globalStyles, '--color-brand-surface-raised:\s*#29241e').Count) 1 'Warm bright charcoal raised token'
+Assert-Equal ([regex]::Matches($globalStyles, '--color-brand-surface-warm:\s*#302a22').Count) 1 'Warm bright charcoal warm token'
+Assert-Equal ([regex]::Matches($globalStyles, '--color-brand-border-strong:\s*#82725c').Count) 1 'Interactive border contrast token'
+Assert-Equal ([regex]::Matches($globalStyles, '--color-brand-text-muted:\s*#bdb2a2').Count) 1 'Readable muted text token'
+Assert-Equal ([regex]::Matches($homeStyles, 'filter:\s*brightness').Count) 0 'Home Hero artificial image brightness filter count'
+
+foreach ($aboutPath in @('dist\about\index.html', 'dist\ko\about\index.html', 'dist\ja\about\index.html', 'dist\zh-cn\about\index.html')) {
+  $aboutHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $aboutPath)
+  $principlesBlock = [regex]::Match($aboutHtml, '(?s)<ol class="about-capabilities__grid">(.*?)</ol>')
+  Assert-Equal $principlesBlock.Success $true "About philosophy block: $aboutPath"
+  Assert-Equal ([regex]::Matches($principlesBlock.Groups[1].Value, '<h3>').Count) 3 "About philosophy principle count: $aboutPath"
+  Assert-Equal ([regex]::Matches($aboutHtml, 'about-approach').Count) 0 "Removed duplicate About philosophy block: $aboutPath"
+  Assert-Equal ([regex]::Matches($aboutHtml, 'class="about-team page-section"').Count) 1 "About team section: $aboutPath"
+  Assert-Equal ([regex]::Matches($aboutHtml, 'class="about-location page-section"').Count) 1 "About location section: $aboutPath"
+}
 foreach ($gameDetailPath in @('dist\games\mushhero\index.html', 'dist\games\mushdash\index.html')) {
   $gameDetailHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $gameDetailPath)
   Assert-Equal ([regex]::Matches($gameDetailHtml, 'class="media-gallery__item"').Count) 3 "Game gallery item count: $gameDetailPath"
@@ -712,6 +820,20 @@ foreach ($legalPath in @('dist\privacy\index.html', 'dist\terms\index.html')) {
   $legalHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $legalPath)
   Assert-Equal ([regex]::Matches($legalHtml, '<(?:main|article|div|section)[^>]*\sdata-motion-page(?:\s|=|>)').Count) 0 "Legal motion opt-in count: $legalPath"
 }
+$legalPaths = @(
+  'dist\privacy\index.html', 'dist\ko\privacy\index.html', 'dist\ja\privacy\index.html', 'dist\zh-cn\privacy\index.html',
+  'dist\terms\index.html', 'dist\ko\terms\index.html', 'dist\ja\terms\index.html', 'dist\zh-cn\terms\index.html'
+)
+foreach ($legalPath in $legalPaths) {
+  $legalHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $legalPath)
+  Assert-Equal ([regex]::Matches($legalHtml, 'class="privacy-toc privacy-toc--desktop"').Count) 1 "Legal desktop TOC count: $legalPath"
+  Assert-Equal ([regex]::Matches($legalHtml, '<details class="privacy-toc privacy-toc--mobile">').Count) 1 "Legal mobile TOC count: $legalPath"
+}
+$legalStyles = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\styles\privacy.css')
+$legalBaseStyles = $legalStyles.Substring(0, $legalStyles.IndexOf('@media'))
+Assert-Equal ([regex]::Matches($legalBaseStyles, '(?s)\.privacy-layout__aside\s*\{[^}]*display:\s*none').Count) 1 'Legal desktop TOC hidden below desktop breakpoint'
+Assert-Equal ([regex]::Matches($legalStyles, '(?s)@media \(min-width:\s*64rem\).*?\.privacy-toc--mobile\s*\{[^}]*display:\s*none').Count) 1 'Legal mobile TOC hidden at desktop breakpoint'
+Assert-Equal ([regex]::Matches($legalStyles, '(?s)@media \(min-width:\s*64rem\).*?\.privacy-layout__aside\s*\{[^}]*display:\s*block').Count) 1 'Legal desktop TOC visible at desktop breakpoint'
 
 $profilePairs = @(
   [PSCustomObject]@{

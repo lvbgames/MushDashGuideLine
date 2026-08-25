@@ -2,7 +2,6 @@
 import { getLocalePath, type Locale } from '../../i18n/config';
 import type { Translation } from '../../i18n/translations/en';
 import type { NewsItem } from '../../types/news';
-import ExternalLink from '../ui/ExternalLink.astro';
 
 interface Props {
   item: NewsItem;
@@ -24,24 +23,28 @@ const formattedDate = new Intl.DateTimeFormat(dateLocale[locale], {
   day: 'numeric'
 }).format(new Date(`${item.publishedAt}T00:00:00Z`));
 const internalHref = item.type === 'internal' ? getLocalePath(locale, 'news-article', item.slug) : null;
+const href = item.type === 'external' ? item.sourceUrl : internalHref;
 ---
 
-<article class="news-card" aria-labelledby={titleId}>
-  <div class="news-card__meta">
-    <span class="news-card__kind">{translation.news.kindLabels[item.kind]}</span>
-    <span>{item.type === 'internal' ? item.author : item.publisher}</span>
-    {item.type === 'external' && item.author && <span>{item.author}</span>}
-    <time datetime={item.publishedAt}>{formattedDate}</time>
-  </div>
-  <h3 id={titleId}>{item.localizedTitle[locale]}</h3>
-  <p>{item.localizedSummary[locale]}</p>
-  {item.type === 'external' ? (
-    <ExternalLink href={item.sourceUrl} externalLabel={translation.common.opensNewTab}>
-      <span class="news-card__source">{translation.news.sourceCta}</span>
-    </ExternalLink>
-  ) : (
-    <a class="news-card__internal-link" href={internalHref ?? undefined}>
-      <span class="news-card__internal-cta">{translation.news.internalCta}</span>
-    </a>
-  )}
+<article class="news-card-entry" aria-labelledby={titleId}>
+  <a
+    class:list={['news-card', item.type === 'external' ? 'news-card--external' : 'news-card--internal']}
+    href={href ?? undefined}
+    target={item.type === 'external' ? '_blank' : undefined}
+    rel={item.type === 'external' ? 'noopener noreferrer' : undefined}
+  >
+    <div class="news-card__meta">
+      <div class="news-card__byline">
+        <span class="news-card__kind">{translation.news.kindLabels[item.kind]}</span>
+        <span class="news-card__source">
+          <span>{item.type === 'internal' ? item.author : item.publisher}</span>
+          {item.type === 'external' && item.author && <span>{item.author}</span>}
+        </span>
+      </div>
+      <time class="news-card__date" datetime={item.publishedAt}>{formattedDate}</time>
+    </div>
+    <h3 id={titleId}>{item.localizedTitle[locale]}</h3>
+    <p>{item.localizedSummary[locale]}</p>
+    {item.type === 'external' && <span class="news-card__external-icon" aria-hidden="true">↗</span>}
+  </a>
 </article>

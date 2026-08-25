@@ -101,7 +101,7 @@ const heroSlides = heroGames.flatMap(({ game }, gameIndex) => game.screenshots.s
   </div>
 
   <Container className="home-hero__inner">
-    <h1 id="home-hero-title" class="screen-reader">{translation.home.gamesTitle}: MushHero, Mush Dash</h1>
+    <h1 id="home-hero-title" class="screen-reader">{translation.home.gamesTitle}: MushHero, MushDash</h1>
 
     <div class="home-hero__content-stage">
       {heroGames.map(({ game, genre, headline, headlineLines, description, detailLabel, detailPath }, gameIndex) => (
@@ -234,7 +234,7 @@ const heroSlides = heroGames.flatMap(({ game }, gameIndex) => game.screenshots.s
       root.dataset.currentSlide = String(currentSlide);
       showGameContent(Number(slides[currentSlide]?.dataset.gameIndex ?? 0));
       if (announce && slideLive) {
-        const gameTitle = contentPanels[currentGame]?.dataset.contentGame === 'mushdash' ? 'Mush Dash' : 'MushHero';
+        const gameTitle = contentPanels[currentGame]?.dataset.contentGame === 'mushdash' ? 'MushDash' : 'MushHero';
         slideLive.textContent = `${gameTitle}, ${currentSlide + 1} / ${slides.length}`;
       }
       if (restartAutoPlay) scheduleAutoPlay();

@@ -22,7 +22,6 @@
 }
 
 .about-hero h1,
-.about-approach h2,
 .about-team h2,
 .about-location h2,
 .about-contact h2 {
@@ -33,7 +32,6 @@
 }
 
 .about-hero__content > p:last-child,
-.about-approach__intro > p:last-child,
 .about-team__intro > p:last-child,
 .about-location__content > p:last-of-type,
 .about-contact__action > p {
@@ -78,8 +76,7 @@
   background: var(--color-elevated);
 }
 
-.about-capabilities__grid,
-.about-approach__list {
+.about-capabilities__grid {
   padding: 0;
   margin: 0;
   list-style: none;
@@ -98,17 +95,14 @@
   background: var(--color-card);
 }
 
-.about-capabilities__grid li > span,
-.about-approach__list li > span {
+.about-capabilities__grid li > span {
   color: var(--color-brand-honey);
   font-size: 0.75rem;
   font-weight: 800;
 }
 
 .about-capabilities__grid h3,
-.about-capabilities__grid p,
-.about-approach__list h3,
-.about-approach__list p {
+.about-capabilities__grid p {
   margin: 0;
 }
 
@@ -117,36 +111,9 @@
   font-size: clamp(1.3rem, 4vw, 1.65rem);
 }
 
-.about-capabilities__grid p,
-.about-approach__list p {
+.about-capabilities__grid p {
   margin-top: var(--space-3);
   color: var(--color-text-secondary);
-}
-
-.about-approach {
-  border-block: 1px solid var(--color-border);
-  background: var(--color-brand-surface-raised);
-}
-
-.about-approach__inner {
-  display: grid;
-  gap: var(--space-10);
-}
-
-.about-approach__list {
-  border-top: 1px solid var(--color-border-strong);
-}
-
-.about-approach__list li {
-  display: grid;
-  grid-template-columns: 2rem 1fr;
-  gap: var(--space-4);
-  padding-block: var(--space-6);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.about-approach__list h3 {
-  font-size: 1.15rem;
 }
 
 .about-team {
@@ -409,12 +376,6 @@
 
   :lang(ja) .about-hero__content {
     max-width: 54rem;
-  }
-
-  .about-approach__inner {
-    grid-template-columns: minmax(0, 0.9fr) minmax(26rem, 1.1fr);
-    gap: var(--space-16);
-    align-items: start;
   }
 
   .about-team__inner {

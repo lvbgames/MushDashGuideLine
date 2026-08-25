@@ -183,6 +183,98 @@ export const newsItems: readonly NewsItem[] = [
   },
   {
     type: 'external',
+    slug: 'bic-2025-mushdash-repeat-play-djaakek00',
+    kind: 'blog-review',
+    originalTitle: '[BGC 서포터즈] 2025 BIC 부산인디커넥트페스티벌 방문 후기',
+    localizedTitle: {
+      en: '[BGC Supporters] A Visit to Busan Indie Connect Festival 2025',
+      ko: '[BGC 서포터즈] 2025 BIC 부산인디커넥트페스티벌 방문 후기',
+      ja: '【BGCサポーターズ】2025 BIC釜山インディーコネクトフェスティバル参加レポート',
+      'zh-cn': '【BGC 支持者】2025 BIC 釜山独立游戏节体验记录'
+    },
+    localizedSummary: {
+      en: 'The author returned to MushDash at BIC and highlighted its character customization and cute mushroom design after playing it at an earlier event.',
+      ko: '작성자는 이전 행사에 이어 BIC에서도 MushDash를 플레이하며, 캐릭터 커스터마이징과 귀여운 버섯 디자인을 긍정적으로 소개했습니다.',
+      ja: '筆者は以前のイベントに続いてBICでもMushDashを試遊し、キャラクターカスタマイズとかわいらしいキノコのデザインを好意的に紹介しています。',
+      'zh-cn': '作者继此前的活动体验后，又在 BIC 试玩了 MushDash，并肯定了角色自定义功能和可爱的蘑菇造型。'
+    },
+    publisher: '美 池 :',
+    author: 'djaakek00',
+    publishedAt: '2025-08-21',
+    sourceUrl: 'https://blog.naver.com/djaakek00/223978126463',
+    lastVerifiedAt: '2026-08-25'
+  },
+  {
+    type: 'external',
+    slug: 'bgc-2025-mushdash-memorable-game-ko-castle',
+    kind: 'blog-review',
+    originalTitle: '[BGC 서포터즈 9기] 발대식 후기',
+    localizedTitle: {
+      en: '[BGC Supporters 9] Orientation Day Recap',
+      ko: '[BGC 서포터즈 9기] 발대식 후기',
+      ja: '【BGCサポーターズ9期】発足式レポート',
+      'zh-cn': '【BGC 支持者第 9 期】启动仪式体验记录'
+    },
+    localizedSummary: {
+      en: 'After trying the games at the event, the author introduced MushDash as one of the titles that remained especially memorable.',
+      ko: '작성자는 행사에서 여러 게임을 체험한 뒤, MushDash를 특히 기억에 남았던 작품으로 소개했습니다.',
+      ja: '筆者はイベントで複数のゲームを試遊し、その中でもMushDashを特に印象に残った作品として紹介しています。',
+      'zh-cn': '作者在活动中体验了多款游戏，并将 MushDash 介绍为尤其令人印象深刻的作品。'
+    },
+    publisher: "GAME'R' DESIGNER",
+    author: 'ko_castle',
+    publishedAt: '2025-08-13',
+    sourceUrl: 'https://blog.naver.com/ko_castle/223969678143',
+    lastVerifiedAt: '2026-08-25'
+  },
+  {
+    type: 'external',
+    slug: 'bic-2024-mushdash-play-review-kuromi01',
+    kind: 'blog-review',
+    originalTitle: '[BIC] 부산인디커넥트페스티벌 후기 !',
+    localizedTitle: {
+      en: '[BIC] Busan Indie Connect Festival Recap',
+      ko: '[BIC] 부산인디커넥트페스티벌 후기 !',
+      ja: '【BIC】釜山インディーコネクトフェスティバル参加レポート',
+      'zh-cn': '【BIC】釜山独立游戏节体验记录'
+    },
+    localizedSummary: {
+      en: 'The author played MushDash at BIC and described it as the game they enjoyed most, while highlighting its demanding and competitive play.',
+      ko: '작성자는 BIC 현장에서 MushDash를 직접 플레이하고 가장 즐긴 게임으로 꼽으며, 높은 난도와 승부욕을 자극하는 플레이를 함께 소개했습니다.',
+      ja: '筆者はBIC会場でMushDashを試遊し、最も楽しんだゲームとして挙げながら、歯ごたえのある難度と競争心を刺激するプレイを紹介しています。',
+      'zh-cn': '作者在 BIC 现场试玩了 MushDash，将其列为自己最享受的游戏，并提到较高难度和富有竞争感的玩法。'
+    },
+    publisher: '˙ᵕ˙',
+    author: 'kuromi01',
+    publishedAt: '2024-08-31',
+    sourceUrl: 'https://blog.naver.com/kuromi01/223567525541',
+    lastVerifiedAt: '2026-08-25'
+  },
+  {
+    type: 'external',
+    slug: 'bic-2024-mushdash-friends-and-difficulty-tunacanzorim',
+    kind: 'blog-review',
+    originalTitle: '[BGC 서포터즈] 부산인디커넥트페스티벌 2024 후기',
+    localizedTitle: {
+      en: '[BGC Supporters] Busan Indie Connect Festival 2024 Recap',
+      ko: '[BGC 서포터즈] 부산인디커넥트페스티벌 2024 후기',
+      ja: '【BGCサポーターズ】釜山インディーコネクトフェスティバル2024参加レポート',
+      'zh-cn': '【BGC 支持者】2024 釜山独立游戏节体验记录'
+    },
+    localizedSummary: {
+      en: 'The author found MushDash’s obstacles and traps challenging, while noting that the multiplayer race looked especially fun to enjoy with friends.',
+      ko: '작성자는 MushDash의 장애물과 함정이 어렵다고 느낀 한편, 친구들과 함께 즐기면 특히 재미있을 것이라는 인상을 전했습니다.',
+      ja: '筆者はMushDashの障害物やトラップに難しさを感じる一方、友達と一緒に遊べば特に楽しめそうだという印象を伝えています。',
+      'zh-cn': '作者认为 MushDash 的障碍与陷阱颇具难度，同时也表示这款多人竞速游戏和朋友一起玩会更有乐趣。'
+    },
+    publisher: '산들바람 스텝',
+    author: 'tunacanzorim',
+    publishedAt: '2024-08-29',
+    sourceUrl: 'https://blog.naver.com/tunacanzorim/223565100540',
+    lastVerifiedAt: '2026-08-25'
+  },
+  {
+    type: 'external',
     slug: 'busan-indie-studios-bic-2024-gamemeca',
     kind: 'press-coverage',
     originalTitle: '부산 인디 게임사 23곳, BIC에서 신작 알린다',

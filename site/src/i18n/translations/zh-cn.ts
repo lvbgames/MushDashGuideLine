@@ -3,19 +3,19 @@ import type { Translation } from './en';
 export const zhCn: Translation = {
   meta: {
     homeTitle: 'Lv.B — 韩国釜山独立游戏工作室',
-    homeDescription: 'Lv.B是一家位于韩国釜山、开发MushHero和Mush Dash的独立游戏工作室。',
+    homeDescription: 'Lv.B是一家位于韩国釜山、开发MushHero和MushDash的独立游戏工作室。',
     gamesTitle: '游戏 — Lv.B',
-    gamesDescription: '了解 Lv.B 打造的两个风格鲜明的多人游戏世界：MushHero 与 Mush Dash。',
+    gamesDescription: '了解 Lv.B 打造的两个风格鲜明的多人游戏世界：MushHero 与 MushDash。',
     aboutTitle: '关于 Lv.B — 独立游戏工作室',
     aboutDescription: '了解位于韩国釜山、专注多人玩法与独特世界观的独立游戏工作室 Lv.B。',
     contactTitle: '商务联系 — Lv.B',
     contactDescription: '通过电子邮件向 Lv.B 咨询商务合作、活动与展会、内容创作者与 Steam 鉴赏家、媒体报道与采访等公司事务。',
     mushHeroTitle: 'MushHero — 合作 Roguelite 防守游戏 | Lv.B',
     mushHeroDescription: '了解 MushHero：与队友共同抵御怪物浪潮，并在每次挑战中打造全新构筑。',
-    mushDashTitle: 'Mush Dash — 在线派对竞速 | Lv.B',
-    mushDashDescription: '了解 Mush Dash：最多七名玩家在危险的障碍赛道上竞速，游戏目前处于抢先体验阶段。',
+    mushDashTitle: 'MushDash — 在线派对竞速 | Lv.B',
+    mushDashDescription: '了解 MushDash：最多七名玩家在危险的障碍赛道上竞速，游戏目前处于抢先体验阶段。',
     newsTitle: '动态与报道 — Lv.B',
-    newsDescription: '查看有关 Lv.B、MushHero 与 Mush Dash 的已核实访谈、媒体报道与专题内容。'
+    newsDescription: '查看有关 Lv.B、MushHero 与 MushDash 的已核实访谈、媒体报道与专题内容。'
   },
   nav: {
     games: '游戏',
@@ -57,6 +57,9 @@ export const zhCn: Translation = {
       pauseSlideshow: '暂停幻灯片播放',
       playSlideshow: '播放幻灯片'
     },
+    featuredProjectLabel: 'FEATURED PROJECT',
+    featuredGameMeta: '合作 Roguelite 防守游戏 · 预计 2027 年推出',
+    featuredDetailCta: '了解 MushHero',
     featuredEyebrow: '合作 Roguelite 防守游戏',
     featuredTitle: '用全新的策略迎接每一波挑战。',
     featuredTitleLines: ['用全新的策略', '迎接每一波挑战。'],
@@ -72,10 +75,9 @@ export const zhCn: Translation = {
     gamesDescription: '了解 Lv.B 打造的不同多人游戏世界。',
     primaryGame: '主推游戏',
     releasedGame: '已发行游戏',
-    dashEyebrow: '现已推出抢先体验版',
     dashTitle: '快速冲刺，看穿陷阱，夺得王冠。',
     dashDescription: '最多七名玩家在线竞速，躲避致命陷阱，并在冲向终点的路上收集 Mushroom Coin。',
-    dashDetailCta: '了解 Mush Dash',
+    dashDetailCta: '了解 MushDash',
     aboutEyebrow: '来自韩国釜山',
     aboutTitle: '一起欢笑，一起成长。',
     aboutDescription: 'Lv.B 是一家位于韩国釜山的独立游戏工作室。我们以多人玩法和独特世界观为基础，打造轻松上手、长久难忘的游戏体验。',
@@ -102,11 +104,11 @@ export const zhCn: Translation = {
     featuredEyebrow: '当前主推项目',
     featuredDescription: 'MushHero 是一款合作 Roguelite 防守游戏，玩家共同对抗怪物浪潮和强大首领，并在每次挑战中形成不同策略。',
     releasedEyebrow: '抢先体验作品',
-    releasedDescription: 'Mush Dash 是一款在线派对竞速游戏，最多七名玩家躲避危险陷阱、收集 Mushroom Coin 并争夺最后的王冠。',
+    releasedDescription: 'MushDash 是一款在线派对竞速游戏，最多七名玩家躲避危险陷阱、收集 Mushroom Coin 并争夺最后的王冠。',
     detailCta: '查看游戏详情',
     gameImageAlts: {
       mushhero: 'MushHero 英雄在官方游戏截图中走向怪物',
-      mushdash: 'Mush Dash 官方游戏截图中的赛道与蘑菇选手'
+      mushdash: 'MushDash 官方游戏截图中的赛道与蘑菇选手'
     },
     principlesEyebrow: '我们的制作方式',
     principlesTitle: '一起游玩，更有乐趣。',
@@ -126,21 +128,13 @@ export const zhCn: Translation = {
     heroTitle: '一起欢笑，一起成长的游戏体验。',
     heroDescription: 'Lv.B 是一家位于韩国釜山的独立游戏工作室。我们以多人玩法和独特的世界观为基础，打造让玩家一起欢笑、彼此连接并共同成长的游戏体验。我们的目标，是让每个人都能轻松上手，并在游戏结束后仍留下长久而难忘的回忆。',
     logoAlt: 'Lv.B',
-    capabilitiesEyebrow: '我们所做的事',
+    capabilitiesEyebrow: '我们的制作方式',
     capabilitiesTitle: 'Lv.B 打造游戏体验的三个方向。',
     capabilitiesTitleLines: ['Lv.B 打造游戏体验的', '三个方向。'],
     capabilities: [
-      { title: '多人玩法', description: '我们设计在共同游玩时更有趣、更有意义的体验。' },
-      { title: '独特世界观', description: '我们塑造一眼就能认出，并能让玩家长久记住的世界与个性。' },
-      { title: '轻松上手', description: '我们追求容易进入，同时拥有足够深度让玩家持续投入的玩法。' }
-    ],
-    approachEyebrow: '我们的方式',
-    approachTitle: '轻松开始，长久难忘。',
-    approachDescription: '我们专注清晰的玩法、共同经历的时刻，以及在游戏结束后依然延续的感受。',
-    approach: [
-      { title: '容易进入', description: '清晰的规则与目标，让每位玩家都能快速找到乐趣。' },
-      { title: '一起更有趣', description: '我们打磨能够自然带来欢笑、连接与共同成长的多人玩法。' },
-      { title: '留下记忆', description: '独特的世界与有意义的玩法，让体验延续到最后一局之后。' }
+      { title: '一起游玩，更有乐趣', description: '我们通过多人玩法，打造比独自游玩更有趣、更有意义的共同体验。' },
+      { title: '令人难忘的世界', description: '我们塑造一眼就能认出的独特世界、角色与体验，让它们长久留在玩家记忆中。' },
+      { title: '轻松上手，深入体验', description: '每个人都能轻松开始，并在持续游玩中发现新的乐趣与深度。' }
     ],
     team: {
       eyebrow: '团队',
@@ -214,8 +208,12 @@ export const zhCn: Translation = {
       'blog-review': '试玩报告',
       feature: '专题'
     },
-    sourceCta: '阅读原文',
-    internalCta: '阅读动态',
+    paginationLabel: '动态分页',
+    previousPage: '上一页',
+    nextPage: '下一页',
+      pageLabel: '页码',
+    paginationTitle: '动态与媒体报道 — 第 {page} 页 — Lv.B',
+    paginationDescription: '浏览经核实的 Lv.B 访谈、媒体报道与试玩体验第 {page} 页。',
     followEyebrow: '官方频道',
     followTitle: '关注 Lv.B',
     followDescription: '通过 Lv.B 官方频道获取工作室动态、游戏资讯与社区支持。'
@@ -252,9 +250,9 @@ export const zhCn: Translation = {
     purchaseTitle: '关注 MushHero 的后续消息。',
     purchaseDescription: '将 MushHero 加入 Steam 愿望单，关注游戏直到正式推出。',
     moreGamesEyebrow: 'Lv.B 的其他作品',
-    moreGamesTitle: '认识 Mush Dash。',
+    moreGamesTitle: '认识 MushDash。',
     moreGameDescription: '最多七名玩家在线竞速，躲避致命陷阱，并在冲向终点的路上收集 Mushroom Coin。',
-    moreGameCta: '了解 Mush Dash'
+    moreGameCta: '了解 MushDash'
   },
   mushDash: {
     heroEyebrow: '向王冠冲刺',
@@ -278,15 +276,15 @@ export const zhCn: Translation = {
     featuredScreenshotEyebrow: '进入赛道',
     featuredScreenshotTitle: '找到穿越每个障碍的路线。',
     galleryEyebrow: '官方游戏截图',
-    galleryTitle: '进一步了解 Mush Dash。',
+    galleryTitle: '进一步了解 MushDash。',
     screenshotAlts: [
-      '显示 Mush House 赛道选择和蘑菇选手的 Mush Dash 大厅',
-      '铺设在巨型厨房中的 Mush Dash 障碍赛道',
-      '在发光跳台间弹跳的 Mush Dash 蘑菇选手'
+      '显示 Mush House 赛道选择和蘑菇选手的 MushDash 大厅',
+      '铺设在巨型厨房中的 MushDash 障碍赛道',
+      '在发光跳台间弹跳的 MushDash 蘑菇选手'
     ],
     purchaseEyebrow: '抢先体验现已推出',
-    purchaseTitle: '加入 Mush Dash 竞速。',
-    purchaseDescription: '通过 Steam 或 Epic Games Store 游玩 Mush Dash，争夺最终王冠。',
+    purchaseTitle: '加入 MushDash 竞速。',
+    purchaseDescription: '通过 Steam 或 Epic Games Store 游玩 MushDash，争夺最终王冠。',
     moreGamesEyebrow: 'Lv.B 的其他作品',
     moreGamesTitle: '认识 MushHero。',
     moreGameDescription: '与队友共同抵御怪物浪潮，在每次挑战中打造不同的 Roguelite 策略。',

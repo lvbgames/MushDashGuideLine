@@ -3,19 +3,19 @@ import type { Translation } from './en';
 export const ko: Translation = {
   meta: {
     homeTitle: 'Lv.B(레벨비) — 부산 인디 게임 개발사',
-    homeDescription: 'Lv.B(레벨비)는 부산에서 MushHero와 Mush Dash를 만드는 인디 게임 개발사입니다.',
+    homeDescription: 'Lv.B(레벨비)는 부산에서 MushHero와 MushDash를 만드는 인디 게임 개발사입니다.',
     gamesTitle: '게임 — Lv.B',
-    gamesDescription: 'Lv.B가 선보이는 서로 다른 두 멀티플레이 세계, MushHero와 Mush Dash를 만나보세요.',
+    gamesDescription: 'Lv.B가 선보이는 서로 다른 두 멀티플레이 세계, MushHero와 MushDash를 만나보세요.',
     aboutTitle: 'Lv.B 소개 — 독립 게임 스튜디오',
     aboutDescription: '부산을 기반으로 멀티플레이와 독창적인 세계관의 게임을 만드는 인디 게임 개발사 Lv.B를 소개합니다.',
     contactTitle: '비즈니스 문의 — Lv.B',
     contactDescription: 'Lv.B의 비즈니스, 파트너십, 행사·전시, 크리에이터·Steam 큐레이터, 언론·인터뷰 문의를 이메일로 직접 보내세요.',
     mushHeroTitle: 'MushHero — 협동 로그라이트 디펜스 | Lv.B',
     mushHeroDescription: '몬스터 무리에 맞서 함께 방어하고, 새로운 빌드를 완성하는 협동 로그라이트 디펜스 게임 MushHero를 만나보세요.',
-    mushDashTitle: 'Mush Dash — 온라인 파티 레이스 | Lv.B',
-    mushDashDescription: '최대 7명이 위험한 장애물 코스를 달리는 앞서 해보기 온라인 파티 레이스 게임 Mush Dash를 만나보세요.',
+    mushDashTitle: 'MushDash — 온라인 파티 레이스 | Lv.B',
+    mushDashDescription: '최대 7명이 위험한 장애물 코스를 달리는 앞서 해보기 온라인 파티 레이스 게임 MushDash를 만나보세요.',
     newsTitle: '소식과 보도 — Lv.B',
-    newsDescription: 'Lv.B와 MushHero, Mush Dash를 다룬 검증된 인터뷰와 보도·소개 자료를 확인하세요.'
+    newsDescription: 'Lv.B와 MushHero, MushDash를 다룬 검증된 인터뷰와 보도·소개 자료를 확인하세요.'
   },
   nav: {
     games: '게임',
@@ -57,6 +57,9 @@ export const ko: Translation = {
       pauseSlideshow: '슬라이드쇼 일시정지',
       playSlideshow: '슬라이드쇼 재생'
     },
+    featuredProjectLabel: 'FEATURED PROJECT',
+    featuredGameMeta: '협동 로그라이트 디펜스 · 2027년 출시 예정',
+    featuredDetailCta: 'MushHero 자세히 보기',
     featuredEyebrow: '협동 로그라이트 디펜스',
     featuredTitle: '몰려오는 적에 맞서 매번 새로운 해법을 찾아보세요.',
     featuredTitleLines: ['몰려오는 적에 맞서', '매번 새로운 해법을', '찾아보세요.'],
@@ -72,10 +75,9 @@ export const ko: Translation = {
     gamesDescription: 'Lv.B가 만든 서로 다른 멀티플레이 세계를 만나보세요.',
     primaryGame: '주요 게임',
     releasedGame: '출시작',
-    dashEyebrow: '앞서 해보기',
     dashTitle: '빠르게 달리고, 함정을 읽고, 왕관을 차지하세요.',
     dashDescription: '최대 7명이 온라인으로 경주하고, 위험한 함정을 피하며 결승선까지 Mushroom Coin을 모으세요.',
-    dashDetailCta: 'Mush Dash 살펴보기',
+    dashDetailCta: 'MushDash 살펴보기',
     aboutEyebrow: '부산의 인디 게임 개발사',
     aboutTitle: '함께 웃고, 함께 성장하는 게임.',
     aboutDescription: 'Lv.B(레벨비)는 부산을 기반으로 활동하는 인디 게임 개발사입니다. 멀티플레이와 독창적인 세계관을 바탕으로, 누구나 쉽게 시작하고 오래 기억할 수 있는 게임 경험을 만듭니다.',
@@ -102,11 +104,11 @@ export const ko: Translation = {
     featuredEyebrow: '현재 주력 프로젝트',
     featuredDescription: 'MushHero는 플레이어가 함께 몬스터 무리와 강력한 보스에 맞서며 매번 다른 전략을 만드는 협동 로그라이트 디펜스 게임입니다.',
     releasedEyebrow: '앞서 해보기 출시작',
-    releasedDescription: 'Mush Dash는 최대 7명의 플레이어가 위험한 함정을 피하고 Mushroom Coin을 모으며 마지막 왕관을 향해 달리는 온라인 파티 레이스 게임입니다.',
+    releasedDescription: 'MushDash는 최대 7명의 플레이어가 위험한 함정을 피하고 Mushroom Coin을 모으며 마지막 왕관을 향해 달리는 온라인 파티 레이스 게임입니다.',
     detailCta: '게임 상세 보기',
     gameImageAlts: {
       mushhero: '공식 게임 스크린샷에서 몬스터에게 다가가는 MushHero 영웅들',
-      mushdash: '공식 게임 스크린샷의 Mush Dash 코스와 버섯 레이서'
+      mushdash: '공식 게임 스크린샷의 MushDash 코스와 버섯 레이서'
     },
     principlesEyebrow: '게임을 만드는 방식',
     principlesTitle: '함께할수록 더 즐거운 게임.',
@@ -126,21 +128,13 @@ export const ko: Translation = {
     heroTitle: '함께 웃고, 함께 성장하는 게임.',
     heroDescription: 'Lv.B(레벨비)는 부산을 기반으로 활동하는 인디 게임 개발사입니다. 멀티플레이와 독창적인 세계관을 바탕으로, 함께 웃고 함께 성장할 수 있는 게임을 만듭니다. 누구나 쉽게 시작할 수 있지만, 오래도록 기억에 남는 경험을 선사하는 것이 Lv.B의 목표입니다.',
     logoAlt: 'Lv.B',
-    capabilitiesEyebrow: '우리가 하는 일',
+    capabilitiesEyebrow: '게임을 만드는 방식',
     capabilitiesTitle: 'Lv.B가 게임을 만드는 세 가지 기준.',
     capabilitiesTitleLines: ['Lv.B가 게임을 만드는', '세 가지 기준.'],
     capabilities: [
-      { title: '멀티플레이', description: '함께할수록 더 즐겁고 의미 있는 경험을 설계합니다.' },
-      { title: '독창적인 세계관', description: '한눈에 알아보고 오래 기억할 수 있는 세계와 개성을 만듭니다.' },
-      { title: '쉬운 시작', description: '누구나 부담 없이 시작하면서도 오래 즐길 깊이를 갖춘 플레이를 지향합니다.' }
-    ],
-    approachEyebrow: '우리의 방식',
-    approachTitle: '쉽게 시작하고, 오래 기억하도록.',
-    approachDescription: '명확한 플레이와 함께하는 순간, 게임이 끝난 뒤에도 남는 경험에 집중합니다.',
-    approach: [
-      { title: '쉽게 시작하기', description: '명확한 규칙과 목표로 누구나 빠르게 재미를 찾을 수 있게 합니다.' },
-      { title: '함께 더 즐겁게', description: '웃음과 연결, 함께 성장하는 순간이 자연스럽게 생기도록 멀티플레이를 다듬습니다.' },
-      { title: '오래 기억하기', description: '독창적인 세계와 의미 있는 플레이로 마지막 라운드 이후에도 남는 경험을 만듭니다.' }
+      { title: '함께할수록 더 즐겁게', description: '멀티플레이를 통해 혼자보다 함께할 때 더 재미있고 의미 있는 경험을 만듭니다.' },
+      { title: '오래 기억되는 세계', description: '한눈에 알아볼 수 있는 독창적인 세계와 캐릭터, 오래 남는 경험을 만듭니다.' },
+      { title: '쉽게 시작하고, 깊게 즐기기', description: '누구나 쉽게 시작할 수 있지만, 플레이할수록 새로운 재미와 깊이를 발견할 수 있게 만듭니다.' }
     ],
     team: {
       eyebrow: '우리 팀',
@@ -214,8 +208,12 @@ export const ko: Translation = {
       'blog-review': '플레이 후기',
       feature: '소개'
     },
-    sourceCta: '원문 보기',
-    internalCta: '소식 읽기',
+    paginationLabel: '소식 페이지',
+    previousPage: '이전',
+    nextPage: '다음',
+    pageLabel: '페이지',
+    paginationTitle: '소식 및 보도 자료 — {page}페이지 — Lv.B',
+    paginationDescription: '검증된 Lv.B 인터뷰, 보도 자료와 플레이 후기의 {page}페이지입니다.',
     followEyebrow: '공식 채널',
     followTitle: 'Lv.B 소식 받기',
     followDescription: '공식 채널에서 스튜디오와 게임의 새로운 소식을 만나보세요.'
@@ -252,9 +250,9 @@ export const ko: Translation = {
     purchaseTitle: 'MushHero의 다음 소식을 놓치지 마세요.',
     purchaseDescription: 'Steam 위시리스트에 MushHero를 추가하고 출시까지 이어지는 소식을 확인하세요.',
     moreGamesEyebrow: 'Lv.B의 다른 게임',
-    moreGamesTitle: 'Mush Dash를 만나보세요.',
+    moreGamesTitle: 'MushDash를 만나보세요.',
     moreGameDescription: '최대 7명이 온라인으로 경주하고, 위험한 함정을 피하며 결승선까지 Mushroom Coin을 모으세요.',
-    moreGameCta: 'Mush Dash 살펴보기'
+    moreGameCta: 'MushDash 살펴보기'
   },
   mushDash: {
     heroEyebrow: '왕관을 향한 질주',
@@ -278,15 +276,15 @@ export const ko: Translation = {
     featuredScreenshotEyebrow: '코스 위에서',
     featuredScreenshotTitle: '모든 장애물을 통과할 경로를 찾으세요.',
     galleryEyebrow: '공식 스크린샷',
-    galleryTitle: 'Mush Dash를 더 가까이 살펴보세요.',
+    galleryTitle: 'MushDash를 더 가까이 살펴보세요.',
     screenshotAlts: [
-      'Mush House 코스 선택 화면과 버섯 레이서가 보이는 Mush Dash 로비',
-      '거대한 주방 위에 펼쳐진 Mush Dash 장애물 코스',
-      '빛나는 발판 위를 튀어 오르는 Mush Dash 버섯 레이서들'
+      'Mush House 코스 선택 화면과 버섯 레이서가 보이는 MushDash 로비',
+      '거대한 주방 위에 펼쳐진 MushDash 장애물 코스',
+      '빛나는 발판 위를 튀어 오르는 MushDash 버섯 레이서들'
     ],
     purchaseEyebrow: '앞서 해보기',
-    purchaseTitle: 'Mush Dash 레이스에 참가하세요.',
-    purchaseDescription: 'Steam 또는 Epic Games Store에서 Mush Dash를 플레이하고 최종 왕관을 노리세요.',
+    purchaseTitle: 'MushDash 레이스에 참가하세요.',
+    purchaseDescription: 'Steam 또는 Epic Games Store에서 MushDash를 플레이하고 최종 왕관을 노리세요.',
     moreGamesEyebrow: 'Lv.B의 다른 게임',
     moreGamesTitle: 'MushHero를 만나보세요.',
     moreGameDescription: '몬스터 무리에 맞서 함께 방어하고, 매번 다른 로그라이트 전략을 완성하세요.',

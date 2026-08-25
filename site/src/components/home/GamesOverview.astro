@@ -11,10 +11,11 @@ import SectionHeading from '../ui/SectionHeading.astro';
 interface Props {
   featured: Game;
   secondary: Game;
+  secondaryPath: string;
   translation: Translation;
 }
 
-const { featured, secondary, translation } = Astro.props;
+const { featured, secondary, secondaryPath, translation } = Astro.props;
 const statusLabels = {
   upcoming: translation.common.coming2027,
   'early-access': translation.common.earlyAccess,
@@ -50,7 +51,7 @@ const statusLabels = {
           <p>{translation.home.dashDescription}</p>
           <div class="game-overview__actions">
             <GameStoreButtons game={secondary} labels={translation.common} />
-            <ButtonLink href="#mushdash" variant="quiet">{translation.common.exploreGame}</ButtonLink>
+            <ButtonLink href={secondaryPath} variant="quiet">{translation.common.exploreGame}</ButtonLink>
           </div>
         </div>
       </article>

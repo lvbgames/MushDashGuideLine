@@ -31,7 +31,7 @@ const koSections: readonly TermsSection[] = [
     '이 약관은 Steam 또는 Epic Games Store 등 외부 플랫폼 자체의 계정·스토어·결제 서비스에는 직접 적용되지 않습니다. 해당 서비스에는 각 사업자의 약관과 정책이 별도로 적용됩니다.'
   ]),
   section('definitions', '용어 정의', [
-    '“게임”은 Lv.B가 제공하는 Mush Dash, MushHero 및 향후 이 약관을 적용한다고 명시한 게임을 말합니다. “온라인 기능”은 게임에서 제공되는 로그인, Lobby, Session, P2P 연결, 클라우드 저장 등 네트워크 기반 기능을 말합니다.',
+    '“게임”은 Lv.B가 제공하는 MushDash, MushHero 및 향후 이 약관을 적용한다고 명시한 게임을 말합니다. “온라인 기능”은 게임에서 제공되는 로그인, Lobby, Session, P2P 연결, 클라우드 저장 등 네트워크 기반 기능을 말합니다.',
     '“플랫폼”은 Steam과 Epic Games Store처럼 게임의 구매·다운로드·실행 또는 계정 기능을 제공하는 외부 서비스를 말합니다. “이용자”는 적용 법령과 플랫폼 절차에 따라 게임을 이용하는 사람을 말합니다.'
   ]),
   section('notice-changes', '약관의 적용·고지·변경', [
@@ -56,7 +56,7 @@ const koSections: readonly TermsSection[] = [
     '게임의 코드, 그래픽, 음악, 캐릭터, 명칭과 기타 콘텐츠에 관한 권리는 Lv.B 또는 정당한 권리자에게 있습니다. 적용 법령이 허용하는 경우를 제외하고 무단 복제·배포·판매·대여 또는 상업적 이용을 해서는 안 됩니다.'
   ]),
   section('accounts-online', '플랫폼 계정과 온라인 기능', [
-    'Lv.B는 현재 별도의 Lv.B 회원계정을 운영하지 않습니다. Mush Dash의 온라인 기능은 Steam 또는 Epic 계정 연동과 Epic Online Services(EOS)를 이용하며, 플랫폼 또는 EOS의 로그인 상태와 서비스 이용 가능 여부가 필요할 수 있습니다.',
+    'Lv.B는 현재 별도의 Lv.B 회원계정을 운영하지 않습니다. MushDash의 온라인 기능은 Steam 또는 Epic 계정 연동과 Epic Online Services(EOS)를 이용하며, 플랫폼 또는 EOS의 로그인 상태와 서비스 이용 가능 여부가 필요할 수 있습니다.',
     'Lobby, Session 및 P2P 연결에서는 이용자 기기 사이의 네트워크 연결이 사용될 수 있습니다. 이용자는 자신의 플랫폼 계정과 인증수단을 안전하게 관리하고, 계정 문제는 해당 플랫폼이 제공하는 절차도 함께 이용해야 합니다.'
   ]),
   section('user-obligations', '이용자의 의무 및 금지행위', [
@@ -82,7 +82,7 @@ const koSections: readonly TermsSection[] = [
     'Lv.B는 저장 기능의 안정성을 위해 합리적인 노력을 기울이지만 기기 고장, 파일 손상, 동기화 충돌, 플랫폼 또는 외부 서비스 장애 등 모든 경우에 데이터가 손실 없이 보존된다고 보장할 수는 없습니다. 다만 Lv.B의 고의 또는 중대한 과실로 인한 책임이나 적용 법령상 이용자의 권리를 배제하지 않습니다.'
   ]),
   section('purchases-refunds', '게임·유료 콘텐츠 구매 및 환불', [
-    'Mush Dash와 같이 플랫폼에서 판매되는 게임 본체의 구매와 결제는 이용자가 선택한 플랫폼을 통해 이루어집니다. Lv.B 공식 웹사이트는 게임이나 유료 콘텐츠를 직접 판매하거나 결제를 처리하지 않습니다. 별도 유료 콘텐츠는 실제로 제공되는 경우에만 해당 플랫폼에서 구매할 수 있습니다.',
+    'MushDash와 같이 플랫폼에서 판매되는 게임 본체의 구매와 결제는 이용자가 선택한 플랫폼을 통해 이루어집니다. Lv.B 공식 웹사이트는 게임이나 유료 콘텐츠를 직접 판매하거나 결제를 처리하지 않습니다. 별도 유료 콘텐츠는 실제로 제공되는 경우에만 해당 플랫폼에서 구매할 수 있습니다.',
     '취소·청약철회·환불은 구매한 플랫폼의 최신 절차와 적용 법령에 따라 처리됩니다. 플랫폼 정책은 법령상 보장되는 소비자 권리를 배제하지 않으며, 이 약관은 특정 플레이 시간이나 고정된 환불 조건을 별도로 정하지 않습니다.'
   ]),
   section('external-services', '외부 플랫폼과 서비스', [
@@ -118,7 +118,7 @@ const enSections: readonly TermsSection[] = [
     'These Terms do not directly govern the account, store or payment services operated by external platforms such as Steam or the Epic Games Store. Each provider’s own terms and policies apply to those services.'
   ]),
   section('definitions', 'Definitions', [
-    '“Game” means Mush Dash, MushHero and any future game that expressly states these Terms apply. “Online Features” means network-based features such as sign-in, Lobby, Session, P2P connections and cloud saves.',
+    '“Game” means MushDash, MushHero and any future game that expressly states these Terms apply. “Online Features” means network-based features such as sign-in, Lobby, Session, P2P connections and cloud saves.',
     '“Platform” means an external service—such as Steam or the Epic Games Store—that provides purchase, download, launch or account functions. “User” means a person who uses a Game under applicable law and the relevant Platform process.'
   ]),
   section('notice-changes', 'Application, notice and changes', [
@@ -137,7 +137,7 @@ const enSections: readonly TermsSection[] = [
     'Rights in the Game’s code, graphics, music, characters, names and other content remain with Lv.B or the relevant rights holder. Except where permitted by law, unauthorized copying, distribution, sale, rental or commercial use is prohibited.'
   ]),
   section('accounts-online', 'Platform accounts and Online Features', [
-    'Lv.B currently operates no separate Lv.B membership account. Mush Dash uses Steam or Epic account integration and Epic Online Services(EOS) for Online Features, which may require an active Platform or EOS sign-in and available services.',
+    'Lv.B currently operates no separate Lv.B membership account. MushDash uses Steam or Epic account integration and Epic Online Services(EOS) for Online Features, which may require an active Platform or EOS sign-in and available services.',
     'Lobby, Session and P2P connections may use network connections between user devices. Users should protect their Platform credentials and also use the relevant Platform process for account-related issues.'
   ]),
   section('user-obligations', 'User obligations and prohibited conduct', [
@@ -163,7 +163,7 @@ const enSections: readonly TermsSection[] = [
     'Lv.B uses reasonable care in providing save features but cannot guarantee lossless preservation in every case, including device failure, file corruption, synchronization conflicts or failures of a Platform or external service. This does not exclude liability for Lv.B’s intent or gross negligence or any mandatory rights under applicable law.'
   ]),
   section('purchases-refunds', 'Purchases and refunds', [
-    'Purchases and payments for Games sold through a Platform, including Mush Dash, are completed through the Platform selected by the User. The official Lv.B website does not sell Games or paid content directly and does not process payments. Separate paid content can be purchased through the relevant Platform only when it is actually offered.',
+    'Purchases and payments for Games sold through a Platform, including MushDash, are completed through the Platform selected by the User. The official Lv.B website does not sell Games or paid content directly and does not process payments. Separate paid content can be purchased through the relevant Platform only when it is actually offered.',
     'Cancellation, withdrawal and refund requests are handled under the current process of the purchasing Platform and applicable law. Platform policies do not exclude mandatory consumer rights, and these Terms do not set a fixed play-time threshold or other separate fixed refund rule.'
   ]),
   section('external-services', 'External Platforms and services', [
@@ -193,7 +193,7 @@ const jaSections: readonly TermsSection[] = [
     '本規約は、SteamやEpic Games Storeなどの外部プラットフォームが運営するアカウント、ストア、決済サービスそのものには直接適用されません。これらには各事業者の規約およびポリシーが別途適用されます。'
   ]),
   section('definitions', '用語の定義', [
-    '「ゲーム」とは、Mush Dash、MushHeroおよび今後本規約の適用を明示するゲームをいいます。「オンライン機能」とは、ログイン、Lobby、Session、P2P接続、クラウドセーブなど、ゲームが提供するネットワーク機能をいいます。',
+    '「ゲーム」とは、MushDash、MushHeroおよび今後本規約の適用を明示するゲームをいいます。「オンライン機能」とは、ログイン、Lobby、Session、P2P接続、クラウドセーブなど、ゲームが提供するネットワーク機能をいいます。',
     '「プラットフォーム」とは、SteamやEpic Games Storeなど、ゲームの購入、ダウンロード、起動またはアカウント機能を提供する外部サービスをいいます。「利用者」とは、適用法令およびプラットフォームの手続に従ってゲームを利用する方をいいます。'
   ]),
   section('notice-changes', '規約の適用、周知および変更', [
@@ -212,7 +212,7 @@ const jaSections: readonly TermsSection[] = [
     'ゲームのコード、グラフィック、音楽、キャラクター、名称その他のコンテンツに関する権利は、Lv.Bまたは正当な権利者に帰属します。適用法令で認められる場合を除き、無断での複製、配布、販売、貸与または商業利用は禁止されます。'
   ]),
   section('accounts-online', 'プラットフォームアカウントとオンライン機能', [
-    'Lv.Bは現在、独自のLv.B会員アカウントを運営していません。Mush Dashのオンライン機能ではSteamまたはEpicアカウント連携とEpic Online Services(EOS)を利用しており、プラットフォームまたはEOSへのログインとサービスの稼働が必要となる場合があります。',
+    'Lv.Bは現在、独自のLv.B会員アカウントを運営していません。MushDashのオンライン機能ではSteamまたはEpicアカウント連携とEpic Online Services(EOS)を利用しており、プラットフォームまたはEOSへのログインとサービスの稼働が必要となる場合があります。',
     'Lobby、SessionおよびP2P接続では、利用者の端末間でネットワーク接続が行われることがあります。利用者はプラットフォームの認証情報を適切に管理し、アカウントに関する問題については当該プラットフォームの手続も利用してください。'
   ]),
   section('user-obligations', '利用者の義務および禁止行為', [
@@ -238,7 +238,7 @@ const jaSections: readonly TermsSection[] = [
     'Lv.Bは保存機能の安定性確保に合理的な努力を行いますが、端末の故障、ファイル破損、同期の競合、プラットフォームまたは外部サービスの障害など、あらゆる場合にデータが損失なく保存されることを保証するものではありません。ただし、Lv.Bの故意または重大な過失による責任や適用法令上の利用者の権利を排除しません。'
   ]),
   section('purchases-refunds', 'ゲーム・有料コンテンツの購入および返金', [
-    'Mush Dashなど、プラットフォームで販売されるゲーム本体の購入と決済は、利用者が選択したプラットフォームを通じて行われます。Lv.B公式サイトはゲームや有料コンテンツを直接販売せず、決済も処理しません。別途の有料コンテンツは、実際に提供される場合に限り、当該プラットフォームで購入できます。',
+    'MushDashなど、プラットフォームで販売されるゲーム本体の購入と決済は、利用者が選択したプラットフォームを通じて行われます。Lv.B公式サイトはゲームや有料コンテンツを直接販売せず、決済も処理しません。別途の有料コンテンツは、実際に提供される場合に限り、当該プラットフォームで購入できます。',
     'キャンセル、申込みの撤回および返金は、購入したプラットフォームの最新の手続と適用法令に従って処理されます。プラットフォームポリシーによって法令上保障される消費者の権利が排除されることはなく、本規約ではプレイ時間などの固定された返金条件を別途定めません。'
   ]),
   section('external-services', '外部プラットフォームおよびサービス', [
@@ -268,7 +268,7 @@ const zhSections: readonly TermsSection[] = [
     '本条款不直接适用于Steam、Epic Games Store等外部平台自行运营的账户、商店或支付服务。上述服务另行适用相应运营方的条款与政策。'
   ]),
   section('definitions', '术语定义', [
-    '“游戏”是指Mush Dash、MushHero以及今后明确适用本条款的游戏。“在线功能”是指登录、Lobby、Session、P2P连接、云存档等基于网络提供的功能。',
+    '“游戏”是指MushDash、MushHero以及今后明确适用本条款的游戏。“在线功能”是指登录、Lobby、Session、P2P连接、云存档等基于网络提供的功能。',
     '“平台”是指Steam、Epic Games Store等提供游戏购买、下载、启动或账户功能的外部服务。“用户”是指按照适用法律与平台流程使用游戏的人员。'
   ]),
   section('notice-changes', '条款的适用、告知与变更', [
@@ -287,7 +287,7 @@ const zhSections: readonly TermsSection[] = [
     '游戏代码、画面、音乐、角色、名称及其他内容的权利归Lv.B或相应权利人所有。除适用法律允许的情况外，不得擅自复制、传播、销售、出租或用于商业目的。'
   ]),
   section('accounts-online', '平台账户与在线功能', [
-    'Lv.B目前不运营独立的Lv.B会员账户。Mush Dash的在线功能使用Steam或Epic账户关联以及Epic Online Services(EOS)，因此可能需要保持相应平台或EOS的登录状态且相关服务可用。',
+    'Lv.B目前不运营独立的Lv.B会员账户。MushDash的在线功能使用Steam或Epic账户关联以及Epic Online Services(EOS)，因此可能需要保持相应平台或EOS的登录状态且相关服务可用。',
     'Lobby、Session和P2P连接可能在用户设备之间建立网络连接。用户应妥善保护平台账户凭证；账户相关问题还应使用对应平台提供的处理流程。'
   ]),
   section('user-obligations', '用户义务与禁止行为', [
@@ -313,7 +313,7 @@ const zhSections: readonly TermsSection[] = [
     'Lv.B将为存档功能的稳定性采取合理措施，但无法保证在设备故障、文件损坏、同步冲突、平台或外部服务故障等所有情况下数据均无损保存。此说明不排除Lv.B因故意或重大过失应承担的责任，也不限制用户依据强制性法律享有的权利。'
   ]),
   section('purchases-refunds', '游戏、付费内容的购买与退款', [
-    '对于Mush Dash等通过平台销售的游戏本体，用户通过所选择的平台完成购买与付款。Lv.B官方网站不直接销售游戏或付费内容，也不处理支付。独立付费内容仅在实际提供时通过相应平台购买。',
+    '对于MushDash等通过平台销售的游戏本体，用户通过所选择的平台完成购买与付款。Lv.B官方网站不直接销售游戏或付费内容，也不处理支付。独立付费内容仅在实际提供时通过相应平台购买。',
     '取消、撤回购买及退款按照购买平台的最新流程与适用法律处理。平台政策不排除法律保障的消费者权利，本条款也不另行规定固定游戏时长或其他固定退款条件。'
   ]),
   section('external-services', '外部平台与服务', [

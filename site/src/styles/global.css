@@ -11,35 +11,35 @@
   color-scheme: dark;
   --color-brand-bg: #0f0d0c;
   --color-brand-bg-rgb: 15 13 12;
-  --color-brand-surface: #16120f;
-  --color-brand-surface-rgb: 22 18 15;
-  --color-brand-surface-raised: #1d1712;
-  --color-brand-surface-warm: #241b10;
+  --color-brand-surface: #221e19;
+  --color-brand-surface-rgb: 34 30 25;
+  --color-brand-surface-raised: #29241e;
+  --color-brand-surface-warm: #302a22;
   --color-brand-card: var(--color-brand-surface-raised);
   --color-brand-card-strong: var(--color-brand-surface-warm);
-  --color-brand-border: #3b342c;
-  --color-brand-border-strong: #6e604a;
+  --color-brand-border: #51483d;
+  --color-brand-border-strong: #82725c;
   --color-brand-text: #f7f1e5;
-  --color-brand-text-secondary: #cfc4b3;
-  --color-brand-text-muted: #a89d8a;
+  --color-brand-text-secondary: #d5caba;
+  --color-brand-text-muted: #bdb2a2;
   --color-brand-accent: #ffd746;
   --color-brand-accent-rgb: 255 215 70;
   --color-brand-accent-hover: var(--color-brand-honey);
-  --color-brand-accent-soft: #30240b;
+  --color-brand-accent-soft: #3a2e10;
   --color-brand-accent-contrast: #231f20;
   --color-brand-cream: #fff08c;
   --color-brand-honey: #ffb400;
   --color-focus-ring: var(--color-brand-cream);
   --color-mushhero-accent: var(--color-brand-honey);
   --color-mushhero-accent-rgb: 255 180 0;
-  --color-mushhero-accent-soft: #30210a;
+  --color-mushhero-accent-soft: #39280d;
   --color-mushhero-accent-text: var(--color-brand-accent-contrast);
   --color-mushdash-accent: #55b9b0;
   --color-mushdash-accent-rgb: 85 185 176;
   --color-mushdash-accent-hover: #70cbc4;
-  --color-mushdash-accent-soft: #102a2a;
+  --color-mushdash-accent-soft: #163331;
   --color-mushdash-accent-text: #071514;
-  --color-page: var(--color-brand-bg);
+  --color-page: #1a1714;
   --color-elevated: var(--color-brand-surface);
   --color-card: var(--color-brand-card);
   --color-card-strong: var(--color-brand-card-strong);
@@ -52,7 +52,7 @@
   --color-primary: var(--color-brand-accent);
   --color-primary-hover: var(--color-brand-accent-hover);
   --color-primary-text: var(--color-brand-accent-contrast);
-  --color-secondary: #2a241f;
+  --color-secondary: #312a23;
   --color-mushhero: var(--color-mushhero-accent);
   --color-mushhero-soft: var(--color-mushhero-accent-soft);
   --color-mushdash: #55b9b0;
@@ -457,8 +457,6 @@ h3 {
 }
 
 .section-heading h2,
-.featured-game h2,
-.mushdash-section h2,
 .about-preview h2,
 .contact-preview h2,
 .community-preview h2 {
@@ -466,14 +464,6 @@ h3 {
   font-size: clamp(2rem, 7vw, 4.5rem);
   letter-spacing: -0.055em;
   line-height: 1.02;
-}
-
-:lang(ko) .featured-game h2,
-:lang(ja) .featured-game h2,
-:lang(zh-cn) .featured-game h2 {
-  font-size: clamp(1.85rem, 5vw, 3.75rem);
-  letter-spacing: -0.035em;
-  line-height: 1.1;
 }
 
 .section-heading p:last-child {
@@ -488,18 +478,58 @@ h3 {
 
 .featured-game__intro {
   display: grid;
-  gap: var(--space-6);
+  max-width: 58rem;
+  gap: 0;
   margin-bottom: var(--space-12);
 }
 
-.featured-game__intro > div:last-child {
-  max-width: var(--text-max);
+.featured-game__title {
+  margin: var(--space-3) 0 0;
+  color: var(--color-text);
+  font-size: clamp(2.4rem, 7vw, 4.25rem);
+  font-weight: 950;
+  letter-spacing: -0.055em;
+  line-height: 1;
 }
 
-.featured-game__intro > div:last-child > p {
-  margin: 0 0 var(--space-6);
+.featured-game__meta {
+  margin: var(--space-3) 0 0;
+  color: var(--color-brand-cream);
+  font-size: 0.9rem;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+}
+
+.featured-game__headline {
+  max-width: 15ch;
+  margin: var(--space-8) 0 0;
+  font-size: clamp(2rem, 7vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 1.02;
+}
+
+:lang(ko) .featured-game__headline,
+:lang(ja) .featured-game__headline,
+:lang(zh-cn) .featured-game__headline {
+  max-width: 18ch;
+  font-size: clamp(1.85rem, 5vw, 3.75rem);
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+
+.featured-game__description {
+  max-width: 46rem;
+  margin: var(--space-6) 0 0;
   color: var(--color-text-secondary);
   font-size: 1.05rem;
+}
+
+.featured-game__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
 }
 
 .game-feature-list {
@@ -670,54 +700,8 @@ h3 {
   gap: var(--space-3);
 }
 
-.mushdash-section {
-  background:
-    linear-gradient(135deg, rgb(var(--color-mushdash-accent-rgb) / 0.035), transparent 38%),
-    var(--color-elevated);
-}
-
-.mushdash-section__inner {
-  display: grid;
-  gap: var(--space-8);
-}
-
-.mushdash-section__media {
-  border: 1px solid rgb(var(--color-mushdash-accent-rgb) / 0.38);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-}
-
-.mushdash-section__content {
-  display: grid;
-  align-content: center;
-  gap: var(--space-4);
-}
-
-.mushdash-section__content .eyebrow,
-.mushdash-section__content p,
-.mushdash-section__content h2 {
-  margin-top: 0;
-}
-
-.mushdash-section__name {
-  margin-bottom: calc(var(--space-4) * -1);
-  color: var(--color-mushdash);
-  font-weight: 800;
-}
-
-.mushdash-section__content > p:not(.eyebrow, .mushdash-section__name) {
-  max-width: var(--text-narrow);
-  color: var(--color-text-secondary);
-}
-
-.mushdash-section__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-}
-
 .about-preview {
-  border-bottom: 1px solid var(--color-border);
+  border-block: 1px solid var(--color-border);
   background: var(--color-page);
 }
 
@@ -1202,7 +1186,6 @@ h3 {
     display: none;
   }
 
-  .featured-game__intro,
   .about-preview__inner,
   .contact-preview__inner {
     grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
@@ -1250,11 +1233,6 @@ h3 {
     aspect-ratio: 16 / 11;
   }
 
-  .mushdash-section__inner {
-    grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
-    align-items: center;
-  }
-
   .community-preview__inner {
     grid-template-columns: minmax(0, 0.9fr) minmax(24rem, 1.1fr);
     gap: var(--space-16);
@@ -1288,10 +1266,6 @@ h3 {
     padding: var(--space-8);
   }
 
-  .mushdash-section__inner {
-    gap: var(--space-16);
-  }
-
   .contact-page__layout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: stretch;
@@ -1306,7 +1280,6 @@ h3 {
 @media (max-width: 30rem) {
   .home-hero__actions,
   .game-overview__actions,
-  .mushdash-section__actions,
   .game-store-buttons {
     align-items: stretch;
     flex-direction: column;
@@ -1314,12 +1287,7 @@ h3 {
 
   .home-hero__actions .button-link,
   .game-overview__actions .button-link,
-  .mushdash-section__actions .button-link,
   .game-store-buttons .button-link {
-    width: 100%;
-  }
-
-  .mushdash-section__actions .game-store-buttons {
     width: 100%;
   }
 

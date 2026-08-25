@@ -19,7 +19,7 @@ Homepage/
 - `site/src/components/pages/HomePage.astro`: 네 locale Home 조립.
 - `site/src/components/pages/GamesPage.astro`: 네 locale Our Games 조립.
 - `site/src/components/pages/AboutPage.astro`: 네 locale About, 소규모 팀 소개, 공통 회사 데이터 기반 스튜디오 위치·Google 지도 조립.
-- `site/src/components/pages/GameDetailPage.astro`: MushHero와 Mush Dash가 공유하는 상세 페이지 조립.
+- `site/src/components/pages/GameDetailPage.astro`: MushHero와 MushDash가 공유하는 상세 페이지 조립.
 - `site/src/components/pages/ContactPage.astro`: 문의 범위와 locale별 정적 mailto CTA.
 - `site/src/components/pages/NewsPage.astro`: 최신순 단일 News & Press 목록과 SNS Follow CTA를 공유하는 네 locale 페이지.
 - `site/src/components/pages/PressPage.astro`: 검증 데이터와 공개 자산을 조합하는 네 locale Press Kit.
@@ -28,8 +28,8 @@ Homepage/
 - `site/src/components/pages/TermsPage.astro`, `site/src/components/terms/`, `site/src/components/legal/`: 네 locale Terms Hero·본문과 Privacy/Terms 공통 목차 조립.
 - `site/src/components/news/NewsItemCard.astro`: locale별 제목·요약과 외부 원문 링크를 출력하는 텍스트 카드.
 - `site/src/components/game-detail/`: Hero, Overview, Feature Grid, Featured Screenshot, Gallery, Purchase CTA, More Games 섹션.
-- `site/src/components/home/`: Home 전용 섹션. `HomeHero.astro`가 MushHero·Mush Dash 수동 game tab, 게임별 CTA와 공식 이미지 2장 Carousel을 통합하며 기존 Featured Game·Games Overview·Mush Dash 이하 흐름을 이어간다.
-- `site/src/components/games/`: Our Games Hero, MushHero 주력 영역, Mush Dash 출시작 영역.
+- `site/src/components/home/`: Home 전용 섹션. `HomeHero.astro`가 MushHero·MushDash 수동 game tab, 게임별 CTA와 공식 이미지 2장 Carousel을 통합하며 기존 Featured Game·Games Overview·MushDash 이하 흐름을 이어간다.
+- `site/src/components/games/`: Our Games Hero, MushHero 주력 영역, MushDash 출시작 영역.
 - `site/src/components/about/TeamMembers.astro`: `team.ts` 기반 팀원 카드와 승인 프로필 이미지·브랜드 대체 표시.
 - `site/src/components/layout/`: Header, Footer, 모바일 내비게이션, 언어 전환.
 - `site/src/components/ui/`: 버튼과 공통 표시 요소.
@@ -43,7 +43,7 @@ Homepage/
 - `site/src/data/privacy.ts`, `site/src/types/privacy.ts`: 동일 순서 19개 section과 네 언어 Privacy metadata·본문의 typed source.
 - `site/src/data/terms.ts`, `site/src/types/terms.ts`: 한국어 기준 원문과 동일 순서 16개 section을 유지하는 네 언어 Terms typed source.
 - `site/src/i18n/`: route 생성과 네 언어 번역 데이터.
-- `site/src/pages/`: Home·Our Games·About·Contact·MushHero·Mush Dash·News의 공개 정규 28개 route, sitemap에서 제외되는 Privacy·Terms 각 4개 route와 브랜드 `404.astro`.
+- `site/src/pages/`: Home·Our Games·About·Contact·MushHero·MushDash·News의 공개 정규 28개 route, sitemap에서 제외되는 Privacy·Terms 각 4개 route와 브랜드 `404.astro`.
 - `site/src/styles/games.css`: Our Games 전용 반응형 포트폴리오 레이아웃.
 - `site/src/styles/about.css`: About V1 전용 반응형 레이아웃과 게임별 accent.
 - `site/src/styles/game-detail.css`: 두 게임이 공유하는 상세 레이아웃과 게임별 accent override.
@@ -57,7 +57,7 @@ Homepage/
 ## 게임 상세 라우트
 
 - MushHero: `/games/mushhero/`, `/ko/games/mushhero/`, `/ja/games/mushhero/`, `/zh-cn/games/mushhero/`
-- Mush Dash: `/games/mushdash/`, `/ko/games/mushdash/`, `/ja/games/mushdash/`, `/zh-cn/games/mushdash/`
+- MushDash: `/games/mushdash/`, `/ko/games/mushdash/`, `/ja/games/mushdash/`, `/zh-cn/games/mushdash/`
 
 ## Our Games 라우트
 

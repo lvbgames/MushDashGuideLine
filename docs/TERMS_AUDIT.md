@@ -32,7 +32,7 @@
 
 ## 약관 정책 결정
 
-- Mush Dash 게임 본체는 Steam과 Epic Games Store에서 판매 중이며 홈페이지 직접 결제는 없다. 게임 본체의 구매·환불은 구매 플랫폼의 절차와 적용 법령에 따른다. 별도 유료 콘텐츠는 실제 제공되는 경우에만 적용되는 조건부 문구를 유지한다.
+- MushDash 게임 본체는 Steam과 Epic Games Store에서 판매 중이며 홈페이지 직접 결제는 없다. 게임 본체의 구매·환불은 구매 플랫폼의 절차와 적용 법령에 따른다. 별도 유료 콘텐츠는 실제 제공되는 경우에만 적용되는 조건부 문구를 유지한다.
 - Lv.B 자체 계정이 아닌 Steam 또는 Epic 계정과 EOS 기반 온라인 기능을 설명한다.
 - 업데이트·기능 변경 가능성은 두되 영구적인 지원을 보장하지 않는다.
 - 온라인 기능 종료는 합리적으로 가능한 사전 안내와 법령·플랫폼 절차를 전제로 한다.
@@ -70,14 +70,14 @@
 
 ## 플랫폼 Terms/EULA 후속 확인
 
-- Steam Subscriber Agreement는 게임별 추가 Subscription Terms가 있을 수 있음을 밝히지만, 공개 Steamworks 문서와 공개 store page만으로 Mush Dash 앱에 Lv.B Custom EULA를 등록할 수 있는 정확한 Portal 필드나 현재 등록 여부를 확인하지 못했다. 권한 있는 Steamworks에서 Mush Dash 앱의 Store Admin·Legal·Custom EULA 관련 설정과 외부 website/legal link를 `Manual Portal Check`한다.
-- Epic Games Store EULA는 개발자와 이용자 사이의 Software Specific Terms가 거래 중 제시될 수 있음을 밝힌다. 그러나 공개 문서만으로 Mush Dash 제품의 Developer Portal EULA·Legal 필드 및 Epic Launcher 노출 상태는 확인되지 않았다. Product·Store Settings와 offer별 표시 방식을 `Manual Portal Check`한다.
+- Steam Subscriber Agreement는 게임별 추가 Subscription Terms가 있을 수 있음을 밝히지만, 공개 Steamworks 문서와 공개 store page만으로 MushDash 앱에 Lv.B Custom EULA를 등록할 수 있는 정확한 Portal 필드나 현재 등록 여부를 확인하지 못했다. 권한 있는 Steamworks에서 MushDash 앱의 Store Admin·Legal·Custom EULA 관련 설정과 외부 website/legal link를 `Manual Portal Check`한다.
+- Epic Games Store EULA는 개발자와 이용자 사이의 Software Specific Terms가 거래 중 제시될 수 있음을 밝힌다. 그러나 공개 문서만으로 MushDash 제품의 Developer Portal EULA·Legal 필드 및 Epic Launcher 노출 상태는 확인되지 않았다. Product·Store Settings와 offer별 표시 방식을 `Manual Portal Check`한다.
 - 이용자에게 연결하는 외부 플랫폼 약관은 [Steam Subscriber Agreement](https://store.steampowered.com/subscriber_agreement/)와 [Epic Games Store EULA](https://legal.epicgames.com/store/eula?lang=en-US)다. Lv.B Terms는 이 플랫폼 구매약관을 대체하지 않고, 플랫폼 약관이 존재한다는 이유로 Lv.B의 게임 이용 조건이 불필요하다고 보지도 않는다.
 - 실제 유료 offer가 활성화되어 있는지 Steamworks·Epic Developer Portal의 상품·카탈로그 설정과 출시 package에서 별도로 확인한다. 활성 상품이 있다면 상품 유형, 가격 표시, 청약철회 안내와 지급·복구 흐름을 다시 감사한다.
 
 ## 구매 상태 감사
 
-- 2026-08-12 공개 Steam과 Epic Games Store page에서 Mush Dash Base Game의 구매 UI를 확인했다. Terms는 게임 본체의 플랫폼 판매를 가정형으로 숨기지 않고, Lv.B 홈페이지가 직접 판매·결제를 처리하지 않는다는 사실을 함께 표시한다.
+- 2026-08-12 공개 Steam과 Epic Games Store page에서 MushDash Base Game의 구매 UI를 확인했다. Terms는 게임 본체의 플랫폼 판매를 가정형으로 숨기지 않고, Lv.B 홈페이지가 직접 판매·결제를 처리하지 않는다는 사실을 함께 표시한다.
 - Epic 공개 page에는 `In-Game Purchases` 표시가 있으나 이것만으로 특정 인게임 offer가 현재 실제 client에서 구매 가능한지 확정하지 않는다.
 - source에는 checkout, receipt 조회, 특정 offer 처리와 transaction identifier 저장 코드가 있으나 `MDGameInstance.h`의 BlueprintCallable `PurchaseOffer` 본문은 현재 no-op이다. 실제 Steam·Epic catalog와 공개 client를 확인하기 전에는 인게임 유료 offer 활성 상태를 `미확정`으로 유지한다.
 

@@ -1,0 +1,13 @@
+---
+import NewsPage from '../../../../components/pages/NewsPage.astro';
+import { getNewsPaginationPages } from '../../../../utils/newsPagination';
+
+export function getStaticPaths() {
+  return getNewsPaginationPages().map((page) => ({ params: { page: String(page) }, props: { currentPage: page } }));
+}
+
+interface Props { currentPage: number; }
+const { currentPage } = Astro.props;
+---
+
+<NewsPage locale="zh-cn" currentPage={currentPage} />

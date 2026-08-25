@@ -1,0 +1,53 @@
+---
+import { getLocalePath, type Locale } from '../../i18n/config';
+import type { Translation } from '../../i18n/translations/en';
+
+interface Props {
+  locale: Locale;
+  currentPage: number;
+  totalPages: number;
+  translation: Translation;
+}
+
+const { locale, currentPage, totalPages, translation } = Astro.props;
+const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+const pageHref = (page: number) => getLocalePath(locale, 'news', page === 1 ? undefined : String(page));
+---
+
+{
+  totalPages > 1 && (
+    <nav class="news-pagination" aria-label={translation.news.paginationLabel}>
+      <div class="news-pagination__direction">
+        {currentPage > 1 && (
+          <a href={pageHref(currentPage - 1)} rel="prev">
+            <span aria-hidden="true">←</span>
+            <span>{translation.news.previousPage}</span>
+          </a>
+        )}
+      </div>
+      <ol class="news-pagination__pages">
+        {pages.map((page) => (
+          <li>
+            {page === currentPage ? (
+              <span class="news-pagination__page" aria-current="page" aria-label={`${translation.news.pageLabel} ${page}`}>
+                {page}
+              </span>
+            ) : (
+              <a class="news-pagination__page" href={pageHref(page)} aria-label={`${translation.news.pageLabel} ${page}`}>
+                {page}
+              </a>
+            )}
+          </li>
+        ))}
+      </ol>
+      <div class="news-pagination__direction news-pagination__direction--next">
+        {currentPage < totalPages && (
+          <a href={pageHref(currentPage + 1)} rel="next">
+            <span>{translation.news.nextPage}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        )}
+      </div>
+    </nav>
+  )
+}

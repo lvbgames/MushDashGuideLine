@@ -83,6 +83,9 @@ export interface Translation {
       pauseSlideshow: string;
       playSlideshow: string;
     };
+    featuredProjectLabel: string;
+    featuredGameMeta: string;
+    featuredDetailCta: string;
     featuredEyebrow: string;
     featuredTitle: string;
     featuredTitleLines?: readonly string[];
@@ -94,7 +97,6 @@ export interface Translation {
     gamesDescription: string;
     primaryGame: string;
     releasedGame: string;
-    dashEyebrow: string;
     dashTitle: string;
     dashDescription: string;
     dashDetailCta: string;
@@ -149,10 +151,6 @@ export interface Translation {
     capabilitiesTitle: string;
     capabilitiesTitleLines?: readonly string[];
     capabilities: ReadonlyArray<{ title: string; description: string }>;
-    approachEyebrow: string;
-    approachTitle: string;
-    approachDescription: string;
-    approach: ReadonlyArray<{ title: string; description: string }>;
     team: {
       eyebrow: string;
       title: string;
@@ -210,8 +208,12 @@ export interface Translation {
       'blog-review': string;
       feature: string;
     };
-    sourceCta: string;
-    internalCta: string;
+    paginationLabel: string;
+    previousPage: string;
+    nextPage: string;
+    pageLabel: string;
+    paginationTitle: string;
+    paginationDescription: string;
     followEyebrow: string;
     followTitle: string;
     followDescription: string;
@@ -228,19 +230,19 @@ export interface Translation {
 export const en: Translation = {
   meta: {
     homeTitle: 'Lv.B — Indie Game Studio in Busan, Korea',
-    homeDescription: 'Lv.B is a Busan indie game studio creating MushHero and Mush Dash.',
+    homeDescription: 'Lv.B is a Busan indie game studio creating MushHero and MushDash.',
     gamesTitle: 'Our Games — Lv.B',
-    gamesDescription: 'Explore MushHero and Mush Dash, two distinctive multiplayer worlds created by indie game studio Lv.B.',
+    gamesDescription: 'Explore MushHero and MushDash, two distinctive multiplayer worlds created by indie game studio Lv.B.',
     aboutTitle: 'About Lv.B — Independent Game Studio',
     aboutDescription: 'Meet Lv.B, a Busan-based indie game studio creating approachable multiplayer games set in distinctive worlds.',
     contactTitle: 'Business Contact — Lv.B',
     contactDescription: 'Email Lv.B about business, partnerships, events, creators and Steam Curators, press, interviews and other company matters.',
     mushHeroTitle: 'MushHero — Cooperative Roguelite Defense | Lv.B',
     mushHeroDescription: 'Explore MushHero, a cooperative roguelite defense game about fighting monster waves, shaping new builds and defending together.',
-    mushDashTitle: 'Mush Dash — Online Party Racing | Lv.B',
-    mushDashDescription: 'Race through deadly obstacle courses with up to seven players in Mush Dash, an online party racing game available in Early Access.',
+    mushDashTitle: 'MushDash — Online Party Racing | Lv.B',
+    mushDashDescription: 'Race through deadly obstacle courses with up to seven players in MushDash, an online party racing game available in Early Access.',
     newsTitle: 'News & Press — Lv.B',
-    newsDescription: 'Read verified interviews, coverage and features about Lv.B, MushHero and Mush Dash.'
+    newsDescription: 'Read verified interviews, coverage and features about Lv.B, MushHero and MushDash.'
   },
   nav: {
     games: 'Games',
@@ -282,6 +284,9 @@ export const en: Translation = {
       pauseSlideshow: 'Pause slideshow',
       playSlideshow: 'Play slideshow'
     },
+    featuredProjectLabel: 'Featured project',
+    featuredGameMeta: 'Cooperative roguelite defense · Coming in 2027',
+    featuredDetailCta: 'View MushHero details',
     featuredEyebrow: 'Cooperative roguelite defense',
     featuredTitle: 'Build a new answer to every wave.',
     featuredDescription: 'Fight through waves of monsters and powerful bosses together. Randomized weapons, evolving skills and branching progression make each run your own.',
@@ -296,10 +301,9 @@ export const en: Translation = {
     gamesDescription: 'Distinctive multiplayer worlds created by Lv.B.',
     primaryGame: 'Featured game',
     releasedGame: 'Released game',
-    dashEyebrow: 'Out now in Early Access',
     dashTitle: 'Run fast. Read the traps. Claim the crown.',
     dashDescription: 'Race online with up to seven players, dodge deadly traps and collect Mushroom Coins on the way to the finish.',
-    dashDetailCta: 'View Mush Dash',
+    dashDetailCta: 'View MushDash',
     aboutEyebrow: 'From Busan, South Korea',
     aboutTitle: 'Games to laugh, connect and grow together.',
     aboutDescription: 'Lv.B is an indie game studio based in Busan. We create approachable multiplayer games set in distinctive worlds—experiences designed to stay with players long after the session ends.',
@@ -325,11 +329,11 @@ export const en: Translation = {
     featuredEyebrow: 'Current featured project',
     featuredDescription: 'MushHero is a cooperative roguelite defense game where players fight together against monster waves and powerful bosses, shaping a different strategy every run.',
     releasedEyebrow: 'Released in Early Access',
-    releasedDescription: 'Mush Dash is an online party racing game where up to seven players dodge deadly traps, collect Mushroom Coins and race for the final crown.',
+    releasedDescription: 'MushDash is an online party racing game where up to seven players dodge deadly traps, collect Mushroom Coins and race for the final crown.',
     detailCta: 'View game details',
     gameImageAlts: {
       mushhero: 'MushHero heroes approaching monsters in an official game screenshot',
-      mushdash: 'Mush Dash course and mushroom racer in an official game screenshot'
+      mushdash: 'MushDash course and mushroom racer in an official game screenshot'
     },
     principlesEyebrow: 'How we make games',
     principlesTitle: 'Games that are better together.',
@@ -349,20 +353,12 @@ export const en: Translation = {
     heroTitle: 'Games to laugh, connect and grow together.',
     heroDescription: 'Lv.B is an indie game studio based in Busan, South Korea. We create multiplayer games set in distinctive worlds—experiences where players can laugh, connect, and grow together. Our goal is to make games that are easy to pick up, yet memorable long after the session ends.',
     logoAlt: 'Lv.B',
-    capabilitiesEyebrow: 'What we do',
-    capabilitiesTitle: 'What shapes an Lv.B game.',
+    capabilitiesEyebrow: 'How we make games',
+    capabilitiesTitle: 'Three principles behind every Lv.B game.',
     capabilities: [
-      { title: 'Multiplayer Games', description: 'We design experiences that become more fun and meaningful when played together.' },
-      { title: 'Distinctive Worlds', description: 'Every project grows from a setting and personality players can recognize and remember.' },
-      { title: 'Approachable Play', description: 'We make games that are easy to begin without losing the depth that keeps a session engaging.' }
-    ],
-    approachEyebrow: 'Our approach',
-    approachTitle: 'Easy to join. Worth remembering.',
-    approachDescription: 'We focus on clear play, shared moments and experiences that continue to resonate after the session.',
-    approach: [
-      { title: 'Easy to Pick Up', description: 'Clear rules and readable goals help players find the fun without unnecessary friction.' },
-      { title: 'Better Together', description: 'Multiplayer moments are built to encourage laughter, connection and shared growth.' },
-      { title: 'Built to Stay', description: 'Distinctive worlds and meaningful play give each session a life beyond the final round.' }
+      { title: 'Better Together', description: 'We build multiplayer experiences that become more fun and meaningful when shared with others.' },
+      { title: 'Worlds That Stay With You', description: 'We create distinctive worlds, characters and moments players can recognize at a glance and remember long after.' },
+      { title: 'Easy to Start, Rich to Explore', description: 'Our games are easy to pick up, with new possibilities and depth that emerge the longer you play.' }
     ],
     team: {
       eyebrow: 'Our Team',
@@ -436,8 +432,12 @@ export const en: Translation = {
       'blog-review': 'Play review',
       feature: 'Feature'
     },
-    sourceCta: 'Read original',
-    internalCta: 'Read update',
+    paginationLabel: 'News pages',
+    previousPage: 'Previous',
+    nextPage: 'Next',
+    pageLabel: 'Page',
+    paginationTitle: 'News & Press — Page {page} — Lv.B',
+    paginationDescription: 'Browse page {page} of verified Lv.B interviews, coverage and play reviews.',
     followEyebrow: 'Official channels',
     followTitle: 'Follow Lv.B',
     followDescription: 'Get studio updates, game news and community support from our official channels.'
@@ -474,9 +474,9 @@ export const en: Translation = {
     purchaseTitle: 'Keep MushHero on your radar.',
     purchaseDescription: 'Add MushHero to your Steam wishlist to follow the game as it moves toward release.',
     moreGamesEyebrow: 'More from Lv.B',
-    moreGamesTitle: 'Meet Mush Dash.',
+    moreGamesTitle: 'Meet MushDash.',
     moreGameDescription: 'Race online with up to seven players, dodge deadly traps and collect Mushroom Coins on the way to the finish.',
-    moreGameCta: 'View Mush Dash'
+    moreGameCta: 'View MushDash'
   },
   mushDash: {
     heroEyebrow: 'Run for the crown',
@@ -500,15 +500,15 @@ export const en: Translation = {
     featuredScreenshotEyebrow: 'On the course',
     featuredScreenshotTitle: 'Find the route through every obstacle.',
     galleryEyebrow: 'Official screenshots',
-    galleryTitle: 'A closer look at Mush Dash.',
+    galleryTitle: 'A closer look at MushDash.',
     screenshotAlts: [
-      'Mush Dash lobby showing the Mush House course selection and a mushroom racer',
-      'Mush Dash obstacle course built across a giant kitchen',
-      'Mush Dash mushroom racers bouncing across glowing pads'
+      'MushDash lobby showing the Mush House course selection and a mushroom racer',
+      'MushDash obstacle course built across a giant kitchen',
+      'MushDash mushroom racers bouncing across glowing pads'
     ],
     purchaseEyebrow: 'Available in Early Access',
-    purchaseTitle: 'Join the Mush Dash race.',
-    purchaseDescription: 'Play Mush Dash through Steam or the Epic Games Store and race for the final crown.',
+    purchaseTitle: 'Join the MushDash race.',
+    purchaseDescription: 'Play MushDash through Steam or the Epic Games Store and race for the final crown.',
     moreGamesEyebrow: 'More from Lv.B',
     moreGamesTitle: 'Meet MushHero.',
     moreGameDescription: 'Defend together against monster waves and shape a different roguelite strategy every run.',

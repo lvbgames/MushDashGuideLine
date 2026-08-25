@@ -1,12 +1,13 @@
 ---
-import { newsItems } from '../../data/news';
 import { games } from '../../data/games';
 import { socialLinks } from '../../data/socialLinks';
 import type { Locale } from '../../i18n/config';
 import { getTranslation } from '../../i18n/translations';
+import { getNewsPageItems, newsPageCount } from '../../utils/newsPagination';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/news.css';
 import NewsItemCard from '../news/NewsItemCard.astro';
+import NewsPagination from '../news/NewsPagination.astro';
 import SiteFooter from '../layout/SiteFooter.astro';
 import SiteHeader from '../layout/SiteHeader.astro';
 import SocialLinks from '../social/SocialLinks.astro';
@@ -14,13 +15,22 @@ import Container from '../ui/Container.astro';
 
 interface Props {
   locale: Locale;
+  currentPage?: number;
 }
 
-const { locale } = Astro.props;
+const { locale, currentPage = 1 } = Astro.props;
 const translation = getTranslation(locale);
-const sortedItems = [...newsItems].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+const pageItems = getNewsPageItems(currentPage);
+const routeParam = currentPage === 1 ? undefined : String(currentPage);
+const pageNumber = String(currentPage);
+const title = currentPage === 1
+  ? translation.meta.newsTitle
+  : translation.news.paginationTitle.replace('{page}', pageNumber);
+const description = currentPage === 1
+  ? translation.meta.newsDescription
+  : translation.news.paginationDescription.replace('{page}', pageNumber);
 
-if (sortedItems.length === 0) {
+if (pageItems.length === 0) {
   throw new Error('News requires at least one verified item.');
 }
 
@@ -35,12 +45,13 @@ if (!ogImage) {
 <BaseLayout
   locale={locale}
   route="news"
-  title={translation.meta.newsTitle}
-  description={translation.meta.newsDescription}
+  routeParam={routeParam}
+  title={title}
+  description={description}
   ogImage={ogImage}
   ogImageAlt={translation.gamesPage.gameImageAlts.mushhero}
 >
-  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="news" translation={translation} />
+  <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="news" routeParam={routeParam} translation={translation} />
   <main class="news-page" data-motion-page>
     <section class="news-hero" aria-labelledby="news-title">
       <Container>
@@ -58,7 +69,7 @@ if (!ogImage) {
         </div>
         <div class="news-list">
           {
-            sortedItems.map((item) => (
+            pageItems.map((item) => (
               <NewsItemCard
                 item={item}
                 locale={locale}
@@ -68,6 +79,7 @@ if (!ogImage) {
             ))
           }
         </div>
+        <NewsPagination locale={locale} currentPage={currentPage} totalPages={newsPageCount} translation={translation} />
       </Container>
     </section>
 

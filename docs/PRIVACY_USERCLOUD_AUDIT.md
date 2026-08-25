@@ -179,10 +179,10 @@ wrapper의 `WeeklyChallenges` 배열에 위 진행 row가 저장된다. 전체 U
 - read failure는 기본값만 cache에 적용하며 cloud write 또는 delete를 하지 않는다.
 - 정상 UserCloud 파일에 TTL, 만료 timestamp, 자동 삭제 schedule 또는 보유기간 설정이 없다.
 - 게임 삭제 또는 플랫폼 계정 연결 해제에 반응해 UserCloud 파일을 삭제하는 코드도 없다.
-- EOS/Unreal 온라인 서비스 계층에는 사용자 파일 삭제 API가 존재하지만, 현재 Mush Dash 프로젝트는 이 호출을 사용하지 않는다. 서비스 기능의 존재와 현재 게임 구현을 구분한다.
+- EOS/Unreal 온라인 서비스 계층에는 사용자 파일 삭제 API가 존재하지만, 현재 MushDash 프로젝트는 이 호출을 사용하지 않는다. 서비스 기능의 존재와 현재 게임 구현을 구분한다.
 - 따라서 데이터는 온라인 저장 기능 제공을 위해 유지되며, 유효한 요청·서비스 종료·처리 목적 종료 시 적용 법령과 플랫폼·EOS 기술 절차에 따라 처리해야 한다. 소스만으로 고정 보유기간을 만들 수 없다.
 - 이용자는 `lvb909@naver.com`으로 열람·정정·삭제·처리정지를 요청할 수 있다. 현재 저장소에는 이메일 발신자와 특정 UserCloud 계정의 소유 관계를 확정하는 검증된 운영 도구가 없으므로 표시 이름만으로 처리하지 않는다. 상세 절차와 한계는 `PRIVACY_REQUEST_RUNBOOK.md`에 둔다.
-- Epic Developer Portal의 조직 단위 `Delete User`는 여러 제품의 데이터와 계정 연결에 영향을 줄 수 있으므로 Mush Dash 파일 삭제의 기본 절차로 사용하지 않는다. 실제 영향 범위와 권한은 운영 계정 및 Epic 지원을 통해 확인해야 한다.
+- Epic Developer Portal의 조직 단위 `Delete User`는 여러 제품의 데이터와 계정 연결에 영향을 줄 수 있으므로 MushDash 파일 삭제의 기본 절차로 사용하지 않는다. 실제 영향 범위와 권한은 운영 계정 및 Epic 지원을 통해 확인해야 한다.
 
 ## 10. 공개 Privacy에 반영한 범주
 

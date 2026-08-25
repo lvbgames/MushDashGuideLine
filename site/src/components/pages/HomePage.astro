@@ -12,7 +12,6 @@ import ContactPreview from '../home/ContactPreview.astro';
 import FeaturedGameSection from '../home/FeaturedGameSection.astro';
 import GamesOverview from '../home/GamesOverview.astro';
 import HomeHero from '../home/HomeHero.astro';
-import MushDashSection from '../home/MushDashSection.astro';
 import SiteFooter from '../layout/SiteFooter.astro';
 import SiteHeader from '../layout/SiteHeader.astro';
 
@@ -26,7 +25,7 @@ const mushHero = games.find((game) => game.slug === 'mushhero');
 const mushDash = games.find((game) => game.slug === 'mushdash');
 
 if (!mushHero || !mushDash) {
-  throw new Error('Home requires MushHero and Mush Dash data.');
+  throw new Error('Home requires MushHero and MushDash data.');
 }
 
 const getLocalScreenshots = (slug: GameSlug): readonly GameImage[] => pressScreenshots
@@ -73,9 +72,17 @@ const ogImage = new URL(ogImagePath, Astro.site ?? 'https://lvb.kr').href;
       mushHeroPath={getLocalePath(locale, 'mushhero')}
       mushDashPath={getLocalePath(locale, 'mushdash')}
     />
-    <FeaturedGameSection game={homeMushHero} translation={translation} />
-    <GamesOverview featured={homeMushHero} secondary={homeMushDash} translation={translation} />
-    <MushDashSection game={homeMushDash} translation={translation} detailPath={getLocalePath(locale, 'mushdash')} />
+    <FeaturedGameSection
+      game={homeMushHero}
+      detailPath={getLocalePath(locale, 'mushhero')}
+      translation={translation}
+    />
+    <GamesOverview
+      featured={homeMushHero}
+      secondary={homeMushDash}
+      secondaryPath={getLocalePath(locale, 'mushdash')}
+      translation={translation}
+    />
     <AboutPreview translation={translation} aboutPath={getLocalePath(locale, 'about')} />
     <CommunityPreview links={socialLinks} translation={translation} />
     <ContactPreview locale={locale} translation={translation} />

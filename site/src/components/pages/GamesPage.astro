@@ -22,7 +22,7 @@ const mushHero = games.find((game) => game.slug === 'mushhero');
 const mushDash = games.find((game) => game.slug === 'mushdash');
 
 if (!mushHero || !mushDash) {
-  throw new Error('Games requires MushHero and Mush Dash data.');
+  throw new Error('Games requires MushHero and MushDash data.');
 }
 
 const ogImage = mushHero.screenshots[0]?.src ?? mushHero.heroImage?.src;

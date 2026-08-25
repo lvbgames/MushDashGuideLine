@@ -78,7 +78,7 @@ export const games: readonly Game[] = [
   },
   {
     slug: 'mushdash',
-    title: 'Mush Dash',
+    title: 'MushDash',
     status: 'unknown',
     priority: 'secondary',
     releaseStatus: 'early-access',
@@ -104,7 +104,7 @@ export const games: readonly Game[] = [
       width: 231,
       height: 87,
       aspectRatio: 2.6552,
-      altKey: 'Mush Dash Steam capsule',
+      altKey: 'MushDash Steam capsule',
       purpose: 'capsule',
       sourcePage: 'https://store.steampowered.com/app/3153140/Mush_Dash/',
       lastVerifiedAt: '2026-07-30'
@@ -114,7 +114,7 @@ export const games: readonly Game[] = [
       width: 460,
       height: 215,
       aspectRatio: 2.1395,
-      altKey: 'Mush Dash Steam header',
+      altKey: 'MushDash Steam header',
       purpose: 'hero',
       sourcePage: 'https://store.steampowered.com/app/3153140/Mush_Dash/',
       lastVerifiedAt: '2026-07-30'
@@ -125,7 +125,7 @@ export const games: readonly Game[] = [
         width: 1920,
         height: 1080,
         aspectRatio: 1.7778,
-        altKey: 'Mush Dash Steam screenshot 1',
+        altKey: 'MushDash Steam screenshot 1',
         purpose: 'screenshot',
         sourcePage: 'https://store.steampowered.com/app/3153140/Mush_Dash/',
         lastVerifiedAt: '2026-07-30'
@@ -135,7 +135,7 @@ export const games: readonly Game[] = [
         width: 1920,
         height: 1080,
         aspectRatio: 1.7778,
-        altKey: 'Mush Dash Steam screenshot 2',
+        altKey: 'MushDash Steam screenshot 2',
         purpose: 'screenshot',
         sourcePage: 'https://store.steampowered.com/app/3153140/Mush_Dash/',
         lastVerifiedAt: '2026-07-30'
@@ -145,7 +145,7 @@ export const games: readonly Game[] = [
         width: 1920,
         height: 1080,
         aspectRatio: 1.7778,
-        altKey: 'Mush Dash Steam screenshot 3',
+        altKey: 'MushDash Steam screenshot 3',
         purpose: 'screenshot',
         sourcePage: 'https://store.steampowered.com/app/3153140/Mush_Dash/',
         lastVerifiedAt: '2026-07-30'

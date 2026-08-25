@@ -36,7 +36,7 @@ function section(
 
 const koSections: readonly PrivacySection[] = [
   section('scope', '처리방침의 목적과 적용 범위', [
-    `이 처리방침은 Lv.B 공식 웹사이트, Lv.B가 제공하는 MushHero와 Mush Dash 및 Mush Dash의 온라인 기능, 이메일을 통한 문의와 고객 지원에 적용됩니다.`,
+    `이 처리방침은 Lv.B 공식 웹사이트, Lv.B가 제공하는 MushHero와 MushDash 및 MushDash의 온라인 기능, 이메일을 통한 문의와 고객 지원에 적용됩니다.`,
     `웹사이트 방문, 게임 플랫폼 이용, 이메일 문의는 서로 다른 경로입니다. 각 플랫폼 사업자가 자체적으로 처리하는 정보에는 해당 사업자의 개인정보 처리방침이 함께 적용됩니다.`
   ]),
   section('controller', '개인정보 처리자 정보', [
@@ -53,7 +53,7 @@ const koSections: readonly PrivacySection[] = [
     `이용자가 메일 프로그램에서 문의를 보내면 표시 이름 또는 이름, 이메일 주소, 문의 내용, 첨부 파일 및 첨부 파일에 포함된 로그·스크린샷·기타 정보가 Lv.B와 이메일 서비스 사업자에게 전달될 수 있습니다. 웹사이트 자체는 메일 본문이나 첨부 파일을 저장하지 않습니다.`
   ]),
   section('games-platforms', '게임 및 플랫폼 온라인 기능', [
-    `Mush Dash는 Steam 또는 Epic 계정 연동과 Epic Online Services(EOS)를 통한 온라인 로그인, Lobby, Session, P2P 연결 및 EOS UserCloud를 사용합니다. 이 과정에서 플랫폼 또는 EOS가 계정 식별자와 접속에 필요한 기술 정보를 처리할 수 있으며, 게임 클라이언트는 실행 중 온라인 기능을 위해 SDK를 통해 해당 식별자를 사용할 수 있습니다.`,
+    `MushDash는 Steam 또는 Epic 계정 연동과 Epic Online Services(EOS)를 통한 온라인 로그인, Lobby, Session, P2P 연결 및 EOS UserCloud를 사용합니다. 이 과정에서 플랫폼 또는 EOS가 계정 식별자와 접속에 필요한 기술 정보를 처리할 수 있으며, 게임 클라이언트는 실행 중 온라인 기능을 위해 SDK를 통해 해당 식별자를 사용할 수 있습니다.`,
     `EOS UserCloud에는 튜토리얼 진행 상태, 플레이어 표시 이름, 선택한 프로필 아이콘·이름표·아바타 설정, 게임 내 재화 잔액, 보유 꾸미기 항목·인벤토리, Infinity Tower 최고 기록, 주간 도전 식별자·진행값·완료 여부·보상 수령 여부·주차, 중복 구매 처리를 방지하기 위한 거래 식별자가 저장될 수 있습니다. 그래픽·오디오·언어·매칭 지역 설정은 이용자 기기의 로컬 저장 슬롯에 별도로 저장되며 이 UserCloud 경로로 업로드되지 않습니다.`,
     `게임 클라이언트는 계정별 UserCloud 영역을 찾기 위해 SDK에 계정 식별자를 전달하지만, 확인한 저장 JSON 자체에는 Steam ID, Epic Account ID 또는 EOS Product User ID가 포함되지 않습니다. 다만 온라인 로그인에서 받은 플레이어 표시 이름은 프로필 저장 데이터에 포함됩니다. Lv.B는 플랫폼 식별자를 자체 서버나 별도 데이터베이스에 복제·저장하지 않으며, 자체 중앙 게임 서버 또는 개인정보 데이터베이스를 운영하지 않습니다.`,
     `Lv.B는 자체 플레이 분석·텔레메트리 시스템을 운영하지 않습니다. 게임 로그는 이용자 기기에만 생성되며, 크래시 리포트나 로컬 게임 로그를 Lv.B 서버로 자동 전송하지 않습니다. 이용자가 기술 지원 이메일에 로그, 스크린샷 또는 파일을 직접 첨부한 경우에만 해당 자료를 문의 처리에 사용합니다.`
@@ -77,7 +77,7 @@ const koSections: readonly PrivacySection[] = [
     'external-services',
     '외부 서비스 및 플랫폼',
     [
-      `웹사이트는 Netlify에서 정적으로 호스팅되며, About 페이지의 Google Maps iframe과 Steam 서버의 게임 이미지를 사용합니다. 문의 메일은 NAVER 메일 주소로 수신하고, 게임 및 스토어 링크는 Steam과 Epic Games Store로 연결됩니다. Mush Dash의 온라인 기능에는 EOS가 사용됩니다.`,
+      `웹사이트는 Netlify에서 정적으로 호스팅되며, About 페이지의 Google Maps iframe과 Steam 서버의 게임 이미지를 사용합니다. 문의 메일은 NAVER 메일 주소로 수신하고, 게임 및 스토어 링크는 Steam과 Epic Games Store로 연결됩니다. MushDash의 온라인 기능에는 EOS가 사용됩니다.`,
       `외부 콘텐츠를 불러오거나 링크를 방문하면 IP 주소, 요청 URL, 브라우저·기기 정보, 접속 시각 같은 기술 정보가 해당 사업자에게 전달될 수 있습니다. Lv.B는 외부 사업자의 계정·로그·보유기간을 직접 관리하지 않습니다.`
     ],
     undefined,
@@ -128,7 +128,7 @@ const koSections: readonly PrivacySection[] = [
 
 const enSections: readonly PrivacySection[] = [
   section('scope', 'Purpose and scope', [
-    `This Policy applies to the official Lv.B website, MushHero and Mush Dash, the online features of Mush Dash, and inquiries or support sent by email.`,
+    `This Policy applies to the official Lv.B website, MushHero and MushDash, the online features of MushDash, and inquiries or support sent by email.`,
     `Website visits, game-platform use and email inquiries are separate interactions. A platform provider’s own privacy notice also applies to information it processes independently.`
   ]),
   section('controller', 'Who is responsible', [
@@ -145,7 +145,7 @@ const enSections: readonly PrivacySection[] = [
     `When a person sends an inquiry from their email application, Lv.B and the email provider may receive their name or display name, email address, message, attachments, and logs, screenshots or other information contained in those attachments. The website itself does not store the message or attachments.`
   ]),
   section('games-platforms', 'Games and platform features', [
-    `Mush Dash uses Steam or Epic account integration and Epic Online Services(EOS) for online sign-in, Lobby, Session, P2P connections and EOS UserCloud. A platform or EOS may process account identifiers and technical connection information, and the game client may use those identifiers through the SDK while online features are running.`,
+    `MushDash uses Steam or Epic account integration and Epic Online Services(EOS) for online sign-in, Lobby, Session, P2P connections and EOS UserCloud. A platform or EOS may process account identifiers and technical connection information, and the game client may use those identifiers through the SDK while online features are running.`,
     `EOS UserCloud may store tutorial progress, the player display name, selected profile icon, nameplate and avatar settings, in-game currency balances, owned customization items and inventory, the highest Infinity Tower record, weekly challenge ID, progress, completion, reward-claim status and week number, and transaction identifiers used to prevent duplicate purchase processing. Graphics, audio, language and matchmaking-region settings are stored separately in a local slot on the user’s device and are not uploaded through this UserCloud path.`,
     `The game client passes an account identifier to the SDK to locate the account-specific UserCloud area, but the reviewed save JSON does not itself contain a Steam ID, Epic Account ID or EOS Product User ID. The player display name received during online sign-in is included in the profile save data. Lv.B does not copy platform identifiers to its own server or a separate database and operates no proprietary central game server or personal-information database.`,
     `Lv.B operates no proprietary gameplay analytics or telemetry system. Game logs are created only on the user’s device, and Lv.B does not automatically send crash reports or local game logs to an Lv.B server. Lv.B receives logs, screenshots or files only when a person chooses to attach them to a technical-support email.`
@@ -169,7 +169,7 @@ const enSections: readonly PrivacySection[] = [
     'external-services',
     'External services and platforms',
     [
-      `The website is statically hosted on Netlify, embeds Google Maps on the About page and loads game images from Steam servers. Inquiries are received at a NAVER Mail address, while game and store links lead to Steam and the Epic Games Store. Mush Dash uses EOS for its online features.`,
+      `The website is statically hosted on Netlify, embeds Google Maps on the About page and loads game images from Steam servers. Inquiries are received at a NAVER Mail address, while game and store links lead to Steam and the Epic Games Store. MushDash uses EOS for its online features.`,
       `Loading external content or following a link may give that provider technical data such as an IP address, requested URL, browser or device information and access time. Lv.B does not directly manage those providers’ accounts, logs or retention periods.`
     ],
     undefined,
@@ -220,7 +220,7 @@ const enSections: readonly PrivacySection[] = [
 
 const jaSections: readonly PrivacySection[] = [
   section('scope', '本ポリシーの目的と適用範囲', [
-    `本ポリシーは、Lv.B公式サイト、Lv.Bが提供するMushHeroおよびMush Dash、Mush Dashのオンライン機能、メールによるお問い合わせとサポートに適用されます。`,
+    `本ポリシーは、Lv.B公式サイト、Lv.Bが提供するMushHeroおよびMushDash、MushDashのオンライン機能、メールによるお問い合わせとサポートに適用されます。`,
     `サイトの閲覧、ゲームプラットフォームの利用、メールでのお問い合わせは、それぞれ異なる経路です。各プラットフォームが独自に処理する情報には、その事業者のプライバシーポリシーも適用されます。`
   ]),
   section('controller', '個人情報を取り扱う事業者', [
@@ -237,7 +237,7 @@ const jaSections: readonly PrivacySection[] = [
     `メールソフトからお問い合わせを送信すると、表示名または氏名、メールアドレス、本文、添付ファイルおよび添付ファイルに含まれるログ、スクリーンショット、その他の情報がLv.Bとメールサービス事業者に送信される場合があります。本サイト自体は本文や添付ファイルを保存しません。`
   ]),
   section('games-platforms', 'ゲームとプラットフォーム機能', [
-    `Mush Dashは、SteamまたはEpicアカウントとの連携、およびEpic Online Services(EOS)によるオンラインログイン、Lobby、Session、P2P接続、EOS UserCloudを利用します。この過程でプラットフォームまたはEOSがアカウント識別子や接続に必要な技術情報を処理する場合があり、ゲームクライアントはオンライン機能の実行中にSDKを通じて当該識別子を利用する場合があります。`,
+    `MushDashは、SteamまたはEpicアカウントとの連携、およびEpic Online Services(EOS)によるオンラインログイン、Lobby、Session、P2P接続、EOS UserCloudを利用します。この過程でプラットフォームまたはEOSがアカウント識別子や接続に必要な技術情報を処理する場合があり、ゲームクライアントはオンライン機能の実行中にSDKを通じて当該識別子を利用する場合があります。`,
     `EOS UserCloudには、チュートリアルの進行状況、プレイヤー表示名、選択したプロフィールアイコン・ネームプレート・アバター設定、ゲーム内通貨残高、所有しているカスタマイズ項目・インベントリ、Infinity Towerの最高記録、ウィークリーチャレンジのID・進行値・完了状況・報酬受取状況・週番号、および購入処理の重複を防止するための取引識別子が保存される場合があります。グラフィック、オーディオ、言語、マッチメイキング地域の設定は利用者端末のローカルスロットに別途保存され、このUserCloud経路ではアップロードされません。`,
     `ゲームクライアントはアカウント別のUserCloud領域を特定するため、SDKへアカウント識別子を渡しますが、確認したセーブJSON自体にSteam ID、Epic Account ID、EOS Product User IDは含まれていません。ただし、オンラインログイン時に受け取ったプレイヤー表示名はプロフィールのセーブデータに含まれます。Lv.Bはプラットフォーム識別子を独自サーバーや別個のデータベースへ複製・保存せず、独自の中央ゲームサーバーまたは個人情報データベースを運用していません。`,
     `Lv.Bは独自のプレイ分析・テレメトリシステムを運用していません。ゲームログは利用者の端末内にのみ生成され、クラッシュレポートやローカルゲームログがLv.Bのサーバーへ自動送信されることはありません。利用者が技術サポートのメールにログ、スクリーンショット、ファイルを自ら添付した場合に限り、お問い合わせ対応のために利用します。`
@@ -261,7 +261,7 @@ const jaSections: readonly PrivacySection[] = [
     'external-services',
     '外部サービスとプラットフォーム',
     [
-      `本サイトはNetlifyで静的にホスティングされ、AboutページではGoogle Mapsのiframe、ゲーム画像にはSteamのサーバーを利用しています。お問い合わせはNAVERメールで受信し、ゲームとストアのリンクはSteamおよびEpic Games Storeへ移動します。Mush Dashのオンライン機能にはEOSを利用します。`,
+      `本サイトはNetlifyで静的にホスティングされ、AboutページではGoogle Mapsのiframe、ゲーム画像にはSteamのサーバーを利用しています。お問い合わせはNAVERメールで受信し、ゲームとストアのリンクはSteamおよびEpic Games Storeへ移動します。MushDashのオンライン機能にはEOSを利用します。`,
       `外部コンテンツの読み込みやリンク先への移動により、IPアドレス、リクエストURL、ブラウザ・端末情報、アクセス日時などが各事業者へ送信される場合があります。Lv.Bは各事業者のアカウント、ログ、保存期間を直接管理しません。`
     ],
     undefined,
@@ -312,7 +312,7 @@ const jaSections: readonly PrivacySection[] = [
 
 const zhSections: readonly PrivacySection[] = [
   section('scope', '本政策的目的与适用范围', [
-    `本政策适用于Lv.B官方网站、Lv.B提供的MushHero与Mush Dash、Mush Dash的在线功能，以及通过电子邮件进行的咨询与客户支持。`,
+    `本政策适用于Lv.B官方网站、Lv.B提供的MushHero与MushDash、MushDash的在线功能，以及通过电子邮件进行的咨询与客户支持。`,
     `访问网站、使用游戏平台和发送电子邮件属于不同的处理场景。平台运营方独立处理的信息还适用其各自的隐私政策。`
   ]),
   section('controller', '个人信息处理方', [
@@ -329,7 +329,7 @@ const zhSections: readonly PrivacySection[] = [
     `用户通过邮件客户端发送咨询时，Lv.B与邮件服务商可能会收到姓名或显示名称、电子邮件地址、咨询内容、附件，以及附件中包含的日志、截图或其他信息。网站本身不会保存邮件正文或附件。`
   ]),
   section('games-platforms', '游戏与平台在线功能', [
-    `Mush Dash使用Steam或Epic账户关联，并通过Epic Online Services(EOS)提供在线登录、Lobby、Session、P2P连接和EOS UserCloud功能。在此过程中，平台或EOS可能会处理账户标识符及连接所需的技术信息；游戏客户端在运行在线功能时，可能会通过SDK使用相关标识符。`,
+    `MushDash使用Steam或Epic账户关联，并通过Epic Online Services(EOS)提供在线登录、Lobby、Session、P2P连接和EOS UserCloud功能。在此过程中，平台或EOS可能会处理账户标识符及连接所需的技术信息；游戏客户端在运行在线功能时，可能会通过SDK使用相关标识符。`,
     `EOS UserCloud可能保存教程进度、玩家显示名称、所选个人资料图标、名牌与角色外观设置、游戏内货币余额、已拥有的自定义内容与物品栏、Infinity Tower最高记录、每周挑战ID、进度、完成状态、奖励领取状态与周次，以及用于防止重复处理购买交易的交易标识符。画面、音频、语言和匹配地区设置会单独保存至用户设备的本地存档槽，不会通过此UserCloud路径上传。`,
     `游戏客户端会向SDK传递账户标识符，以定位对应账户的UserCloud空间；但经核查，存档JSON本身不包含Steam ID、Epic Account ID或EOS Product User ID。在线登录时取得的玩家显示名称会包含在个人资料存档中。Lv.B不会将平台标识符复制或保存至自有服务器或单独的数据库，也不运营自有中央游戏服务器或个人信息数据库。`,
     `Lv.B不运营自有的游玩分析或遥测系统。游戏日志仅生成在用户设备本地，崩溃报告或本地游戏日志不会自动发送至Lv.B服务器。仅当用户主动将日志、截图或文件附加至技术支持邮件时，Lv.B才会将其用于处理咨询。`
@@ -353,7 +353,7 @@ const zhSections: readonly PrivacySection[] = [
     'external-services',
     '外部服务与平台',
     [
-      `网站由Netlify进行静态托管，About页面嵌入Google Maps iframe，游戏图片从Steam服务器加载。咨询邮件由NAVER邮箱接收，游戏和商店链接则指向Steam与Epic Games Store。Mush Dash的在线功能使用EOS。`,
+      `网站由Netlify进行静态托管，About页面嵌入Google Maps iframe，游戏图片从Steam服务器加载。咨询邮件由NAVER邮箱接收，游戏和商店链接则指向Steam与Epic Games Store。MushDash的在线功能使用EOS。`,
       `加载外部内容或访问链接时，IP地址、请求URL、浏览器或设备信息、访问时间等技术信息可能会发送给相应服务商。Lv.B不直接管理这些服务商的账户、日志或保存期限。`
     ],
     undefined,
