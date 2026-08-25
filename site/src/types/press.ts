@@ -2,20 +2,21 @@ import type { Locale } from '../i18n/config';
 import type { GameSlug } from './game';
 
 export interface PressAsset {
-  id: 'full-logo' | 'symbol';
+  id: 'horizontal-logo' | 'stacked-logo' | 'symbol';
   path: string;
   width: number;
   height: number;
   downloadName: string;
 }
 
-export interface PressScreenshot {
+export interface PressMedia {
+  id: string;
   game: GameSlug;
   path: string;
-  sourceUrl: string;
   width: number;
   height: number;
   sha256: string;
+  alt: Readonly<Record<Locale, string>>;
 }
 
 export type PressDownloadId = 'brand' | 'mushhero' | 'mushdash';

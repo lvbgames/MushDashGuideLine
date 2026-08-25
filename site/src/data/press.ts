@@ -1,23 +1,68 @@
-import type { PressAsset, PressDownload, PressScreenshot, PressTranslations } from '../types/press';
+import type { PressAsset, PressDownload, PressMedia, PressTranslations } from '../types/press';
 
 export const pressAssets: readonly PressAsset[] = [
-  { id: 'full-logo', path: '/brand/lvb-logo.png', width: 1876, height: 769, downloadName: 'lvb-logo.png' },
-  { id: 'symbol', path: '/brand/lvb-symbol.png', width: 794, height: 769, downloadName: 'lvb-symbol.png' }
+  { id: 'horizontal-logo', path: '/press/assets/brand/lvb-logo-horizontal-transparent.png', width: 1876, height: 769, downloadName: 'lvb-logo-horizontal-transparent.png' },
+  { id: 'stacked-logo', path: '/press/assets/brand/lvb-logo-stacked-transparent.png', width: 1052, height: 1213, downloadName: 'lvb-logo-stacked-transparent.png' },
+  { id: 'symbol', path: '/press/assets/brand/lvb-symbol-transparent.png', width: 1024, height: 1024, downloadName: 'lvb-symbol-transparent.png' }
 ];
 
-export const pressScreenshots: readonly PressScreenshot[] = [
-  { game: 'mushhero', path: '/press/assets/mushhero/mushhero-01.jpg', sourceUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711200/2bd506a8530d829461a9dd09474bf75dbbe9d8f2/ss_2bd506a8530d829461a9dd09474bf75dbbe9d8f2.1920x1080.jpg?t=1782291404', width: 1920, height: 1080, sha256: '484B07E40D88556C53425222C1FCE4A9953DAA8A21AEA83CE33964060E106077' },
-  { game: 'mushhero', path: '/press/assets/mushhero/mushhero-02.jpg', sourceUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711200/f96a767c38c8d9b7baf269e049acd6f20744b8f2/ss_f96a767c38c8d9b7baf269e049acd6f20744b8f2.1920x1080.jpg?t=1782291404', width: 1920, height: 1080, sha256: '13741FE3995FBC4FB8D84453BAB191B700AAF0823C4DA3D44E62CD3ED7CD37AF' },
-  { game: 'mushhero', path: '/press/assets/mushhero/mushhero-03.jpg', sourceUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711200/da2fffa5e4c7162cb00c418bb963e1865329ee95/ss_da2fffa5e4c7162cb00c418bb963e1865329ee95.1920x1080.jpg?t=1782291404', width: 1920, height: 1080, sha256: '3CE54AC177C4A2D4CC7578B39904E97CB5C62CD995532DA8B4BDBBE193C50E90' },
-  { game: 'mushdash', path: '/press/assets/mushdash/mushdash-01.jpg', sourceUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3153140/7966ab2fd72923decd51e216d4924880e9e1382e/ss_7966ab2fd72923decd51e216d4924880e9e1382e.1920x1080.jpg?t=1781498090', width: 1920, height: 1080, sha256: '6B22EE5A5218B4EFA03ED05F86ABC5D5104995CD84CCE53B8877F7511165C4E4' },
-  { game: 'mushdash', path: '/press/assets/mushdash/mushdash-02.jpg', sourceUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3153140/512f8f3be28f4ee7832a47d06460d8eb9e1e3ea0/ss_512f8f3be28f4ee7832a47d06460d8eb9e1e3ea0.1920x1080.jpg?t=1781498090', width: 1920, height: 1080, sha256: '3F7E7C093C0430F7E87DB2ECF9E3C64E88D8DE081C2A6843F15774EC434D55F9' },
-  { game: 'mushdash', path: '/press/assets/mushdash/mushdash-03.jpg', sourceUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3153140/92c6b9367ee79a2b56ed98a67df94c1b3043207d/ss_92c6b9367ee79a2b56ed98a67df94c1b3043207d.1920x1080.jpg?t=1781498090', width: 1920, height: 1080, sha256: '10D6AD2513F92DE008B61BA969B4FD8D7C293D90199E151383E6B01FB698BADB' }
+export const pressMedia: readonly PressMedia[] = [
+  {
+    id: 'mushhero-keyart-primary', game: 'mushhero', path: '/press/assets/mushhero/mushhero-keyart-primary.jpg', width: 1920, height: 1080,
+    sha256: '028EC8FFA2FFE42682D8D1AD3C7684BFB4EC675DB63FE62A6D02266CF4D81376',
+    alt: { en: 'MushHero key art', ko: 'MushHero 대표 키아트', ja: 'MushHero キーアート', 'zh-cn': 'MushHero 主视觉图' }
+  },
+  {
+    id: 'mushhero-press-wide', game: 'mushhero', path: '/press/assets/mushhero/mushhero-press-wide-1920.jpg', width: 1920, height: 620,
+    sha256: 'F1DC15B8AA03B9B56E54D32011B2F64292FD809515883C3AA4FA33DBB0DD395E',
+    alt: { en: 'MushHero town panorama', ko: 'MushHero 마을 전경', ja: 'MushHero の街のパノラマ', 'zh-cn': 'MushHero 城镇全景' }
+  },
+  {
+    id: 'mushhero-screenshot-01', game: 'mushhero', path: '/press/assets/mushhero/mushhero-screenshot-01.jpg', width: 1920, height: 1080,
+    sha256: '88A96824E6769553EE9C74EE2EBB0F64B0D52A95807A6213AB849DD7B2CF2DAD',
+    alt: { en: 'MushHero boss battle screenshot', ko: 'MushHero 보스 전투 스크린샷', ja: 'MushHero ボス戦のスクリーンショット', 'zh-cn': 'MushHero 首领战游戏截图' }
+  },
+  {
+    id: 'mushhero-screenshot-02', game: 'mushhero', path: '/press/assets/mushhero/mushhero-screenshot-02.jpg', width: 1920, height: 1080,
+    sha256: 'B126E858CBE7FC025311C756138C1C344937441D9DA65DE52C901C3852BF26EB',
+    alt: { en: 'MushHero town screenshot', ko: 'MushHero 마을 스크린샷', ja: 'MushHero の街のスクリーンショット', 'zh-cn': 'MushHero 城镇游戏截图' }
+  },
+  {
+    id: 'mushhero-screenshot-03', game: 'mushhero', path: '/press/assets/mushhero/mushhero-screenshot-03.jpg', width: 1920, height: 1080,
+    sha256: '86ABE54FAE0BD873492426CB03D5D7F686C37E23F3C0127DF0B4151EC6416190',
+    alt: { en: 'MushHero wave battle screenshot', ko: 'MushHero 웨이브 전투 스크린샷', ja: 'MushHero ウェーブ戦のスクリーンショット', 'zh-cn': 'MushHero 波次战斗游戏截图' }
+  },
+  {
+    id: 'mushdash-keyart-primary', game: 'mushdash', path: '/press/assets/mushdash/mushdash-keyart-primary.jpg', width: 1920, height: 1080,
+    sha256: '82C2529AE443F29BC1CDD8F9EB6A65BBFD8B49012D686195933D2C9177FBDD65',
+    alt: { en: 'MushDash key art', ko: 'MushDash 대표 키아트', ja: 'MushDash キーアート', 'zh-cn': 'MushDash 主视觉图' }
+  },
+  {
+    id: 'mushdash-press-wide', game: 'mushdash', path: '/press/assets/mushdash/mushdash-press-wide-1920.jpg', width: 1920, height: 620,
+    sha256: 'BB07BC36DA6412C7F728AF8D08B8A2E6DFB0CFA7DAC33BCB878FEFC3CC21B3A9',
+    alt: { en: 'MushDash character panorama', ko: 'MushDash 캐릭터 전경', ja: 'MushDash キャラクターのパノラマ', 'zh-cn': 'MushDash 角色全景图' }
+  },
+  {
+    id: 'mushdash-promo-01', game: 'mushdash', path: '/press/assets/mushdash/mushdash-promo-01.jpg', width: 800, height: 450,
+    sha256: '2A57A43FBCDA4B194B984E894812CC6E2DEF51465942B3AB6E82C5EB7B9F6B39',
+    alt: { en: 'MushDash promotional image 1', ko: 'MushDash 프로모션 이미지 1', ja: 'MushDash プロモーション画像 1', 'zh-cn': 'MushDash 宣传图片 1' }
+  },
+  {
+    id: 'mushdash-promo-02', game: 'mushdash', path: '/press/assets/mushdash/mushdash-promo-02.jpg', width: 800, height: 450,
+    sha256: '066C37C5FEFC6D866DAA0CF98533CEEB5EB544C7B2B221F798AAD580A37F6D30',
+    alt: { en: 'MushDash promotional image 2', ko: 'MushDash 프로모션 이미지 2', ja: 'MushDash プロモーション画像 2', 'zh-cn': 'MushDash 宣传图片 2' }
+  },
+  {
+    id: 'mushdash-promo-03', game: 'mushdash', path: '/press/assets/mushdash/mushdash-promo-03.jpg', width: 800, height: 450,
+    sha256: '2418780B7F0A04005553803190F1FD228C7325F0E73CF0602C54D1BD7318F7DB',
+    alt: { en: 'MushDash promotional image 3', ko: 'MushDash 프로모션 이미지 3', ja: 'MushDash プロモーション画像 3', 'zh-cn': 'MushDash 宣传图片 3' }
+  }
 ];
 
 export const pressDownloads: readonly PressDownload[] = [
-  { id: 'brand', path: '/press/downloads/lvb-brand-assets.zip', fileName: 'lvb-brand-assets.zip', bytes: 81756, sha256: 'B9281432DD14EDB034B3691D32262F9A07A86B9055B911C0EA1DE8427D3A696B', contents: '2 PNG + USAGE.txt' },
-  { id: 'mushhero', path: '/press/downloads/mushhero-press-kit.zip', fileName: 'mushhero-press-kit.zip', bytes: 1374168, sha256: 'F46E37BFFF886D72187F470DA998E000FE64B9F99C8622FCAF9B701B07560496', contents: '3 JPG + 2 PNG + 4 TXT' },
-  { id: 'mushdash', path: '/press/downloads/mushdash-press-kit.zip', fileName: 'mushdash-press-kit.zip', bytes: 1236568, sha256: '61BBE31E60C9E68B7513139D02D94998A2782E94E1605D29D9FF77D4025800ED', contents: '3 JPG + 2 PNG + 4 TXT' }
+  { id: 'brand', path: '/press/downloads/lvb-brand-assets.zip', fileName: 'lvb-brand-assets.zip', bytes: 255565, sha256: '035DEF47F8B06BF19ABC5855475FC4EC44D12DAC0C78584C711E2C1E19A6367F', contents: '5 PNG' },
+  { id: 'mushhero', path: '/press/downloads/mushhero-press-kit.zip', fileName: 'mushhero-press-kit.zip', bytes: 2300078, sha256: 'CC05D7A934288FF39BC5902AAA4AB35A346C9AF817AF1ABCD3E3BEBA973CCE2C', contents: '6 JPG + 1 PNG' },
+  { id: 'mushdash', path: '/press/downloads/mushdash-press-kit.zip', fileName: 'mushdash-press-kit.zip', bytes: 914628, sha256: 'FA846A03159BCE14DA55BA9604A5AD509AED49DA7394E36EAFE3555C82093890', contents: '5 JPG + 1 PNG' }
 ];
 
 export const pressTranslations: PressTranslations = {
@@ -39,7 +84,7 @@ export const pressTranslations: PressTranslations = {
     brandEyebrow: 'Brand assets',
     brandTitle: 'Lv.B logos',
     brandDescription: 'For editorial and press coverage of Lv.B and its games.',
-    assetLabels: { 'full-logo': 'Lv.B full logo', symbol: 'Lv.B symbol' },
+    assetLabels: { 'horizontal-logo': 'Lv.B horizontal logo', 'stacked-logo': 'Lv.B stacked logo', symbol: 'Lv.B symbol' },
     openOriginal: 'Open original',
     downloadPng: 'Download PNG',
     downloadOriginal: 'Download original',
@@ -47,9 +92,9 @@ export const pressTranslations: PressTranslations = {
     downloadsTitle: 'Download press materials',
     downloadZip: 'Download ZIP',
     downloadLabels: { brand: 'Lv.B Brand Assets', mushhero: 'MushHero Press Kit', mushdash: 'MushDash Press Kit' },
-    downloadDescriptions: { brand: 'Official Lv.B full logo, symbol and usage note.', mushhero: 'Official screenshots, Lv.B logos and fact sheets in four languages.', mushdash: 'Official screenshots, Lv.B logos and fact sheets in four languages.' },
-    screenshotsEyebrow: 'Official screenshots',
-    screenshotsTitle: 'Game screenshots',
+    downloadDescriptions: { brand: 'Official transparent Lv.B logos, symbol and brand preview images.', mushhero: 'Official key art, logo, press image and gameplay screenshots.', mushdash: 'Official key art, logo, press image and promotional images.' },
+    screenshotsEyebrow: 'Official media',
+    screenshotsTitle: 'Game images',
     factsEyebrow: 'At a glance',
     factsTitle: 'Key facts',
     factLabels: { studio: 'Studio', basedIn: 'Based in', currentGames: 'Current games', website: 'Website', contact: 'Business / Press contact' },
@@ -78,7 +123,7 @@ export const pressTranslations: PressTranslations = {
     brandEyebrow: '브랜드 자료',
     brandTitle: 'Lv.B 로고',
     brandDescription: 'Lv.B와 게임에 관한 기사 및 보도 목적으로 사용할 수 있습니다.',
-    assetLabels: { 'full-logo': 'Lv.B 전체 로고', symbol: 'Lv.B 심볼' },
+    assetLabels: { 'horizontal-logo': 'Lv.B 가로 로고', 'stacked-logo': 'Lv.B 세로 로고', symbol: 'Lv.B 심볼' },
     openOriginal: '원본 열기',
     downloadPng: 'PNG 다운로드',
     downloadOriginal: '원본 다운로드',
@@ -86,9 +131,9 @@ export const pressTranslations: PressTranslations = {
     downloadsTitle: '보도 자료 다운로드',
     downloadZip: 'ZIP 다운로드',
     downloadLabels: { brand: 'Lv.B 브랜드 자산', mushhero: 'MushHero 프레스 키트', mushdash: 'MushDash 프레스 키트' },
-    downloadDescriptions: { brand: 'Lv.B 전체 로고, 심볼과 간단한 사용 안내입니다.', mushhero: '공식 스크린샷, Lv.B 로고와 네 언어 팩트 시트입니다.', mushdash: '공식 스크린샷, Lv.B 로고와 네 언어 팩트 시트입니다.' },
-    screenshotsEyebrow: '공식 스크린샷',
-    screenshotsTitle: '게임 스크린샷',
+    downloadDescriptions: { brand: 'Lv.B 투명 로고, 심볼과 브랜드 미리보기 이미지입니다.', mushhero: '공식 키아트, 로고, 언론용 이미지와 게임플레이 스크린샷입니다.', mushdash: '공식 키아트, 로고, 언론용 이미지와 프로모션 이미지입니다.' },
+    screenshotsEyebrow: '공식 미디어',
+    screenshotsTitle: '게임 이미지',
     factsEyebrow: '한눈에 보기',
     factsTitle: '주요 정보',
     factLabels: { studio: '스튜디오', basedIn: '소재지', currentGames: '현재 게임', website: '웹사이트', contact: '비즈니스·언론 문의' },
@@ -117,7 +162,7 @@ export const pressTranslations: PressTranslations = {
     brandEyebrow: 'ブランド素材',
     brandTitle: 'Lv.Bロゴ',
     brandDescription: 'Lv.Bおよびゲームに関する記事・報道でご利用いただけます。',
-    assetLabels: { 'full-logo': 'Lv.Bフルロゴ', symbol: 'Lv.Bシンボル' },
+    assetLabels: { 'horizontal-logo': 'Lv.B横組みロゴ', 'stacked-logo': 'Lv.B縦組みロゴ', symbol: 'Lv.Bシンボル' },
     openOriginal: '原寸画像を開く',
     downloadPng: 'PNGをダウンロード',
     downloadOriginal: '原寸画像をダウンロード',
@@ -125,8 +170,8 @@ export const pressTranslations: PressTranslations = {
     downloadsTitle: 'プレス素材をダウンロード',
     downloadZip: 'ZIPをダウンロード',
     downloadLabels: { brand: 'Lv.Bブランド素材', mushhero: 'MushHeroプレスキット', mushdash: 'MushDashプレスキット' },
-    downloadDescriptions: { brand: 'Lv.Bのフルロゴ、シンボル、簡単な利用案内です。', mushhero: '公式スクリーンショット、Lv.Bロゴ、4言語のファクトシートです。', mushdash: '公式スクリーンショット、Lv.Bロゴ、4言語のファクトシートです。' },
-    screenshotsEyebrow: '公式スクリーンショット',
+    downloadDescriptions: { brand: 'Lv.Bの透過ロゴ、シンボル、ブランドプレビュー画像です。', mushhero: '公式キーアート、ロゴ、プレス画像、ゲームプレイ画像です。', mushdash: '公式キーアート、ロゴ、プレス画像、プロモーション画像です。' },
+    screenshotsEyebrow: '公式メディア',
     screenshotsTitle: 'ゲーム画像',
     factsEyebrow: '基本情報',
     factsTitle: 'Key Facts',
@@ -156,7 +201,7 @@ export const pressTranslations: PressTranslations = {
     brandEyebrow: '品牌素材',
     brandTitle: 'Lv.B 标志',
     brandDescription: '可用于 Lv.B 及旗下游戏的编辑与媒体报道。',
-    assetLabels: { 'full-logo': 'Lv.B 完整标志', symbol: 'Lv.B 图形标志' },
+    assetLabels: { 'horizontal-logo': 'Lv.B 横版标志', 'stacked-logo': 'Lv.B 竖版标志', symbol: 'Lv.B 图形标志' },
     openOriginal: '打开原图',
     downloadPng: '下载 PNG',
     downloadOriginal: '下载原图',
@@ -164,9 +209,9 @@ export const pressTranslations: PressTranslations = {
     downloadsTitle: '下载媒体资料',
     downloadZip: '下载 ZIP',
     downloadLabels: { brand: 'Lv.B 品牌素材', mushhero: 'MushHero 媒体资料包', mushdash: 'MushDash 媒体资料包' },
-    downloadDescriptions: { brand: '包含 Lv.B 完整标志、图形标志及简要使用说明。', mushhero: '包含官方截图、Lv.B 标志及四种语言的游戏资料。', mushdash: '包含官方截图、Lv.B 标志及四种语言的游戏资料。' },
-    screenshotsEyebrow: '官方截图',
-    screenshotsTitle: '游戏截图',
+    downloadDescriptions: { brand: '包含 Lv.B 透明背景标志、图形标志和品牌预览图片。', mushhero: '包含官方主视觉图、标志、媒体图片和游戏截图。', mushdash: '包含官方主视觉图、标志、媒体图片和宣传图片。' },
+    screenshotsEyebrow: '官方媒体素材',
+    screenshotsTitle: '游戏图片',
     factsEyebrow: '基本信息',
     factsTitle: '关键信息',
     factLabels: { studio: '工作室', basedIn: '所在地', currentGames: '当前游戏', website: '网站', contact: '商务与媒体联系' },

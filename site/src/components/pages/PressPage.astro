@@ -2,7 +2,8 @@
 import { company } from '../../data/company';
 import { contactPolicy } from '../../data/contact';
 import { games } from '../../data/games';
-import { pressAssets, pressDownloads, pressScreenshots, pressTranslations } from '../../data/press';
+import { pressAssets, pressDownloads, pressMedia, pressTranslations } from '../../data/press';
+import { getSocialImage } from '../../data/socialImages';
 import { siteConfig } from '../../config/site';
 import type { Locale } from '../../i18n/config';
 import { getTranslation } from '../../i18n/translations';
@@ -22,7 +23,7 @@ interface Props {
 const { locale } = Astro.props;
 const translation = getTranslation(locale);
 const press = pressTranslations[locale];
-const ogImagePath = pressScreenshots.find((asset) => asset.game === 'mushhero')?.path;
+const ogImage = getSocialImage('lvb', locale);
 const mailtoHref = `mailto:${contactPolicy.businessEmail}?subject=${encodeURIComponent(translation.contact.mailtoSubject)}&body=${encodeURIComponent(translation.contact.mailtoBodyTemplate)}`;
 const releaseLabels = {
   upcoming: translation.common.coming2027,
@@ -33,24 +34,16 @@ const numberLocale = locale === 'zh-cn' ? 'zh-CN' : locale;
 const formatBytes = (bytes: number) => bytes >= 1024 * 1024
   ? `${new Intl.NumberFormat(numberLocale, { maximumFractionDigits: 1 }).format(bytes / (1024 * 1024))} MB`
   : `${new Intl.NumberFormat(numberLocale, { maximumFractionDigits: 0 }).format(bytes / 1024)} KB`;
-const galleryItems = pressScreenshots.map((asset) => {
-  const game = games.find((entry) => entry.slug === asset.game);
-  const gameIndex = pressScreenshots.filter((entry) => entry.game === asset.game).findIndex((entry) => entry.path === asset.path);
-  const detail = asset.game === 'mushhero' ? translation.mushHero : translation.mushDash;
+const galleryItems = pressMedia.map((asset) => {
   return {
     src: asset.path,
     width: asset.width,
     height: asset.height,
-    alt: detail.screenshotAlts[gameIndex] ?? game?.title ?? asset.game,
+    alt: asset.alt[locale],
     downloadHref: asset.path,
     downloadName: asset.path.split('/').at(-1)
   };
 });
-
-if (!ogImagePath) {
-  throw new Error('Press Kit requires a verified MushHero image.');
-}
-const ogImage = new URL(ogImagePath, Astro.site ?? 'https://lvb.kr').href;
 ---
 
 <BaseLayout
@@ -58,8 +51,11 @@ const ogImage = new URL(ogImagePath, Astro.site ?? 'https://lvb.kr').href;
   route="press"
   title={press.metaTitle}
   description={press.metaDescription}
-  ogImage={ogImage}
-  ogImageAlt={translation.gamesPage.gameImageAlts.mushhero}
+  ogImage={ogImage.path}
+  ogImageAlt={ogImage.alt}
+  ogImageWidth={ogImage.width}
+  ogImageHeight={ogImage.height}
+  ogImageType={ogImage.type}
 >
   <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="press" translation={translation} />
   <main class="press-page" data-motion-page>
@@ -88,7 +84,7 @@ const ogImage = new URL(ogImagePath, Astro.site ?? 'https://lvb.kr').href;
           <span class="screen-reader" aria-live="polite" data-press-copy-status></span>
         </div>
         <div class="press-about__identity" aria-label={`${company.name} / ${company.alternateName}`} data-motion-item>
-          <img src="/brand/lvb-logo.png" width="1876" height="769" alt="Lv.B" loading="lazy" decoding="async" />
+          <img src="/press/assets/brand/lvb-brand-press-preview.png" width="1920" height="1080" alt="Lv.B" loading="lazy" decoding="async" />
         </div>
       </Container>
     </section>
@@ -101,9 +97,9 @@ const ogImage = new URL(ogImagePath, Astro.site ?? 'https://lvb.kr').href;
         </div>
         <div class="press-games__grid">
           {games.map((game) => {
-            const image = pressScreenshots.find((asset) => asset.game === game.slug);
+            const image = pressMedia.find((asset) => asset.id === `${game.slug}-keyart-primary`);
             const gameCopy = game.slug === 'mushhero' ? translation.gamesPage.featuredDescription : translation.gamesPage.releasedDescription;
-            const imageAlt = translation.gamesPage.gameImageAlts[game.slug];
+            const imageAlt = image?.alt[locale] ?? translation.gamesPage.gameImageAlts[game.slug];
             return (
               <article class:list={['press-game', `press-game--${game.slug}`]} data-motion-item>
                 {image && <img src={image.path} width={image.width} height={image.height} alt={imageAlt} loading="lazy" decoding="async" />}

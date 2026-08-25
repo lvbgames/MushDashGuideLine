@@ -27,7 +27,7 @@
 
 ## 페이지 품질과 메타데이터
 
-- 정규 페이지의 title·description 누락·중복, canonical·네 locale `hreflang`·`x-default` 대응을 확인한다. Open Graph·Twitter의 title·description은 페이지 메타와 같은 의미여야 하고, 공유 이미지 URL은 절대 경로·HTTP 200이어야 하며 `og:image:alt`를 포함해야 한다.
+- 정규 페이지의 title·description 누락·중복, canonical·네 locale `hreflang`·`x-default` 대응을 확인한다. Open Graph·Twitter의 title·description은 페이지 메타와 같은 의미여야 한다. 전용 공유 이미지는 절대 URL, 1200×630, 실제 MIME, locale별 `og:image:alt`·`twitter:image:alt`를 포함하고 public/dist SHA가 승인 원본과 일치해야 한다.
 - 페이지별 H1 하나와 heading 단계, `main`·`nav`·`footer` landmark를 확인한다.
 - 이미지의 `width`·`height`·`alt`와 Hero `eager`·나머지 `lazy` 우선순위를 확인한다.
 - 화면에 TODO·placeholder·개발 상태 문구가 노출되지 않는지 확인한다.
@@ -68,7 +68,7 @@
 - About은 네 locale 모두 회사 철학 영역이 정확히 1개이고 같은 순서·의미의 원칙이 정확히 3개여야 한다. 제거한 중복 approach 영역과 전용 component·CSS·번역은 0건이어야 한다.
 - Legal 목차는 desktop nav와 mobile details가 DOM에 각각 하나씩 존재한다. 64rem 미만에서는 desktop aside, 64rem 이상에서는 mobile details가 `display:none`인 상위 subtree에 있어 접근성 트리와 탭 순서에서 제외되고, 보이는 목차만 anchor 대상으로 이동하는지 확인한다. 실제 screen reader를 실행하지 못한 경우 DOM·computed style·focusability·접근성 tree 검사 범위와 물리 키보드 미검증 항목을 구분해 보고한다.
 - 공통 MediaGallery는 native scroll-snap, 이전·다음 label과 경계 disabled, mobile touch scroll, dialog Close·화살표·Escape·backdrop·trigger focus 복귀를 확인한다.
-- Press는 정적 ZIP 3개와 로컬 스크린샷 6개, 개별 PNG/JPG 다운로드, boilerplate Clipboard 상태, public/dist SHA와 ZIP entry integrity를 확인한다. Hero divider 아래 여백과 제목·설명 간격, Recent Press 관련 UI·번역·스타일 0건도 확인한다. 현재 nullable video URL이 `null`이면 iframe·poster placeholder·영상 UI는 0개여야 한다.
+- Press는 승인된 브랜드 5개·MushHero 7개·MushDash 6개와 정적 ZIP 3개를 확인한다. 화면은 브랜드 다운로드 3개, 게임 이미지 10개, ZIP href 3개를 제공하고, public/dist SHA·ZIP bytes·entry integrity·중복·작업용 docs/previews 미포함을 검사한다. 기존 Home source용 Steam 스크린샷은 별도 보호하며 MushDash `promo-*`를 스크린샷으로 표기하지 않는다. Hero divider 아래 여백과 제목·설명 간격, Recent Press 관련 UI·번역·스타일 0건도 확인한다.
 - Home·MushHero·Press·About mobile Lighthouse는 각각 90·90·90·95 이상, 모든 대상 CLS 0.02 이하·TBT 100ms 이하를 유지하고 report JSON과 Chrome 임시 profile은 저장소에 추가하지 않는다.
 
 ## Naver SEO 운영 감사

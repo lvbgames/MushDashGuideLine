@@ -1,37 +1,53 @@
 # Press Kit
 
-- 네 locale Press Kit은 `site/src/data/press.ts`의 표시 문구·브랜드 asset metadata와 기존 회사·게임·연락처 데이터를 조합한다. News 목록은 `/news/`에서만 제공하고 Press Kit에는 Recent Press를 중복 표시하지 않는다.
-- 공개 브랜드 원본은 `/brand/lvb-logo.png`, `/brand/lvb-symbol.png`이며 개별 PNG와 정적 ZIP에서 같은 승인 원본을 제공한다. 사용 안내는 기사·보도 목적임을 설명할 뿐 새로운 상표 라이선스를 만들지 않는다.
-- Steam CDN 스크린샷은 `games.ts`의 검증 URL에서 2026-08-21에 내려받은 원본 byte를 `/press/assets/`에 보존한다. crop·resize·re-encode하지 않으며 외부 기사·블로그·행사 촬영 이미지와 본문은 포함하지 않는다.
-- 브랜드 자료 용도 안내는 Lv.B와 게임의 기사·보도 목적 범위로 제한한다.
-- 다운로드 manifest의 단일 원본은 `site/src/data/press.ts`다. 화면은 로컬 자산만 다운로드하고, `scripts/prepare-production.ps1`은 public/dist byte·SHA, ZIP entry와 화면 링크를 함께 검증한다.
-- 향후 사용자 승인 자산은 먼저 `references/press-assets/{brand,mushhero,mushdash}/`에서 검토한다. 이 폴더는 자동 배포되지 않으며, 승인 후 public 경로·manifest·SHA·필요한 ZIP을 명시적으로 갱신한다.
+- Press 공개 자산의 승인 원본은 Git에서 제외된 `references/LvbResult/press-kit/{brand,mushhero,mushdash}/`다. `previews/`, `docs/`, contact sheet와 중간 후보는 공개하지 않는다.
+- 네 locale Press 페이지는 `site/src/data/press.ts`의 로컬 자산 manifest와 기존 회사·게임·연락처 데이터를 조합한다. 레이아웃은 Hero → About → Games → Brand → Downloads → Game Images → Key Facts → Contact이고 Recent Press는 표시하지 않는다.
+- MushDash의 `promo-*`는 실제 플레이 스크린샷이 아닌 프로모션 이미지다. 화면과 ZIP 모두 이 분류를 유지한다.
+- 기존 Steam 스크린샷 6개는 Home의 source image로 계속 참조되므로 삭제하지 않지만 Press 페이지와 새 ZIP에는 포함하지 않는다.
+- `scripts/build-press-kits.ps1`은 승인 원본에서 고정 entry 이름·순서·timestamp로 ZIP 3개를 재생성한다. `scripts/prepare-production.ps1`은 public/dist SHA, ZIP 크기·entry·중복, 화면 링크와 OG 출력을 검증한다.
 
-## Local screenshot manifest
+## Public OG assets
 
-모든 파일은 JPEG, 1920×1080이며 원본 HTTP 응답은 `200 image/jpeg`로 확인했다.
+| 공개 URL | 규격 | bytes | SHA-256 | 사용 위치 |
+|---|---:|---:|---|---|
+| `/og/lvb-og-primary.png` | 1200×630 PNG | 44558 | `F07E9FECEF39CB37A7FE1523D6E9EBFD56C3FD1247AE67C90819DC608F816FBA` | Home, About, Games, News, Press, Contact |
+| `/og/mushhero-og-primary.jpg` | 1200×630 JPEG | 108786 | `558408C081859B7B345344FD203C806D4DD16E714DB2EF4FEDB5F4B0232F6481` | MushHero 상세, BIC 2026 자체 News |
+| `/og/mushdash-og-primary.jpg` | 1200×630 JPEG | 141107 | `8C90AA12908B9222FB1CF7DD0136FF5CB4C390DB9A88A6166D21CC8CB9E2C215` | MushDash 상세 |
 
-| 공개 파일 | bytes | SHA-256 | 검증 source |
-|---|---:|---|---|
-| `mushhero/mushhero-01.jpg` | 291902 | `484B07E40D88556C53425222C1FCE4A9953DAA8A21AEA83CE33964060E106077` | `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711200/2bd506a8530d829461a9dd09474bf75dbbe9d8f2/ss_2bd506a8530d829461a9dd09474bf75dbbe9d8f2.1920x1080.jpg?t=1782291404` |
-| `mushhero/mushhero-02.jpg` | 476674 | `13741FE3995FBC4FB8D84453BAB191B700AAF0823C4DA3D44E62CD3ED7CD37AF` | `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711200/f96a767c38c8d9b7baf269e049acd6f20744b8f2/ss_f96a767c38c8d9b7baf269e049acd6f20744b8f2.1920x1080.jpg?t=1782291404` |
-| `mushhero/mushhero-03.jpg` | 525926 | `3CE54AC177C4A2D4CC7578B39904E97CB5C62CD995532DA8B4BDBBE193C50E90` | `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711200/da2fffa5e4c7162cb00c418bb963e1865329ee95/ss_da2fffa5e4c7162cb00c418bb963e1865329ee95.1920x1080.jpg?t=1782291404` |
-| `mushdash/mushdash-01.jpg` | 321542 | `6B22EE5A5218B4EFA03ED05F86ABC5D5104995CD84CCE53B8877F7511165C4E4` | `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3153140/7966ab2fd72923decd51e216d4924880e9e1382e/ss_7966ab2fd72923decd51e216d4924880e9e1382e.1920x1080.jpg?t=1781498090` |
-| `mushdash/mushdash-02.jpg` | 443933 | `3F7E7C093C0430F7E87DB2ECF9E3C64E88D8DE081C2A6843F15774EC434D55F9` | `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3153140/512f8f3be28f4ee7832a47d06460d8eb9e1e3ea0/ss_512f8f3be28f4ee7832a47d06460d8eb9e1e3ea0.1920x1080.jpg?t=1781498090` |
-| `mushdash/mushdash-03.jpg` | 409143 | `10D6AD2513F92DE008B61BA969B4FD8D7C293D90199E151383E6B01FB698BADB` | `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3153140/92c6b9367ee79a2b56ed98a67df94c1b3043207d/ss_92c6b9367ee79a2b56ed98a67df94c1b3043207d.1920x1080.jpg?t=1781498090` |
+## Public Press assets
+
+| 공개 URL | 규격 | bytes | SHA-256 |
+|---|---:|---:|---|
+| `/press/assets/brand/lvb-brand-card-yellow.png` | 1920×1080 PNG | 39311 | `6C9E13C002CA61BDA104392542EE6CEA33E9EB4EC09E7CFDC70D9B888DE28CE3` |
+| `/press/assets/brand/lvb-brand-press-preview.png` | 1920×1080 PNG | 84702 | `60137D3041246091AEA53D178BBF86AF9DD4174050BAA555A843990564CE8E54` |
+| `/press/assets/brand/lvb-logo-horizontal-transparent.png` | 1876×769 PNG | 54992 | `349DE31265DDEB443651FE017AF31CB392069D94DA47FD559F8DB1856C45DA8D` |
+| `/press/assets/brand/lvb-logo-stacked-transparent.png` | 1052×1213 PNG | 47726 | `AF926288880882B2002B66FEAB8C9FCACDC23D05799B0E3FBEE4E87AB56201EC` |
+| `/press/assets/brand/lvb-symbol-transparent.png` | 1024×1024 PNG | 65102 | `26A4284E8AB254294D9A5A5B0775EDD06AD86A8F96EA6EB225502DE66B3EA754` |
+| `/press/assets/mushhero/mushhero-keyart-alt-01.jpg` | 1920×1080 JPEG | 290445 | `D4406D0CF6ACE86D137EC08294D655D04058F553269DC672B3E15F4E123BC288` |
+| `/press/assets/mushhero/mushhero-keyart-primary.jpg` | 1920×1080 JPEG | 257961 | `028EC8FFA2FFE42682D8D1AD3C7684BFB4EC675DB63FE62A6D02266CF4D81376` |
+| `/press/assets/mushhero/mushhero-logo-transparent.png` | 1280×720 PNG | 506872 | `C8A49CE599F7CCF249561FEB95FF593E7C2E9C3C1744C7AEBFDAA78D448263BA` |
+| `/press/assets/mushhero/mushhero-press-wide-1920.jpg` | 1920×620 JPEG | 264157 | `F1DC15B8AA03B9B56E54D32011B2F64292FD809515883C3AA4FA33DBB0DD395E` |
+| `/press/assets/mushhero/mushhero-screenshot-01.jpg` | 1920×1080 JPEG | 371053 | `88A96824E6769553EE9C74EE2EBB0F64B0D52A95807A6213AB849DD7B2CF2DAD` |
+| `/press/assets/mushhero/mushhero-screenshot-02.jpg` | 1920×1080 JPEG | 422147 | `B126E858CBE7FC025311C756138C1C344937441D9DA65DE52C901C3852BF26EB` |
+| `/press/assets/mushhero/mushhero-screenshot-03.jpg` | 1920×1080 JPEG | 194399 | `86ABE54FAE0BD873492426CB03D5D7F686C37E23F3C0127DF0B4151EC6416190` |
+| `/press/assets/mushdash/mushdash-keyart-primary.jpg` | 1920×1080 JPEG | 284104 | `82C2529AE443F29BC1CDD8F9EB6A65BBFD8B49012D686195933D2C9177FBDD65` |
+| `/press/assets/mushdash/mushdash-logo-transparent.png` | 1280×720 PNG | 117430 | `F682FF99F832CEB8BDDDFC8E6700F5E98FD72ABA0691AF61CE050FC577198516` |
+| `/press/assets/mushdash/mushdash-press-wide-1920.jpg` | 1920×620 JPEG | 197282 | `BB07BC36DA6412C7F728AF8D08B8A2E6DFB0CFA7DAC33BCB878FEFC3CC21B3A9` |
+| `/press/assets/mushdash/mushdash-promo-01.jpg` | 800×450 JPEG | 117980 | `2A57A43FBCDA4B194B984E894812CC6E2DEF51465942B3AB6E82C5EB7B9F6B39` |
+| `/press/assets/mushdash/mushdash-promo-02.jpg` | 800×450 JPEG | 106831 | `066C37C5FEFC6D866DAA0CF98533CEEB5EB544C7B2B221F798AAD580A37F6D30` |
+| `/press/assets/mushdash/mushdash-promo-03.jpg` | 800×450 JPEG | 108004 | `2418780B7F0A04005553803190F1FD228C7325F0E73CF0602C54D1BD7318F7DB` |
 
 ## Static download packs
 
-| 파일 | bytes | SHA-256 | 내용 |
+| 공개 URL | bytes | SHA-256 | 내용 |
 |---|---:|---|---|
-| `lvb-brand-assets.zip` | 81756 | `B9281432DD14EDB034B3691D32262F9A07A86B9055B911C0EA1DE8427D3A696B` | `lvb-logo.png`, `lvb-symbol.png`, `USAGE.txt` |
-| `mushhero-press-kit.zip` | 1374168 | `F46E37BFFF886D72187F470DA998E000FE64B9F99C8622FCAF9B701B07560496` | 공식 JPG 3개, Lv.B PNG 2개, `FACT_SHEET_EN/KO/JA/ZH-CN.txt` |
-| `mushdash-press-kit.zip` | 1236568 | `61BBE31E60C9E68B7513139D02D94998A2782E94E1605D29D9FF77D4025800ED` | 공식 JPG 3개, Lv.B PNG 2개, `FACT_SHEET_EN/KO/JA/ZH-CN.txt` |
+| `/press/downloads/lvb-brand-assets.zip` | 255565 | `035DEF47F8B06BF19ABC5855475FC4EC44D12DAC0C78584C711E2C1E19A6367F` | 가로·세로 투명 로고, 심볼, 브랜드 카드·미리보기 PNG 5개 |
+| `/press/downloads/mushhero-press-kit.zip` | 2300078 | `CC05D7A934288FF39BC5902AAA4AB35A346C9AF817AF1ABCD3E3BEBA973CCE2C` | 키아트 2, 로고 1, 와이드 1, 게임플레이 스크린샷 3 |
+| `/press/downloads/mushdash-press-kit.zip` | 914628 | `FA846A03159BCE14DA55BA9604A5AD509AED49DA7394E36EAFE3555C82093890` | 키아트 1, 로고 1, 와이드 1, 프로모션 이미지 3 |
 
 ## Update procedure
 
-1. `games.ts`의 검증 source와 실제 Store 정보를 먼저 확인한다.
-2. 원본 byte를 해당 `/press/assets/<game>/` 경로에 저장하고 HTTP status·MIME·크기·해상도·SHA를 갱신한다.
-3. `press.ts` manifest와 네 언어 fact sheet를 확인한 뒤 ZIP을 다시 만든다. 개발 소스·PSD·AI 등은 넣지 않는다.
-4. ZIP entry를 모두 열어 integrity와 예상 목록을 확인하고 크기·SHA를 이 문서와 `press.ts`에 반영한다.
-5. `npm run build`와 `scripts/prepare-production.ps1`로 public/dist 자산, 화면 링크, archive를 검증한다.
+1. 새 승인 파일을 `references/LvbResult/press-kit/`의 해당 게임 또는 브랜드 폴더에 반영하고 해상도·포맷·공개 권한을 확인한다.
+2. 같은 파일명으로 `site/public/press/assets/`에 복사하고 원본·public SHA가 일치하는지 확인한다.
+3. `scripts/build-press-kits.ps1`을 실행하고 실제 bytes·SHA를 `site/src/data/press.ts`, 이 문서와 production 검증에 반영한다.
+4. `npm run build`와 `scripts/prepare-production.ps1`로 화면 링크, public/dist byte, ZIP entry와 OG 회귀를 검증한다.

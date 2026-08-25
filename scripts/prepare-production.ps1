@@ -599,6 +599,39 @@ foreach ($htmlFile in $htmlFiles) {
   }
 }
 
+$ogRouteSpecs = @(
+  [PSCustomObject]@{ Path = 'dist\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
+  [PSCustomObject]@{ Path = 'dist\ko\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
+  [PSCustomObject]@{ Path = 'dist\ja\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
+  [PSCustomObject]@{ Path = 'dist\zh-cn\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
+  [PSCustomObject]@{ Path = 'dist\about\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
+  [PSCustomObject]@{ Path = 'dist\games\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
+  [PSCustomObject]@{ Path = 'dist\news\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
+  [PSCustomObject]@{ Path = 'dist\news\page\2\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
+  [PSCustomObject]@{ Path = 'dist\press\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
+  [PSCustomObject]@{ Path = 'dist\contact\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' }
+)
+foreach ($localePrefix in @('', 'ko\', 'ja\', 'zh-cn\')) {
+  $ogRouteSpecs += [PSCustomObject]@{ Path = "dist\${localePrefix}games\mushhero\index.html"; Image = 'https://lvb.kr/og/mushhero-og-primary.jpg'; Type = 'image/jpeg' }
+  $ogRouteSpecs += [PSCustomObject]@{ Path = "dist\${localePrefix}games\mushdash\index.html"; Image = 'https://lvb.kr/og/mushdash-og-primary.jpg'; Type = 'image/jpeg' }
+  $ogRouteSpecs += [PSCustomObject]@{ Path = "dist\${localePrefix}news\bic-2026-mushhero-first-public-playtest\index.html"; Image = 'https://lvb.kr/og/mushhero-og-primary.jpg'; Type = 'image/jpeg' }
+}
+foreach ($route in $ogRouteSpecs) {
+  $html = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $route.Path)
+  Assert-Equal ([regex]::Matches($html, '<title>[^<]+</title>').Count) 1 "OG page title: $($route.Path)"
+  Assert-Equal ([regex]::Matches($html, '<meta name="description" content="[^"]+">').Count) 1 "OG page description: $($route.Path)"
+  Assert-Equal ([regex]::Matches($html, '<link rel="canonical" href="https://lvb\.kr/[^"]*">').Count) 1 "OG page canonical: $($route.Path)"
+  Assert-Equal ([regex]::Matches($html, '<meta property="og:title" content="[^"]+">').Count) 1 "Open Graph title: $($route.Path)"
+  Assert-Equal ([regex]::Matches($html, '<meta property="og:description" content="[^"]+">').Count) 1 "Open Graph description: $($route.Path)"
+  Assert-Equal ([regex]::Matches($html, '<meta property="og:image" content="' + [regex]::Escape($route.Image) + '">').Count) 1 "Open Graph image: $($route.Path)"
+  Assert-Equal ([regex]::Matches($html, '<meta property="og:image:width" content="1200">').Count) 1 "Open Graph image width: $($route.Path)"
+  Assert-Equal ([regex]::Matches($html, '<meta property="og:image:height" content="630">').Count) 1 "Open Graph image height: $($route.Path)"
+  Assert-Equal ([regex]::Matches($html, '<meta property="og:image:type" content="' + [regex]::Escape($route.Type) + '">').Count) 1 "Open Graph image type: $($route.Path)"
+  Assert-Equal ([regex]::Matches($html, '<meta property="og:image:alt" content="[^"]+">').Count) 1 "Open Graph image alt: $($route.Path)"
+  Assert-Equal ([regex]::Matches($html, '<meta name="twitter:image" content="' + [regex]::Escape($route.Image) + '">').Count) 1 "Twitter image: $($route.Path)"
+  Assert-Equal ([regex]::Matches($html, '<meta name="twitter:image:alt" content="[^"]+">').Count) 1 "Twitter image alt: $($route.Path)"
+}
+
 $newsListRoutes = @(
   [PSCustomObject]@{ Locale = 'en'; Page1 = 'dist\news\index.html'; Page2 = 'dist\news\page\2\index.html'; Canonical1 = 'https://lvb.kr/news/'; Canonical2 = 'https://lvb.kr/news/page/2/'; Next = '/news/page/2/'; Previous = '/news/' },
   [PSCustomObject]@{ Locale = 'ko'; Page1 = 'dist\ko\news\index.html'; Page2 = 'dist\ko\news\page\2\index.html'; Canonical1 = 'https://lvb.kr/ko/news/'; Canonical2 = 'https://lvb.kr/ko/news/page/2/'; Next = '/ko/news/page/2/'; Previous = '/ko/news/' },
@@ -667,7 +700,7 @@ $newsStyles = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\styles\n
 Assert-Equal ([regex]::Matches($newsStyles, '-webkit-line-clamp:\s*2').Count) 1 'News summary two-line clamp'
 Assert-Equal ([regex]::Matches($newsStyles, '\.news-card__meta\s*\{[^}]*display:\s*grid', [System.Text.RegularExpressions.RegexOptions]::Singleline).Count) 1 'News two-row metadata layout'
 
-$pressScreenshotFiles = @(
+$homeSourceScreenshotFiles = @(
   [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-01.jpg'; Hash = '484B07E40D88556C53425222C1FCE4A9953DAA8A21AEA83CE33964060E106077' },
   [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-02.jpg'; Hash = '13741FE3995FBC4FB8D84453BAB191B700AAF0823C4DA3D44E62CD3ED7CD37AF' },
   [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-03.jpg'; Hash = '3CE54AC177C4A2D4CC7578B39904E97CB5C62CD995532DA8B4BDBBE193C50E90' },
@@ -675,11 +708,59 @@ $pressScreenshotFiles = @(
   [PSCustomObject]@{ Path = 'press\assets\mushdash\mushdash-02.jpg'; Hash = '3F7E7C093C0430F7E87DB2ECF9E3C64E88D8DE081C2A6843F15774EC434D55F9' },
   [PSCustomObject]@{ Path = 'press\assets\mushdash\mushdash-03.jpg'; Hash = '10D6AD2513F92DE008B61BA969B4FD8D7C293D90199E151383E6B01FB698BADB' }
 )
-foreach ($asset in $pressScreenshotFiles) {
+foreach ($asset in $homeSourceScreenshotFiles) {
   $publicAsset = Join-Path $siteRoot "public\$($asset.Path)"
   $distAsset = Join-Path $siteRoot "dist\$($asset.Path)"
-  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $publicAsset).Hash $asset.Hash "Press screenshot source hash: $($asset.Path)"
-  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $distAsset).Hash $asset.Hash "Built Press screenshot hash: $($asset.Path)"
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $publicAsset).Hash $asset.Hash "Home source screenshot hash: $($asset.Path)"
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $distAsset).Hash $asset.Hash "Built Home source screenshot hash: $($asset.Path)"
+}
+
+Add-Type -AssemblyName System.Drawing
+$socialImageFiles = @(
+  [PSCustomObject]@{ Path = 'og\lvb-og-primary.png'; Hash = 'F07E9FECEF39CB37A7FE1523D6E9EBFD56C3FD1247AE67C90819DC608F816FBA'; Width = 1200; Height = 630 },
+  [PSCustomObject]@{ Path = 'og\mushhero-og-primary.jpg'; Hash = '558408C081859B7B345344FD203C806D4DD16E714DB2EF4FEDB5F4B0232F6481'; Width = 1200; Height = 630 },
+  [PSCustomObject]@{ Path = 'og\mushdash-og-primary.jpg'; Hash = '8C90AA12908B9222FB1CF7DD0136FF5CB4C390DB9A88A6166D21CC8CB9E2C215'; Width = 1200; Height = 630 }
+)
+foreach ($asset in $socialImageFiles) {
+  $publicAsset = Join-Path $siteRoot "public\$($asset.Path)"
+  $distAsset = Join-Path $siteRoot "dist\$($asset.Path)"
+  if ((Get-Item -LiteralPath $publicAsset).Length -le 0) { throw "Social image is empty: $($asset.Path)" }
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $publicAsset).Hash $asset.Hash "Social image source hash: $($asset.Path)"
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $distAsset).Hash $asset.Hash "Built social image hash: $($asset.Path)"
+  $image = [System.Drawing.Image]::FromFile($publicAsset)
+  try {
+    Assert-Equal $image.Width $asset.Width "Social image width: $($asset.Path)"
+    Assert-Equal $image.Height $asset.Height "Social image height: $($asset.Path)"
+  } finally {
+    $image.Dispose()
+  }
+}
+
+$pressFinalFiles = @(
+  [PSCustomObject]@{ Path = 'press\assets\brand\lvb-brand-card-yellow.png'; Hash = '6C9E13C002CA61BDA104392542EE6CEA33E9EB4EC09E7CFDC70D9B888DE28CE3' },
+  [PSCustomObject]@{ Path = 'press\assets\brand\lvb-brand-press-preview.png'; Hash = '60137D3041246091AEA53D178BBF86AF9DD4174050BAA555A843990564CE8E54' },
+  [PSCustomObject]@{ Path = 'press\assets\brand\lvb-logo-horizontal-transparent.png'; Hash = '349DE31265DDEB443651FE017AF31CB392069D94DA47FD559F8DB1856C45DA8D' },
+  [PSCustomObject]@{ Path = 'press\assets\brand\lvb-logo-stacked-transparent.png'; Hash = 'AF926288880882B2002B66FEAB8C9FCACDC23D05799B0E3FBEE4E87AB56201EC' },
+  [PSCustomObject]@{ Path = 'press\assets\brand\lvb-symbol-transparent.png'; Hash = '26A4284E8AB254294D9A5A5B0775EDD06AD86A8F96EA6EB225502DE66B3EA754' },
+  [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-keyart-alt-01.jpg'; Hash = 'D4406D0CF6ACE86D137EC08294D655D04058F553269DC672B3E15F4E123BC288' },
+  [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-keyart-primary.jpg'; Hash = '028EC8FFA2FFE42682D8D1AD3C7684BFB4EC675DB63FE62A6D02266CF4D81376' },
+  [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-logo-transparent.png'; Hash = 'C8A49CE599F7CCF249561FEB95FF593E7C2E9C3C1744C7AEBFDAA78D448263BA' },
+  [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-press-wide-1920.jpg'; Hash = 'F1DC15B8AA03B9B56E54D32011B2F64292FD809515883C3AA4FA33DBB0DD395E' },
+  [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-screenshot-01.jpg'; Hash = '88A96824E6769553EE9C74EE2EBB0F64B0D52A95807A6213AB849DD7B2CF2DAD' },
+  [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-screenshot-02.jpg'; Hash = 'B126E858CBE7FC025311C756138C1C344937441D9DA65DE52C901C3852BF26EB' },
+  [PSCustomObject]@{ Path = 'press\assets\mushhero\mushhero-screenshot-03.jpg'; Hash = '86ABE54FAE0BD873492426CB03D5D7F686C37E23F3C0127DF0B4151EC6416190' },
+  [PSCustomObject]@{ Path = 'press\assets\mushdash\mushdash-keyart-primary.jpg'; Hash = '82C2529AE443F29BC1CDD8F9EB6A65BBFD8B49012D686195933D2C9177FBDD65' },
+  [PSCustomObject]@{ Path = 'press\assets\mushdash\mushdash-logo-transparent.png'; Hash = 'F682FF99F832CEB8BDDDFC8E6700F5E98FD72ABA0691AF61CE050FC577198516' },
+  [PSCustomObject]@{ Path = 'press\assets\mushdash\mushdash-press-wide-1920.jpg'; Hash = 'BB07BC36DA6412C7F728AF8D08B8A2E6DFB0CFA7DAC33BCB878FEFC3CC21B3A9' },
+  [PSCustomObject]@{ Path = 'press\assets\mushdash\mushdash-promo-01.jpg'; Hash = '2A57A43FBCDA4B194B984E894812CC6E2DEF51465942B3AB6E82C5EB7B9F6B39' },
+  [PSCustomObject]@{ Path = 'press\assets\mushdash\mushdash-promo-02.jpg'; Hash = '066C37C5FEFC6D866DAA0CF98533CEEB5EB544C7B2B221F798AAD580A37F6D30' },
+  [PSCustomObject]@{ Path = 'press\assets\mushdash\mushdash-promo-03.jpg'; Hash = '2418780B7F0A04005553803190F1FD228C7325F0E73CF0602C54D1BD7318F7DB' }
+)
+foreach ($asset in $pressFinalFiles) {
+  $publicAsset = Join-Path $siteRoot "public\$($asset.Path)"
+  $distAsset = Join-Path $siteRoot "dist\$($asset.Path)"
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $publicAsset).Hash $asset.Hash "Final Press asset hash: $($asset.Path)"
+  Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $distAsset).Hash $asset.Hash "Built final Press asset hash: $($asset.Path)"
 }
 
 $homeResponsiveFiles = @(
@@ -703,20 +784,23 @@ foreach ($asset in $homeResponsiveFiles) {
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $pressArchives = @(
-  [PSCustomObject]@{ Name = 'lvb-brand-assets.zip'; Hash = 'B9281432DD14EDB034B3691D32262F9A07A86B9055B911C0EA1DE8427D3A696B'; Entries = @('brand/lvb-logo.png', 'brand/lvb-symbol.png', 'USAGE.txt') },
-  [PSCustomObject]@{ Name = 'mushhero-press-kit.zip'; Hash = 'F46E37BFFF886D72187F470DA998E000FE64B9F99C8622FCAF9B701B07560496'; Entries = @('brand/lvb-logo.png', 'brand/lvb-symbol.png', 'screenshots/mushhero-01.jpg', 'screenshots/mushhero-02.jpg', 'screenshots/mushhero-03.jpg', 'FACT_SHEET_EN.txt', 'FACT_SHEET_JA.txt', 'FACT_SHEET_KO.txt', 'FACT_SHEET_ZH-CN.txt') },
-  [PSCustomObject]@{ Name = 'mushdash-press-kit.zip'; Hash = '61BBE31E60C9E68B7513139D02D94998A2782E94E1605D29D9FF77D4025800ED'; Entries = @('brand/lvb-logo.png', 'brand/lvb-symbol.png', 'screenshots/mushdash-01.jpg', 'screenshots/mushdash-02.jpg', 'screenshots/mushdash-03.jpg', 'FACT_SHEET_EN.txt', 'FACT_SHEET_JA.txt', 'FACT_SHEET_KO.txt', 'FACT_SHEET_ZH-CN.txt') }
+  [PSCustomObject]@{ Name = 'lvb-brand-assets.zip'; Bytes = 255565; Hash = '035DEF47F8B06BF19ABC5855475FC4EC44D12DAC0C78584C711E2C1E19A6367F'; Entries = @('LvB-Brand-Assets/Logo/lvb-logo-horizontal-transparent.png', 'LvB-Brand-Assets/Logo/lvb-logo-stacked-transparent.png', 'LvB-Brand-Assets/Preview/lvb-brand-card-yellow.png', 'LvB-Brand-Assets/Preview/lvb-brand-press-preview.png', 'LvB-Brand-Assets/Symbol/lvb-symbol-transparent.png') },
+  [PSCustomObject]@{ Name = 'mushhero-press-kit.zip'; Bytes = 2300078; Hash = 'CC05D7A934288FF39BC5902AAA4AB35A346C9AF817AF1ABCD3E3BEBA973CCE2C'; Entries = @('MushHero-Press-Kit/Key-Art/mushhero-keyart-alt-01.jpg', 'MushHero-Press-Kit/Key-Art/mushhero-keyart-primary.jpg', 'MushHero-Press-Kit/Logo/mushhero-logo-transparent.png', 'MushHero-Press-Kit/Press-Image/mushhero-press-wide-1920.jpg', 'MushHero-Press-Kit/Screenshots/mushhero-screenshot-01.jpg', 'MushHero-Press-Kit/Screenshots/mushhero-screenshot-02.jpg', 'MushHero-Press-Kit/Screenshots/mushhero-screenshot-03.jpg') },
+  [PSCustomObject]@{ Name = 'mushdash-press-kit.zip'; Bytes = 914628; Hash = 'FA846A03159BCE14DA55BA9604A5AD509AED49DA7394E36EAFE3555C82093890'; Entries = @('MushDash-Press-Kit/Key-Art/mushdash-keyart-primary.jpg', 'MushDash-Press-Kit/Logo/mushdash-logo-transparent.png', 'MushDash-Press-Kit/Press-Image/mushdash-press-wide-1920.jpg', 'MushDash-Press-Kit/Promotional-Images/mushdash-promo-01.jpg', 'MushDash-Press-Kit/Promotional-Images/mushdash-promo-02.jpg', 'MushDash-Press-Kit/Promotional-Images/mushdash-promo-03.jpg') }
 )
 foreach ($archiveSpec in $pressArchives) {
   $publicArchive = Join-Path $siteRoot "public\press\downloads\$($archiveSpec.Name)"
   $distArchive = Join-Path $siteRoot "dist\press\downloads\$($archiveSpec.Name)"
   if ((Get-Item -LiteralPath $publicArchive).Length -le 0) { throw "Press archive is empty: $($archiveSpec.Name)" }
+  Assert-Equal (Get-Item -LiteralPath $publicArchive).Length $archiveSpec.Bytes "Press archive size: $($archiveSpec.Name)"
   Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $publicArchive).Hash $archiveSpec.Hash "Press archive hash: $($archiveSpec.Name)"
   Assert-Equal (Get-FileHash -Algorithm SHA256 -LiteralPath $distArchive).Hash $archiveSpec.Hash "Built Press archive hash: $($archiveSpec.Name)"
   $archive = [System.IO.Compression.ZipFile]::OpenRead($publicArchive)
   try {
     $actualEntries = @($archive.Entries | Where-Object { -not $_.FullName.EndsWith('/') } | ForEach-Object { $_.FullName })
     Assert-Equal ($actualEntries -join '|') ($archiveSpec.Entries -join '|') "Press archive entries: $($archiveSpec.Name)"
+    Assert-Equal (@($actualEntries | Sort-Object -Unique).Count) $actualEntries.Count "Unique Press archive entries: $($archiveSpec.Name)"
+    Assert-Equal (@($actualEntries | Where-Object { $_ -match '(?i)(contact-sheet|^docs/|/docs/|^previews/|/previews/)' }).Count) 0 "Excluded Press archive working files: $($archiveSpec.Name)"
     foreach ($entry in $archive.Entries) {
       if ($entry.Length -le 0) { continue }
       $entryStream = $entry.Open()
@@ -731,9 +815,10 @@ foreach ($pressPath in @('dist\press\index.html', 'dist\ko\press\index.html', 'd
   $pressHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $pressPath)
   Assert-Equal ([regex]::Matches($pressHtml, 'class="press-download-card"').Count) 3 "Press download card count: $pressPath"
   Assert-Equal ([regex]::Matches($pressHtml, 'href="/press/downloads/[^"]+\.zip" download="[^"]+\.zip"').Count) 3 "Press ZIP download links: $pressPath"
-  Assert-Equal ([regex]::Matches($pressHtml, 'href="/brand/[^"]+\.png" download="[^"]+\.png"').Count) 2 "Press brand downloads: $pressPath"
-  Assert-Equal ([regex]::Matches($pressHtml, 'class="media-gallery__item"').Count) 6 "Press gallery item count: $pressPath"
-  Assert-Equal ([regex]::Matches($pressHtml, 'src="/press/assets/(?:mushhero|mushdash)/[^"]+\.jpg"').Count) 8 "Press local screenshot count: $pressPath"
+  Assert-Equal ([regex]::Matches($pressHtml, 'href="/press/assets/brand/[^"]+\.png" download="[^"]+\.png"').Count) 3 "Press brand downloads: $pressPath"
+  Assert-Equal ([regex]::Matches($pressHtml, 'class="media-gallery__item"').Count) 10 "Press gallery item count: $pressPath"
+  Assert-Equal ([regex]::Matches($pressHtml, 'src="/press/assets/(?:mushhero|mushdash)/[^"]+\.(?:jpg|png)"').Count) 12 "Press final game image count: $pressPath"
+  Assert-Equal ([regex]::Matches($pressHtml, 'src="/press/assets/brand/[^"]+\.png"').Count) 4 "Press final brand image count: $pressPath"
   Assert-Equal ([regex]::Matches($pressHtml, 'press-recent|press-recent-title|class="news-card"').Count) 0 "Removed Press recent coverage UI: $pressPath"
 }
 

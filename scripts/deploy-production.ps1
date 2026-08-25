@@ -76,13 +76,11 @@ if (-not $stagedFilesText) {
 }
 $stagedFiles = @($stagedFilesText -split "`r?`n" | Where-Object { $_ })
 
-$excludedPattern = '^(site/(node_modules|dist)/|references/reviews/|\.codex/.+\.log$|\.codex/.+qa-runtime|.+\.log$)'
-$excludedStaged = @($stagedFiles | Where-Object { $_ -match $excludedPattern })
-if ($excludedStaged.Count -gt 0) {
-  foreach ($path in $excludedStaged) {
-    Invoke-GitChecked @('restore', '--staged', '--', $path)
-  }
-  throw "Excluded generated files were staged and have been removed from the index: $($excludedStaged -join ', '). Review before retrying."
+$forbiddenStagedPattern = '^(references/(?:lvb|LvbResult|reviews)/|site/(?:node_modules|dist)/|\.tmp-verification/|\.codex/.+\.log$|\.codex/.+qa-runtime(?:/|$)|(?:.+/)?lighthouse[^/]*$|.+\.log$)'
+$forbiddenStaged = @($stagedFiles | Where-Object { $_ -match $forbiddenStagedPattern })
+if ($forbiddenStaged.Count -gt 0) {
+  Invoke-GitChecked @('restore', '--staged', '--', '.')
+  throw "Production staging contains forbidden reference or generated files. All staged changes were removed; the working tree was preserved:`n$($forbiddenStaged -join "`n")"
 }
 
 $secretFilePattern = '(^|/)\.env($|\.)|(^|/)(id_rsa|id_ed25519)$|\.(pem|key|p12|pfx)$'

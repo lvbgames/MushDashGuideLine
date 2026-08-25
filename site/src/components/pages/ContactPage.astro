@@ -1,7 +1,7 @@
 ---
 import { contactPolicy } from '../../data/contact';
-import { games } from '../../data/games';
 import { pressTranslations } from '../../data/press';
+import { getSocialImage } from '../../data/socialImages';
 import { getLocalePath } from '../../i18n/config';
 import type { Locale } from '../../i18n/config';
 import { getTranslation } from '../../i18n/translations';
@@ -18,14 +18,11 @@ interface Props {
 const { locale } = Astro.props;
 const translation = getTranslation(locale);
 const pressTranslation = pressTranslations[locale];
-const ogImage = games.find((game) => game.slug === 'mushhero')?.screenshots[0]?.src;
+const ogImage = getSocialImage('lvb', locale);
 const mailtoHref = `mailto:${contactPolicy.businessEmail}?subject=${encodeURIComponent(translation.contact.mailtoSubject)}&body=${encodeURIComponent(translation.contact.mailtoBodyTemplate)}`;
 const emailHref = `mailto:${contactPolicy.businessEmail}`;
 const pressPath = getLocalePath(locale, 'press');
 
-if (!ogImage) {
-  throw new Error('Contact page requires a verified Open Graph image.');
-}
 ---
 
 <BaseLayout
@@ -33,8 +30,11 @@ if (!ogImage) {
   route="contact"
   title={translation.meta.contactTitle}
   description={translation.meta.contactDescription}
-  ogImage={ogImage}
-  ogImageAlt={translation.gamesPage.gameImageAlts.mushhero}
+  ogImage={ogImage.path}
+  ogImageAlt={ogImage.alt}
+  ogImageWidth={ogImage.width}
+  ogImageHeight={ogImage.height}
+  ogImageType={ogImage.type}
 >
   <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="contact" translation={translation} />
   <main class="contact-page" data-motion-page>

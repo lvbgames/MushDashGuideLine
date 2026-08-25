@@ -1,6 +1,6 @@
 ---
 import { company, getGoogleMapsSearchUrl } from '../../data/company';
-import { games } from '../../data/games';
+import { getSocialImage } from '../../data/socialImages';
 import { teamMembers } from '../../data/team';
 import { getLocalePath, type Locale } from '../../i18n/config';
 import { getTranslation } from '../../i18n/translations';
@@ -19,13 +19,8 @@ interface Props {
 
 const { locale } = Astro.props;
 const translation = getTranslation(locale);
-const mushHero = games.find((game) => game.slug === 'mushhero');
-const ogImage = mushHero?.screenshots[0]?.src ?? mushHero?.heroImage?.src;
+const ogImage = getSocialImage('lvb', locale);
 const googleMapsSearchUrl = getGoogleMapsSearchUrl();
-
-if (!ogImage) {
-  throw new Error('About requires a verified Open Graph image.');
-}
 ---
 
 <BaseLayout
@@ -33,8 +28,11 @@ if (!ogImage) {
   route="about"
   title={translation.meta.aboutTitle}
   description={translation.meta.aboutDescription}
-  ogImage={ogImage}
-  ogImageAlt={translation.gamesPage.gameImageAlts.mushhero}
+  ogImage={ogImage.path}
+  ogImageAlt={ogImage.alt}
+  ogImageWidth={ogImage.width}
+  ogImageHeight={ogImage.height}
+  ogImageType={ogImage.type}
 >
   <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="about" translation={translation} />
   <main class="about-page" data-motion-page>

@@ -1,5 +1,6 @@
 ---
 import { games } from '../../data/games';
+import { getSocialImage } from '../../data/socialImages';
 import { getLocalePath, type Locale, type SiteRoute } from '../../i18n/config';
 import { getTranslation } from '../../i18n/translations';
 import type { GameSlug } from '../../types/game';
@@ -30,10 +31,7 @@ if (!game || !otherGame) {
 
 const content = slug === 'mushhero' ? translation.mushHero : translation.mushDash;
 const route: SiteRoute = slug;
-const ogImage = game.screenshots[0]?.src ?? game.heroImage?.src;
-if (!ogImage) {
-  throw new Error(`${game.title} requires a verified Open Graph image.`);
-}
+const ogImage = getSocialImage(slug, locale);
 ---
 
 <BaseLayout
@@ -41,8 +39,11 @@ if (!ogImage) {
   route={route}
   title={slug === 'mushhero' ? translation.meta.mushHeroTitle : translation.meta.mushDashTitle}
   description={slug === 'mushhero' ? translation.meta.mushHeroDescription : translation.meta.mushDashDescription}
-  ogImage={ogImage}
-  ogImageAlt={content.screenshotAlts[0]}
+  ogImage={ogImage.path}
+  ogImageAlt={ogImage.alt}
+  ogImageWidth={ogImage.width}
+  ogImageHeight={ogImage.height}
+  ogImageType={ogImage.type}
 >
   <SiteHeader locale={locale} currentPath={Astro.url.pathname} route={route} translation={translation} />
   <main class="game-detail-page" data-game={slug} data-motion-page>

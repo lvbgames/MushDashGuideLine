@@ -1,6 +1,8 @@
 node_modules/
 site/dist/
-references/reviews/
+/references/reviews/
+/references/lvb/
+/references/LvbResult/
 .codex/**/*.log
 .codex/**/qa-runtime*/
 .env

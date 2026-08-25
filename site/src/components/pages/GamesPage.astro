@@ -1,5 +1,6 @@
 ---
 import { games } from '../../data/games';
+import { getSocialImage } from '../../data/socialImages';
 import { getLocalePath, type Locale } from '../../i18n/config';
 import { getTranslation } from '../../i18n/translations';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -25,10 +26,7 @@ if (!mushHero || !mushDash) {
   throw new Error('Games requires MushHero and MushDash data.');
 }
 
-const ogImage = mushHero.screenshots[0]?.src ?? mushHero.heroImage?.src;
-if (!ogImage) {
-  throw new Error('Games requires a verified Open Graph image.');
-}
+const ogImage = getSocialImage('lvb', locale);
 ---
 
 <BaseLayout
@@ -36,8 +34,11 @@ if (!ogImage) {
   route="games"
   title={translation.meta.gamesTitle}
   description={translation.meta.gamesDescription}
-  ogImage={ogImage}
-  ogImageAlt={translation.gamesPage.gameImageAlts.mushhero}
+  ogImage={ogImage.path}
+  ogImageAlt={ogImage.alt}
+  ogImageWidth={ogImage.width}
+  ogImageHeight={ogImage.height}
+  ogImageType={ogImage.type}
 >
   <SiteHeader locale={locale} currentPath={Astro.url.pathname} route="games" translation={translation} />
   <main class="games-page" data-motion-page>

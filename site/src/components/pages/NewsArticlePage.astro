@@ -1,5 +1,6 @@
 ---
 import type { Locale } from '../../i18n/config';
+import { getSocialImage } from '../../data/socialImages';
 import { getTranslation } from '../../i18n/translations';
 import type { InternalNewsItem } from '../../types/news';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -24,6 +25,7 @@ const formattedDate = new Intl.DateTimeFormat(dateLocale[locale], {
   day: 'numeric'
 }).format(new Date(`${article.publishedAt}T00:00:00Z`));
 const title = `${article.localizedTitle[locale]} — Lv.B`;
+const ogImage = getSocialImage('mushhero', locale);
 ---
 
 <BaseLayout
@@ -32,8 +34,11 @@ const title = `${article.localizedTitle[locale]} — Lv.B`;
   routeParam={article.slug}
   title={title}
   description={article.localizedSummary[locale]}
-  ogImage={article.heroImage.src}
-  ogImageAlt={translation.gamesPage.gameImageAlts.mushhero}
+  ogImage={ogImage.path}
+  ogImageAlt={ogImage.alt}
+  ogImageWidth={ogImage.width}
+  ogImageHeight={ogImage.height}
+  ogImageType={ogImage.type}
   ogType="article"
   articleMeta={{ publishedTime: article.publishedAt, modifiedTime: article.updatedAt, author: article.author }}
 >
