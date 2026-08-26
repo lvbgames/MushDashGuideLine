@@ -1,7 +1,7 @@
 import type { Locale } from '../i18n/config';
-import type { GameImage } from './game';
+import type { GameImage, GameSlug } from './game';
 
-export type NewsKind = 'studio-update' | 'interview' | 'press-coverage' | 'blog-review' | 'feature';
+export type NewsKind = 'studio-update' | 'development-update' | 'announcement' | 'interview' | 'press-coverage' | 'blog-review' | 'feature';
 
 interface NewsItemBase {
   slug: string;
@@ -24,6 +24,13 @@ export interface NewsArticleSection {
   id: string;
   title: string;
   paragraphs: readonly string[];
+  links?: readonly NewsArticleLink[];
+}
+
+export interface NewsArticleLink {
+  label: string;
+  href: string;
+  external?: boolean;
 }
 
 export interface NewsArticleBody {
@@ -36,6 +43,9 @@ export interface InternalNewsItem extends NewsItemBase {
   author: 'Lv.B';
   updatedAt: string;
   heroImage: GameImage;
+  game: GameSlug;
+  socialImage: GameSlug;
+  sourceUrls?: readonly string[];
   localizedBody: Readonly<Record<Locale, NewsArticleBody>>;
 }
 

@@ -10,9 +10,10 @@ interface Props {
   game: Game;
   content: GameDetailTranslation;
   common: Translation['common'];
+  section?: 'featured' | 'gallery' | 'both';
 }
 
-const { game, content, common } = Astro.props;
+const { game, content, common, section = 'both' } = Astro.props;
 const screenshots = game.screenshots.map((image, index) => ({
   image,
   alt: content.screenshotAlts[index] ?? game.title,
@@ -22,7 +23,7 @@ const featured = screenshots[1] ?? screenshots[0];
 const gallery = screenshots;
 ---
 
-{featured && (
+{featured && section !== 'gallery' && (
   <section class="game-detail-featured-shot page-section" aria-labelledby="featured-screenshot-title">
     <Container>
       <SectionHeading id="featured-screenshot-title" eyebrow={content.featuredScreenshotEyebrow} title={content.featuredScreenshotTitle} />
@@ -33,7 +34,7 @@ const gallery = screenshots;
   </section>
 )}
 
-{gallery.length > 0 && (
+{gallery.length > 0 && section !== 'featured' && (
   <section class="game-detail-gallery page-section" aria-labelledby="screenshot-gallery-title">
     <Container>
       <SectionHeading id="screenshot-gallery-title" eyebrow={content.galleryEyebrow} title={content.galleryTitle} />

@@ -17,6 +17,15 @@ export interface GameImage {
   lastVerifiedAt: string;
 }
 
+export interface GameVideo {
+  id: string;
+  sourceUrl: string;
+  embedUrl: string;
+  poster: GameImage;
+  title: Readonly<Record<Locale, string>>;
+  description: Readonly<Record<Locale, string>>;
+}
+
 export interface Game {
   slug: GameSlug;
   title: string;
@@ -32,9 +41,7 @@ export interface Game {
   steamAppId: number | null;
   steamStoreUrl: string | null;
   epicStoreUrl: string | null;
-  youtubeTrailerUrl: string | null;
-  videoTitleKey: string | null;
-  videoPoster: GameImage | null;
+  videos: readonly GameVideo[];
   logo: GameImage | null;
   heroImage: GameImage | null;
   screenshots: readonly GameImage[];

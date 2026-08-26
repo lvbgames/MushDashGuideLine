@@ -25,7 +25,7 @@ const formattedDate = new Intl.DateTimeFormat(dateLocale[locale], {
   day: 'numeric'
 }).format(new Date(`${article.publishedAt}T00:00:00Z`));
 const title = `${article.localizedTitle[locale]} — Lv.B`;
-const ogImage = getSocialImage('mushhero', locale);
+const ogImage = getSocialImage(article.socialImage, locale);
 ---
 
 <BaseLayout
@@ -62,7 +62,7 @@ const ogImage = getSocialImage('mushhero', locale);
               src={article.heroImage.src}
               width={article.heroImage.width}
               height={article.heroImage.height}
-              alt={translation.gamesPage.gameImageAlts.mushhero}
+              alt={translation.gamesPage.gameImageAlts[article.game]}
               loading="eager"
               decoding="async"
               fetchpriority="high"
@@ -77,6 +77,22 @@ const ogImage = getSocialImage('mushhero', locale);
           <section id={section.id} aria-labelledby={`${section.id}-title`}>
             <h2 id={`${section.id}-title`}>{section.title}</h2>
             {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+            {section.links && section.links.length > 0 && (
+              <ul class="news-article-content__links">
+                {section.links.map((link) => (
+                  <li>
+                    <a
+                      href={link.href}
+                      target={link.external ? '_blank' : undefined}
+                      rel={link.external ? 'noopener noreferrer' : undefined}
+                    >
+                      <span>{link.label}</span>
+                      <span aria-hidden="true">{link.external ? '↗' : '→'}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         ))}
       </Container>

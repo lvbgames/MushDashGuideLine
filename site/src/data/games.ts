@@ -19,9 +19,62 @@ export const games: readonly Game[] = [
     steamAppId: mushhero.steamAppId,
     steamStoreUrl: mushhero.steamStoreUrl,
     epicStoreUrl: mushhero.epicStoreUrl,
-    youtubeTrailerUrl: null,
-    videoTitleKey: null,
-    videoPoster: null,
+    videos: [
+      {
+        id: 'at6bQPAzLkI',
+        sourceUrl: 'https://www.youtube.com/shorts/at6bQPAzLkI',
+        embedUrl: 'https://www.youtube-nocookie.com/embed/at6bQPAzLkI?playsinline=1&rel=0&autoplay=1',
+        poster: {
+          src: '/press/assets/mushhero/mushhero-screenshot-01.jpg',
+          width: 1920,
+          height: 1080,
+          aspectRatio: 1.7778,
+          altKey: 'A Peaceful Day in MushTown video poster',
+          purpose: 'screenshot',
+          sourcePage: 'https://www.youtube.com/shorts/at6bQPAzLkI',
+          lastVerifiedAt: '2026-08-26'
+        },
+        title: {
+          en: 'A Peaceful Day in MushTown',
+          ko: 'A Peaceful Day in MushTown',
+          ja: 'A Peaceful Day in MushTown',
+          'zh-cn': 'A Peaceful Day in MushTown'
+        },
+        description: {
+          en: 'A short look at a peaceful moment in the world of MushHero.',
+          ko: 'MushHero의 세계에서 만나는 평화로운 순간을 짧게 소개합니다.',
+          ja: 'MushHeroの世界で過ごす穏やかなひとときを短い映像で紹介します。',
+          'zh-cn': '通过短片感受 MushHero 世界中的宁静时刻。'
+        }
+      },
+      {
+        id: 'GMaEwI8qMpA',
+        sourceUrl: 'https://www.youtube.com/shorts/GMaEwI8qMpA',
+        embedUrl: 'https://www.youtube-nocookie.com/embed/GMaEwI8qMpA?playsinline=1&rel=0&autoplay=1',
+        poster: {
+          src: '/press/assets/mushhero/mushhero-screenshot-02.jpg',
+          width: 1920,
+          height: 1080,
+          aspectRatio: 1.7778,
+          altKey: 'MushHero Boss Teaser video poster',
+          purpose: 'screenshot',
+          sourcePage: 'https://www.youtube.com/shorts/GMaEwI8qMpA',
+          lastVerifiedAt: '2026-08-26'
+        },
+        title: {
+          en: 'MushHero Boss Teaser',
+          ko: 'MushHero Boss Teaser',
+          ja: 'MushHero Boss Teaser',
+          'zh-cn': 'MushHero Boss Teaser'
+        },
+        description: {
+          en: 'A short teaser introducing one of the powerful bosses waiting in MushHero.',
+          ko: 'MushHero에서 기다리는 강력한 보스 중 하나를 짧게 만나보세요.',
+          ja: 'MushHeroで待ち受ける強力なボスの一体を短い映像で紹介します。',
+          'zh-cn': '通过短片一睹 MushHero 中强大首领的风采。'
+        }
+      }
+    ],
     logo: {
       src: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4711200/591835025e8ee5097871491ff79afd28ed89910e/capsule_231x87.jpg?t=1782291404',
       width: 231,
@@ -99,9 +152,7 @@ export const games: readonly Game[] = [
     steamAppId: mushdash.steamAppId,
     steamStoreUrl: mushdash.steamStoreUrl,
     epicStoreUrl: mushdash.epicStoreUrl,
-    youtubeTrailerUrl: null,
-    videoTitleKey: null,
-    videoPoster: null,
+    videos: [],
     logo: {
       src: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3153140/5b4046ddd502d7dc2abec101c77944b59768fef9/capsule_231x87.jpg?t=1781498090',
       width: 231,

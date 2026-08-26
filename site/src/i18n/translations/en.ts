@@ -14,6 +14,11 @@ export interface GameDetailTranslation {
   features: ReadonlyArray<{ title: string; description: string }>;
   featuredScreenshotEyebrow: string;
   featuredScreenshotTitle: string;
+  videosEyebrow: string;
+  videosTitle: string;
+  videosDescription: string;
+  videoPosterAlt: string;
+  watchOnYouTube: string;
   galleryEyebrow: string;
   galleryTitle: string;
   screenshotAlts: readonly string[];
@@ -203,6 +208,8 @@ export interface Translation {
     allTitle: string;
     kindLabels: {
       'studio-update': string;
+      'development-update': string;
+      announcement: string;
       interview: string;
       'press-coverage': string;
       'blog-review': string;
@@ -427,6 +434,8 @@ export const en: Translation = {
     allTitle: 'News & Press',
     kindLabels: {
       'studio-update': 'Studio Update',
+      'development-update': 'Development Update',
+      announcement: 'Announcement',
       interview: 'Interview',
       'press-coverage': 'Press coverage',
       'blog-review': 'Play review',
@@ -463,6 +472,11 @@ export const en: Translation = {
     ],
     featuredScreenshotEyebrow: 'On the battlefield',
     featuredScreenshotTitle: 'Read the wave. Build the answer.',
+    videosEyebrow: 'Official videos',
+    videosTitle: 'See MushHero in motion.',
+    videosDescription: 'Videos load from YouTube only after you choose Play.',
+    videoPosterAlt: '{title} video preview',
+    watchOnYouTube: 'Watch on YouTube',
     galleryEyebrow: 'Official screenshots',
     galleryTitle: 'A closer look at MushHero.',
     screenshotAlts: [
@@ -499,6 +513,11 @@ export const en: Translation = {
     ],
     featuredScreenshotEyebrow: 'On the course',
     featuredScreenshotTitle: 'Find the route through every obstacle.',
+    videosEyebrow: 'Official videos',
+    videosTitle: 'Watch MushDash.',
+    videosDescription: 'Videos load from YouTube only after you choose Play.',
+    videoPosterAlt: '{title} video preview',
+    watchOnYouTube: 'Watch on YouTube',
     galleryEyebrow: 'Official screenshots',
     galleryTitle: 'A closer look at MushDash.',
     screenshotAlts: [

@@ -4,9 +4,9 @@ News는 실시간 scraping이나 기사 본문 복제 없이 `site/src/data/news
 
 ## 현재 상태
 
-- `site/src/types/news.ts`와 `site/src/data/news.ts`에 검증된 외부 자료 11건과 Lv.B 자체 Studio Update 1건을 정적으로 등록했다.
-- `/news/`, `/ko/news/`, `/ja/news/`, `/zh-cn/news/`를 첫 페이지로 사용하고 `/news/page/2/`와 locale별 대응 route를 정적 생성한다. Header·Footer News 링크는 첫 페이지를 가리킨다.
-- 등록 자료: 인터뷰 1건, 언론 보도 3건, 개인 플레이 후기 5건, 개인·공식 기관 소개 2건, Studio Update 1건.
+- `site/src/types/news.ts`와 `site/src/data/news.ts`에 검증된 외부 자료 12건과 Lv.B 자체 글 3건을 정적으로 등록했다.
+- `/news/`와 locale별 첫 페이지에 이어 page 2·3을 정적 생성한다. Header·Footer News 링크는 첫 페이지를 가리킨다.
+- 자체 글은 Studio Update·Development Update·Announcement를 지원하고 검증 근거 URL을 데이터에 보존한다. 외부 BGC 인터뷰는 원문이 직접 지원하는 MushDash·스튜디오 방향만 요약했다.
 - 모든 항목은 `publishedAt` 내림차순의 하나의 정렬 목록에서 같은 카드 위계로 한 번씩 표시하며 페이지당 6건으로 나눈다. 외부 카드 전체는 원문 새 탭, 내부 카드 전체는 같은 locale 상세 route로 연결한다.
 - 카드 metadata는 첫 줄에 category·publisher·author 중 존재하는 값을, 둘째 줄에 날짜만 표시해 긴 출처명에서도 날짜 위치를 일정하게 유지한다.
 - 자동 수집·검색·scraping 기능은 없다. RSS는 자체 글 운영량과 배포 요구가 확정될 때 별도 검토한다.
@@ -19,7 +19,7 @@ News는 실시간 scraping이나 기사 본문 복제 없이 `site/src/data/news
 - 제목·언론사·날짜·원문 링크와 짧은 자체 요약만 사용하고 기사 전체 본문은 복제하지 않는다.
 - 개인 블로그는 작성자·게시일·본문의 직접 언급을 확인하고 실제 시연 후기는 `blog-review`, 개별 게임 소개는 `feature`로 분류한다. 개인 블로그를 언론 보도로 표시하지 않는다.
 - 공공기관·지역 게임 기관이 Lv.B 또는 게임을 개별 소개한 자료는 원문 제목·게시일·직접 언급을 확인한 뒤 `feature`로 등록할 수 있다.
-- 동일 캠페인의 공식 블로그·Instagram·Facebook 재게시는 대표 원문 하나만 등록한다.
+- 동일 캠페인의 공식 블로그·Instagram·Facebook 재게시는 대표 원문 하나만 등록한다. 공식 SNS 기반 자체 글은 개별 URL·게시일·공식 계정을 확인하고 caption을 복제하지 않은 자체 문장으로 작성한다.
 - BIC 공식 전시 listing은 기사로 등록하지 않고 참가 사실의 근거로만 취급한다. BIC 2026의 머쉬히어로·레벨비·비경쟁 퍼블릭 인디·PC·액션 표기는 `https://www.bicfest.org/exhibition/view/2087?chk=0&param=0`에서 확인했다.
 
 ## 검증과 공개
@@ -44,5 +44,5 @@ News는 실시간 scraping이나 기사 본문 복제 없이 `site/src/data/news
 
 - `type: internal`, 공통 slug·category·publishedAt·updatedAt·author·검증된 hero image와 네 locale title·summary·body를 하나의 데이터 항목에 추가한다.
 - 정적 `[slug].astro` route가 네 locale 상세 페이지를 생성하며 목록은 날짜로 자동 정렬한다.
-- 자체 글은 Article Open Graph와 Article JSON-LD를 사용하고 외부 원문 CTA·새 탭 아이콘을 사용하지 않는다.
+- 자체 글은 게임별 Article Open Graph와 Article JSON-LD를 사용한다. 근거·Store 같은 외부 링크는 새 탭 보안 속성을, locale 내부 링크는 같은 탭을 사용한다.
 - 사실·일정·성과를 추측하지 않고 외부 기사 문장을 복제하지 않는다.

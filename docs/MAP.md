@@ -43,7 +43,7 @@ Homepage/
 - `site/src/data/privacy.ts`, `site/src/types/privacy.ts`: 동일 순서 19개 section과 네 언어 Privacy metadata·본문의 typed source.
 - `site/src/data/terms.ts`, `site/src/types/terms.ts`: 한국어 기준 원문과 동일 순서 16개 section을 유지하는 네 언어 Terms typed source.
 - `site/src/i18n/`: route 생성과 네 언어 번역 데이터.
-- `site/src/pages/`: Home·Our Games·About·Contact·MushHero·MushDash·News의 공개 정규 28개 route, sitemap에서 제외되는 Privacy·Terms 각 4개 route와 브랜드 `404.astro`.
+- `site/src/pages/`: Home·Our Games·About·Contact·MushHero·MushDash·News·Press의 공개 색인 52개 route, sitemap에서 제외되는 Privacy·Terms 각 4개 route와 브랜드 `404.astro`.
 - `site/src/styles/games.css`: Our Games 전용 반응형 포트폴리오 레이아웃.
 - `site/src/styles/about.css`: About V1 전용 반응형 레이아웃과 게임별 accent.
 - `site/src/styles/game-detail.css`: 두 게임이 공유하는 상세 레이아웃과 게임별 accent override.
@@ -70,7 +70,8 @@ Homepage/
 ## News & Press 라우트
 
 - `/news/`, `/ko/news/`, `/ja/news/`, `/zh-cn/news/`
-- 자체 글: `/news/bic-2026-mushhero-first-public-playtest/`와 세 locale prefix route
+- pagination: locale별 page 2·3
+- 자체 글: BIC 2026 플레이테스트, `mushhero-warrior-vfx-rework`, `mushdash-early-access-launch`와 각 세 locale prefix route
 
 ## Press Kit 라우트
 
@@ -84,4 +85,4 @@ Homepage/
 
 ## 준비 중인 콘텐츠
 
-- YouTube: 게임별 `youtubeTrailerUrl`·`videoTitleKey`·`videoPoster`가 모두 선택 필드이며 현재 `null`이다.
+- YouTube: `games.ts`의 검증된 MushHero Shorts 2편을 로컬 poster와 click-to-load `youtube-nocookie.com` iframe으로 제공한다. MushDash 영상 목록은 비어 있다.

@@ -151,7 +151,7 @@
 ## 11. 공개 Privacy와 Effective date 운영
 
 - 공개 문구에는 일반 데이터 범주, 현재 삭제 기능의 한계와 요청 채널만 둔다. 내부 파일명, C++ field, SDK 함수명, development 검증 파일과 보안 finding을 노출하지 않는다.
-- 공개 문서의 최종 수정일과 시행일은 사용자 승인 운영 배포일 `2026-08-03`으로 확정한다.
+- 공개 문서의 최종 수정일과 시행일은 click-to-load YouTube 고지 반영일 `2026-08-26`이다.
 - 이후 정책 변경 시 네 언어에 같은 날짜와 의미를 반영하고 `npm run check`, `npm run build`, `prepare-production.ps1`, 네 route 의미 동등성 검사를 다시 수행한다.
 
 ## 12. 참고 근거

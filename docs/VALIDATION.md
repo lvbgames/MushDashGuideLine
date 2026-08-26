@@ -33,6 +33,7 @@
 - 정규 페이지의 title·description 누락·중복, canonical·네 locale `hreflang`·`x-default` 대응을 확인한다. Open Graph·Twitter의 title·description은 페이지 메타와 같은 의미여야 한다. 전용 공유 이미지는 절대 URL, 1200×630, 실제 MIME, locale별 `og:image:alt`·`twitter:image:alt`를 포함하고 public/dist SHA가 승인 원본과 일치해야 한다.
 - 페이지별 H1 하나와 heading 단계, `main`·`nav`·`footer` landmark를 확인한다.
 - 이미지의 `width`·`height`·`alt`와 Hero `eager`·나머지 `lazy` 우선순위를 확인한다.
+- MushHero 영상은 공식 ID 2개만 허용하고 초기 HTML의 iframe·YouTube API script·외부 thumbnail이 0인지 확인한다. Play 뒤 선택 카드에만 `youtube-nocookie.com` iframe이 생성되고 iframe title·allowfullscreen·referrerpolicy·focus 이동과 안전한 원문 fallback 링크가 작동해야 한다.
 - 화면에 TODO·placeholder·개발 상태 문구가 노출되지 않는지 확인한다.
 - Contact의 수신 주소와 locale별 subject·body를 percent-decoding해 손상 여부를 확인하고, 사용하지 않는 form·success 코드가 없는지 검사한다.
 - 신규 Astro 페이지의 외부 새 탭 링크는 보안 속성을 검사한다.
@@ -46,7 +47,7 @@
 - Privacy 화면에서 `TODO`, `FIXME`, `placeholder`, `lvbgames.store`, raw GitHub logo, `Main Project: MushDash`, Epic brand requirement 문구가 0건인지 확인한다.
 - Privacy 네 언어에 첫 언급 `Epic Online Services(EOS)`와 이후 `EOS`, Lobby·Session·P2P·EOS UserCloud, 일반 문의 1년 보관, Netlify Web Analytics·RUM·Log Drains 미사용, 자체 서버·DB·텔레메트리·자동 크래시 전송 미사용, 담당부서 Lv.B가 동일한 의미로 포함되는지 확인한다.
 - 빌드된 Privacy 네 언어 HTML에서 대소문자 구분 없이 내부 구현 명칭 `EIK`가 0건인지 확인한다.
-- 네 언어 Privacy는 최종 수정일과 시행일을 각각 locale별 문구로 표시하고 두 `<time>`의 `datetime` 값이 모두 `2026-08-03`인지 확인한다. 공개 Privacy HTML의 `2026-07-31`, `pending`, `미정`은 0건이어야 한다.
+- 네 언어 Privacy는 최종 수정일과 시행일을 각각 locale별 문구로 표시하고 두 `<time>`의 `datetime` 값이 모두 `2026-08-26`인지 확인한다. 19개 section 순서, `noindex, follow`, sitemap 제외와 youtube-nocookie click-to-load 고지를 함께 확인한다.
 - UserCloud 공개 범주는 네 언어 모두에서 튜토리얼 진행, 표시 이름, 선택한 아이콘·이름표·아바타, 재화 잔액, 보유 아이템·인벤토리, Infinity Tower 최고 기록, 주간 도전 ID·진행·완료·보상 수령, 중복 구매 처리를 방지하는 거래 식별자를 포함해야 한다.
 - 네 언어 모두 계정 식별자는 계정별 영역을 찾는 SDK 처리와 save JSON payload를 구분하고, 로컬 언어·매칭 지역·그래픽·오디오 설정은 UserCloud 업로드 범주에서 제외해야 한다.
 - UserCloud 자동 만료·정기 삭제·게임 제거·계정 연결 해제 시 자동 삭제 또는 이메일 요청의 즉시·무조건 삭제를 보장하는 문구는 없어야 한다. 요청 채널, Lv.B 담당부서, 본인·범위 및 플랫폼/EOS 절차 확인과 제한 안내는 있어야 한다.
@@ -81,7 +82,7 @@
 - 운영 확인 명령은 `curl.exe -sS -D - https://lvb.kr/robots.txt`, `curl.exe -sS -D - -A "Mozilla/5.0 (compatible; Yeti/1.1; +https://naver.me/spd)" https://lvb.kr/robots.txt`, `curl.exe -sS -D - -o NUL http://lvb.kr/robots.txt`를 사용한다.
 - HTTP와 `www`는 대표 HTTPS 호스트로 301/308인지, 정규 페이지는 200인지, custom 404는 실제 404인지 확인한다.
 - 색인 페이지에 `noindex`·`nofollow`·X-Robots-Tag 제한이 없는지 확인하고 404의 `noindex, follow`는 허용한다.
-- sitemap의 모든 `loc`는 `https://lvb.kr/` 절대 URL이어야 하며 현재 News pagination을 포함한 40개 색인 route를 확인한다.
+- sitemap의 모든 `loc`는 `https://lvb.kr/` 절대 URL이어야 하며 현재 News page 3과 자체 글을 포함한 52개 색인 route를 확인한다.
 - `index.html` 직접 URL은 `netlify.toml`의 깊이별 forced 301 규칙이 대표 trailing-slash URL을 가리키는지 확인하고, 실제 동작은 배포 후 재검사한다.
 - title·description 중복, 자기 canonical, H1 하나, 정적 main/nav/footer, frame·meta refresh·JavaScript redirect, 빈·hash-only·javascript href, broken 내부 링크, 내부 nofollow, 이미지 alt·크기·asset을 전체 생성 HTML에서 기계적으로 수집한다.
 - News가 외부 기사 목록이고 자체 상세 본문이 없으면 RSS를 만들지 않으며, 자체 공지·개발일지 상세 route와 본문 발행이 생길 때 재검토한다.

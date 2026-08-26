@@ -1,5 +1,6 @@
 ---
 import { company } from '../../data/company';
+import { getHomeImageSrcSet, homeSourceScreenshots } from '../../data/homeMedia';
 import type { Locale } from '../../i18n/config';
 import type { GameDetailTranslation, Translation } from '../../i18n/translations/en';
 import type { Game } from '../../types/game';
@@ -17,6 +18,9 @@ interface Props {
 
 const { game, locale, content, common } = Astro.props;
 const image = game.screenshots[0] ?? game.heroImage;
+const localImage = image && homeSourceScreenshots.find((entry) => entry.sourceUrl === image.src);
+const displayImage = image && localImage ? { ...image, src: localImage.path } : image;
+const imageSrcSet = localImage ? getHomeImageSrcSet(localImage.path) : undefined;
 const tags = game.detailTags[locale] ?? game.detailTags.en ?? game.genres;
 const statusLabels = {
   upcoming: common.coming2027,
@@ -50,9 +54,11 @@ const statusLabels = {
       />
     </div>
     <GameMedia
-      image={image}
+      image={displayImage}
       alt={content.screenshotAlts[0]}
       loading="eager"
+      srcset={imageSrcSet}
+      sizes="(min-width: 48rem) 55vw, 100vw"
       fallbackText={common.mediaUnavailable}
       className="game-detail-hero__media"
     />

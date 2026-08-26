@@ -1,0 +1,44 @@
+---
+import type { GameDetailTranslation, Translation } from '../../i18n/translations/en';
+import type { Locale } from '../../i18n/config';
+import type { GameVideo } from '../../types/game';
+import ClickToLoadVideo from '../media/ClickToLoadVideo.astro';
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+
+interface Props {
+  videos: readonly GameVideo[];
+  locale: Locale;
+  content: GameDetailTranslation;
+  common: Translation['common'];
+}
+
+const { videos, locale, content, common } = Astro.props;
+---
+
+{videos.length > 0 && (
+  <section class="game-detail-videos page-section" aria-labelledby="game-videos-title">
+    <Container>
+      <SectionHeading id="game-videos-title" eyebrow={content.videosEyebrow} title={content.videosTitle}>
+        <p>{content.videosDescription}</p>
+      </SectionHeading>
+      <div class="game-detail-videos__grid">
+        {videos.map((video) => {
+          const title = video.title[locale];
+          return (
+            <ClickToLoadVideo
+              embedUrl={video.embedUrl}
+              sourceUrl={video.sourceUrl}
+              poster={video.poster}
+              title={title}
+              description={video.description[locale]}
+              posterAlt={content.videoPosterAlt.replace('{title}', title)}
+              playLabel={common.playVideo}
+              sourceLabel={content.watchOnYouTube}
+            />
+          );
+        })}
+      </div>
+    </Container>
+  </section>
+)}

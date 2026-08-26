@@ -10,7 +10,7 @@ import GameFeatureGrid from '../game-detail/GameFeatureGrid.astro';
 import GameOverview from '../game-detail/GameOverview.astro';
 import GamePurchaseCta from '../game-detail/GamePurchaseCta.astro';
 import GameScreenshotSection from '../game-detail/GameScreenshotSection.astro';
-import ClickToLoadVideo from '../media/ClickToLoadVideo.astro';
+import GameVideoSection from '../game-detail/GameVideoSection.astro';
 import MoreGamesSection from '../game-detail/MoreGamesSection.astro';
 import SiteFooter from '../layout/SiteFooter.astro';
 import SiteHeader from '../layout/SiteHeader.astro';
@@ -50,10 +50,9 @@ const ogImage = getSocialImage(slug, locale);
     <GameDetailHero game={game} locale={locale} content={content} common={translation.common} />
     <GameOverview content={content} />
     <GameFeatureGrid content={content} />
-    <GameScreenshotSection game={game} content={content} common={translation.common} />
-    {game.youtubeTrailerUrl && game.videoPoster && (
-      <ClickToLoadVideo url={game.youtubeTrailerUrl} poster={game.videoPoster} title={game.title} playLabel={translation.common.playVideo} />
-    )}
+    <GameScreenshotSection game={game} content={content} common={translation.common} section="featured" />
+    <GameVideoSection videos={game.videos} locale={locale} content={content} common={translation.common} />
+    <GameScreenshotSection game={game} content={content} common={translation.common} section="gallery" />
     <GamePurchaseCta game={game} content={content} common={translation.common} />
     <MoreGamesSection
       game={otherGame}

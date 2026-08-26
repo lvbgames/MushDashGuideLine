@@ -203,6 +203,8 @@ export const zhCn: Translation = {
     allTitle: '动态与报道',
     kindLabels: {
       'studio-update': '工作室动态',
+      'development-update': '开发日志',
+      announcement: '公告',
       interview: '访谈',
       'press-coverage': '媒体报道',
       'blog-review': '试玩报告',
@@ -239,6 +241,11 @@ export const zhCn: Translation = {
     ],
     featuredScreenshotEyebrow: '走进战场',
     featuredScreenshotTitle: '观察攻势，构建新的答案。',
+    videosEyebrow: '官方视频',
+    videosTitle: '通过视频了解 MushHero。',
+    videosDescription: '仅在选择播放后加载 YouTube 视频。',
+    videoPosterAlt: '{title} 视频预览',
+    watchOnYouTube: '在 YouTube 观看',
     galleryEyebrow: '官方游戏截图',
     galleryTitle: '进一步了解 MushHero。',
     screenshotAlts: [
@@ -275,6 +282,11 @@ export const zhCn: Translation = {
     ],
     featuredScreenshotEyebrow: '进入赛道',
     featuredScreenshotTitle: '找到穿越每个障碍的路线。',
+    videosEyebrow: '官方视频',
+    videosTitle: '通过视频了解 MushDash。',
+    videosDescription: '仅在选择播放后加载 YouTube 视频。',
+    videoPosterAlt: '{title} 视频预览',
+    watchOnYouTube: '在 YouTube 观看',
     galleryEyebrow: '官方游戏截图',
     galleryTitle: '进一步了解 MushDash。',
     screenshotAlts: [

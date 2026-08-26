@@ -203,6 +203,8 @@ export const ko: Translation = {
     allTitle: 'News & Press',
     kindLabels: {
       'studio-update': '스튜디오 소식',
+      'development-update': '개발 일지',
+      announcement: '공지',
       interview: '인터뷰',
       'press-coverage': '언론 보도',
       'blog-review': '플레이 후기',
@@ -239,6 +241,11 @@ export const ko: Translation = {
     ],
     featuredScreenshotEyebrow: '전장 속으로',
     featuredScreenshotTitle: '공격을 읽고, 새로운 답을 만드세요.',
+    videosEyebrow: '공식 영상',
+    videosTitle: '영상으로 만나는 MushHero.',
+    videosDescription: '재생을 선택한 뒤에만 YouTube 영상을 불러옵니다.',
+    videoPosterAlt: '{title} 영상 미리보기',
+    watchOnYouTube: 'YouTube에서 보기',
     galleryEyebrow: '공식 스크린샷',
     galleryTitle: 'MushHero를 더 가까이 살펴보세요.',
     screenshotAlts: [
@@ -275,6 +282,11 @@ export const ko: Translation = {
     ],
     featuredScreenshotEyebrow: '코스 위에서',
     featuredScreenshotTitle: '모든 장애물을 통과할 경로를 찾으세요.',
+    videosEyebrow: '공식 영상',
+    videosTitle: '영상으로 만나는 MushDash.',
+    videosDescription: '재생을 선택한 뒤에만 YouTube 영상을 불러옵니다.',
+    videoPosterAlt: '{title} 영상 미리보기',
+    watchOnYouTube: 'YouTube에서 보기',
     galleryEyebrow: '공식 스크린샷',
     galleryTitle: 'MushDash를 더 가까이 살펴보세요.',
     screenshotAlts: [

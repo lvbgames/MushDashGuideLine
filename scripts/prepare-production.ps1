@@ -273,7 +273,7 @@ $requiredPrivacyFacts = @{
   en = @(
     'Last updated:',
     'Effective date:',
-    'August 3, 2026',
+    'August 26, 2026',
     'Epic Online Services(EOS)',
     'Lobby',
     'Session',
@@ -296,7 +296,7 @@ $requiredPrivacyFacts = @{
   ko = @(
     (ConvertFrom-Utf8Base64 '7LWc7KKFIOyImOygleydvDo='),
     (ConvertFrom-Utf8Base64 '7Iuc7ZaJ7J28Og=='),
-    (ConvertFrom-Utf8Base64 'MjAyNuuFhCA47JuUIDPsnbw='),
+    (ConvertFrom-Utf8Base64 'MjAyNuuFhCA47JuUIDI27J28'),
     'Epic Online Services(EOS)',
     'Lobby',
     'Session',
@@ -315,7 +315,7 @@ $requiredPrivacyFacts = @{
   ja = @(
     (ConvertFrom-Utf8Base64 '5pyA57WC5pu05paw5pel77ya'),
     (ConvertFrom-Utf8Base64 '5pa96KGM5pel77ya'),
-    (ConvertFrom-Utf8Base64 'MjAyNuW5tDjmnIgz5pel'),
+    (ConvertFrom-Utf8Base64 'MjAyNuW5tDjmnIgyNuaXpQ=='),
     'Epic Online Services(EOS)',
     'Lobby',
     'Session',
@@ -334,7 +334,7 @@ $requiredPrivacyFacts = @{
   'zh-cn' = @(
     (ConvertFrom-Utf8Base64 '5pyA5ZCO5pu05paw5pel5pyf77ya'),
     (ConvertFrom-Utf8Base64 '55Sf5pWI5pel5pyf77ya'),
-    (ConvertFrom-Utf8Base64 'MjAyNuW5tDjmnIgz5pel'),
+    (ConvertFrom-Utf8Base64 'MjAyNuW5tDjmnIgyNuaXpQ=='),
     'Epic Online Services(EOS)',
     'Lobby',
     'Session',
@@ -383,7 +383,8 @@ foreach ($route in $privacyRoutes) {
   Assert-Equal ([regex]::Matches($privacyHtml, 'hreflang="x-default" href="https://lvb\.kr/privacy/"').Count) 1 "Privacy x-default: $($route.Locale)"
   Assert-Equal ([regex]::Matches($privacyHtml, '<html lang="' + [regex]::Escape($route.Locale) + '">').Count) 1 "Privacy html lang: $($route.Locale)"
   Assert-Equal ([regex]::Matches($privacyHtml, 'application/ld\+json').Count) 0 "Privacy JSON-LD count: $($route.Locale)"
-  Assert-Equal ([regex]::Matches($privacyHtml, 'datetime="2026-08-03"').Count) 2 "Privacy policy date count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($privacyHtml, 'datetime="2026-08-26"').Count) 2 "Privacy policy date count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($privacyHtml, 'youtube-nocookie\.com').Count) 1 "Privacy-enhanced YouTube disclosure: $($route.Locale)"
 
   foreach ($languagePath in $expectedLanguagePaths) {
     if ($privacyHtml -notmatch 'href="' + [regex]::Escape($languagePath) + '"') {
@@ -547,9 +548,13 @@ $requiredFiles = @(
   'dist\about\index.html',
   'dist\news\index.html',
   'dist\news\page\2\index.html',
+  'dist\news\page\3\index.html',
   'dist\ko\news\page\2\index.html',
   'dist\ja\news\page\2\index.html',
   'dist\zh-cn\news\page\2\index.html',
+  'dist\ko\news\page\3\index.html',
+  'dist\ja\news\page\3\index.html',
+  'dist\zh-cn\news\page\3\index.html',
   'dist\press\index.html',
   'dist\ko\press\index.html',
   'dist\ja\press\index.html',
@@ -558,6 +563,14 @@ $requiredFiles = @(
   'dist\ko\news\bic-2026-mushhero-first-public-playtest\index.html',
   'dist\ja\news\bic-2026-mushhero-first-public-playtest\index.html',
   'dist\zh-cn\news\bic-2026-mushhero-first-public-playtest\index.html',
+  'dist\news\mushhero-warrior-vfx-rework\index.html',
+  'dist\ko\news\mushhero-warrior-vfx-rework\index.html',
+  'dist\ja\news\mushhero-warrior-vfx-rework\index.html',
+  'dist\zh-cn\news\mushhero-warrior-vfx-rework\index.html',
+  'dist\news\mushdash-early-access-launch\index.html',
+  'dist\ko\news\mushdash-early-access-launch\index.html',
+  'dist\ja\news\mushdash-early-access-launch\index.html',
+  'dist\zh-cn\news\mushdash-early-access-launch\index.html',
   'dist\contact\index.html',
   'dist\games\mushhero\index.html',
   'dist\games\mushdash\index.html',
@@ -587,15 +600,15 @@ foreach ($relativePath in $requiredFiles) {
 
 $htmlFiles = @(Get-ChildItem -LiteralPath (Join-Path $siteRoot 'dist') -Recurse -File -Filter '*.html')
 $regularHtml = @($htmlFiles | Where-Object { $_.Name -ne '404.html' })
-Assert-Equal $htmlFiles.Count 49 'Total production HTML count'
-Assert-Equal $regularHtml.Count 48 'Regular production HTML count'
+Assert-Equal $htmlFiles.Count 61 'Total production HTML count'
+Assert-Equal $regularHtml.Count 60 'Regular production HTML count'
 
 $sitemap = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'dist\sitemap-0.xml')
 $sitemapCount = ([regex]::Matches($sitemap, '<url>')).Count
-Assert-Equal $sitemapCount 40 'Sitemap URL count'
+Assert-Equal $sitemapCount 52 'Sitemap URL count'
 if ($sitemap -match '/privacy/') { throw 'Privacy routes must be excluded from the sitemap.' }
 if ($sitemap -match '/terms/') { throw 'Terms routes must be excluded from the sitemap.' }
-foreach ($requiredSitemapPath in @('/press/', '/ko/press/', '/ja/press/', '/zh-cn/press/', '/news/page/2/', '/ko/news/page/2/', '/ja/news/page/2/', '/zh-cn/news/page/2/', '/news/bic-2026-mushhero-first-public-playtest/', '/ko/news/bic-2026-mushhero-first-public-playtest/', '/ja/news/bic-2026-mushhero-first-public-playtest/', '/zh-cn/news/bic-2026-mushhero-first-public-playtest/')) {
+foreach ($requiredSitemapPath in @('/press/', '/ko/press/', '/ja/press/', '/zh-cn/press/', '/news/page/2/', '/ko/news/page/2/', '/ja/news/page/2/', '/zh-cn/news/page/2/', '/news/page/3/', '/ko/news/page/3/', '/ja/news/page/3/', '/zh-cn/news/page/3/', '/news/bic-2026-mushhero-first-public-playtest/', '/ko/news/bic-2026-mushhero-first-public-playtest/', '/ja/news/bic-2026-mushhero-first-public-playtest/', '/zh-cn/news/bic-2026-mushhero-first-public-playtest/', '/news/mushhero-warrior-vfx-rework/', '/news/mushdash-early-access-launch/')) {
   if ($sitemap -notmatch [regex]::Escape($requiredSitemapPath)) {
     throw "Indexed route is missing from the sitemap: $requiredSitemapPath"
   }
@@ -608,10 +621,18 @@ $rootStructuredData = $rootJsonMatches[0].Groups[1].Value | ConvertFrom-Json
 Assert-Equal $rootStructuredData.'@graph'.Count 2 'Root JSON-LD graph node count'
 
 $articleRoutes = @(
-  [PSCustomObject]@{ Locale = 'en'; Path = 'dist\news\bic-2026-mushhero-first-public-playtest\index.html'; Canonical = 'https://lvb.kr/news/bic-2026-mushhero-first-public-playtest/' },
-  [PSCustomObject]@{ Locale = 'ko'; Path = 'dist\ko\news\bic-2026-mushhero-first-public-playtest\index.html'; Canonical = 'https://lvb.kr/ko/news/bic-2026-mushhero-first-public-playtest/' },
-  [PSCustomObject]@{ Locale = 'ja'; Path = 'dist\ja\news\bic-2026-mushhero-first-public-playtest\index.html'; Canonical = 'https://lvb.kr/ja/news/bic-2026-mushhero-first-public-playtest/' },
-  [PSCustomObject]@{ Locale = 'zh-cn'; Path = 'dist\zh-cn\news\bic-2026-mushhero-first-public-playtest\index.html'; Canonical = 'https://lvb.kr/zh-cn/news/bic-2026-mushhero-first-public-playtest/' }
+  [PSCustomObject]@{ Locale = 'en'; Path = 'dist\news\bic-2026-mushhero-first-public-playtest\index.html'; Canonical = 'https://lvb.kr/news/bic-2026-mushhero-first-public-playtest/'; Date = '2026-08-21' },
+  [PSCustomObject]@{ Locale = 'ko'; Path = 'dist\ko\news\bic-2026-mushhero-first-public-playtest\index.html'; Canonical = 'https://lvb.kr/ko/news/bic-2026-mushhero-first-public-playtest/'; Date = '2026-08-21' },
+  [PSCustomObject]@{ Locale = 'ja'; Path = 'dist\ja\news\bic-2026-mushhero-first-public-playtest\index.html'; Canonical = 'https://lvb.kr/ja/news/bic-2026-mushhero-first-public-playtest/'; Date = '2026-08-21' },
+  [PSCustomObject]@{ Locale = 'zh-cn'; Path = 'dist\zh-cn\news\bic-2026-mushhero-first-public-playtest\index.html'; Canonical = 'https://lvb.kr/zh-cn/news/bic-2026-mushhero-first-public-playtest/'; Date = '2026-08-21' },
+  [PSCustomObject]@{ Locale = 'en'; Path = 'dist\news\mushhero-warrior-vfx-rework\index.html'; Canonical = 'https://lvb.kr/news/mushhero-warrior-vfx-rework/'; Date = '2026-08-26' },
+  [PSCustomObject]@{ Locale = 'ko'; Path = 'dist\ko\news\mushhero-warrior-vfx-rework\index.html'; Canonical = 'https://lvb.kr/ko/news/mushhero-warrior-vfx-rework/'; Date = '2026-08-26' },
+  [PSCustomObject]@{ Locale = 'ja'; Path = 'dist\ja\news\mushhero-warrior-vfx-rework\index.html'; Canonical = 'https://lvb.kr/ja/news/mushhero-warrior-vfx-rework/'; Date = '2026-08-26' },
+  [PSCustomObject]@{ Locale = 'zh-cn'; Path = 'dist\zh-cn\news\mushhero-warrior-vfx-rework\index.html'; Canonical = 'https://lvb.kr/zh-cn/news/mushhero-warrior-vfx-rework/'; Date = '2026-08-26' },
+  [PSCustomObject]@{ Locale = 'en'; Path = 'dist\news\mushdash-early-access-launch\index.html'; Canonical = 'https://lvb.kr/news/mushdash-early-access-launch/'; Date = '2025-08-26' },
+  [PSCustomObject]@{ Locale = 'ko'; Path = 'dist\ko\news\mushdash-early-access-launch\index.html'; Canonical = 'https://lvb.kr/ko/news/mushdash-early-access-launch/'; Date = '2025-08-26' },
+  [PSCustomObject]@{ Locale = 'ja'; Path = 'dist\ja\news\mushdash-early-access-launch\index.html'; Canonical = 'https://lvb.kr/ja/news/mushdash-early-access-launch/'; Date = '2025-08-26' },
+  [PSCustomObject]@{ Locale = 'zh-cn'; Path = 'dist\zh-cn\news\mushdash-early-access-launch\index.html'; Canonical = 'https://lvb.kr/zh-cn/news/mushdash-early-access-launch/'; Date = '2025-08-26' }
 )
 $articleFullPaths = @()
 foreach ($route in $articleRoutes) {
@@ -622,8 +643,10 @@ foreach ($route in $articleRoutes) {
   Assert-Equal $articleJsonMatches.Count 1 "Article JSON-LD script count: $($route.Locale)"
   $articleData = $articleJsonMatches[0].Groups[1].Value | ConvertFrom-Json
   Assert-Equal $articleData.'@type' 'Article' "Article JSON-LD type: $($route.Locale)"
-  Assert-Equal $articleData.datePublished '2026-08-21' "Article published date: $($route.Locale)"
-  Assert-Equal $articleData.dateModified '2026-08-21' "Article modified date: $($route.Locale)"
+  Assert-Equal $articleData.datePublished $route.Date "Article published date: $($route.Locale) $($route.Path)"
+  Assert-Equal $articleData.dateModified $route.Date "Article modified date: $($route.Locale) $($route.Path)"
+  $expectedArticleImage = if ($route.Path -match 'mushdash') { 'https://lvb.kr/og/mushdash-og-primary.jpg' } else { 'https://lvb.kr/og/mushhero-og-primary.jpg' }
+  Assert-Equal $articleData.image $expectedArticleImage "Article image: $($route.Locale) $($route.Path)"
   Assert-Equal $articleData.mainEntityOfPage.'@id' $route.Canonical "Article main entity: $($route.Locale)"
   Assert-Equal ([regex]::Matches($articleHtml, '<meta property="og:type" content="article">').Count) 1 "Article Open Graph type: $($route.Locale)"
   Assert-Equal ([regex]::Matches($articleHtml, '<link rel="canonical" href="' + [regex]::Escape($route.Canonical) + '">').Count) 1 "Article canonical: $($route.Locale)"
@@ -648,6 +671,7 @@ $ogRouteSpecs = @(
   [PSCustomObject]@{ Path = 'dist\games\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
   [PSCustomObject]@{ Path = 'dist\news\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
   [PSCustomObject]@{ Path = 'dist\news\page\2\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
+  [PSCustomObject]@{ Path = 'dist\news\page\3\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
   [PSCustomObject]@{ Path = 'dist\press\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' },
   [PSCustomObject]@{ Path = 'dist\contact\index.html'; Image = 'https://lvb.kr/og/lvb-og-primary.png'; Type = 'image/png' }
 )
@@ -655,6 +679,8 @@ foreach ($localePrefix in @('', 'ko\', 'ja\', 'zh-cn\')) {
   $ogRouteSpecs += [PSCustomObject]@{ Path = "dist\${localePrefix}games\mushhero\index.html"; Image = 'https://lvb.kr/og/mushhero-og-primary.jpg'; Type = 'image/jpeg' }
   $ogRouteSpecs += [PSCustomObject]@{ Path = "dist\${localePrefix}games\mushdash\index.html"; Image = 'https://lvb.kr/og/mushdash-og-primary.jpg'; Type = 'image/jpeg' }
   $ogRouteSpecs += [PSCustomObject]@{ Path = "dist\${localePrefix}news\bic-2026-mushhero-first-public-playtest\index.html"; Image = 'https://lvb.kr/og/mushhero-og-primary.jpg'; Type = 'image/jpeg' }
+  $ogRouteSpecs += [PSCustomObject]@{ Path = "dist\${localePrefix}news\mushhero-warrior-vfx-rework\index.html"; Image = 'https://lvb.kr/og/mushhero-og-primary.jpg'; Type = 'image/jpeg' }
+  $ogRouteSpecs += [PSCustomObject]@{ Path = "dist\${localePrefix}news\mushdash-early-access-launch\index.html"; Image = 'https://lvb.kr/og/mushdash-og-primary.jpg'; Type = 'image/jpeg' }
 }
 foreach ($route in $ogRouteSpecs) {
   $html = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $route.Path)
@@ -673,22 +699,24 @@ foreach ($route in $ogRouteSpecs) {
 }
 
 $newsListRoutes = @(
-  [PSCustomObject]@{ Locale = 'en'; Page1 = 'dist\news\index.html'; Page2 = 'dist\news\page\2\index.html'; Canonical1 = 'https://lvb.kr/news/'; Canonical2 = 'https://lvb.kr/news/page/2/'; Next = '/news/page/2/'; Previous = '/news/' },
-  [PSCustomObject]@{ Locale = 'ko'; Page1 = 'dist\ko\news\index.html'; Page2 = 'dist\ko\news\page\2\index.html'; Canonical1 = 'https://lvb.kr/ko/news/'; Canonical2 = 'https://lvb.kr/ko/news/page/2/'; Next = '/ko/news/page/2/'; Previous = '/ko/news/' },
-  [PSCustomObject]@{ Locale = 'ja'; Page1 = 'dist\ja\news\index.html'; Page2 = 'dist\ja\news\page\2\index.html'; Canonical1 = 'https://lvb.kr/ja/news/'; Canonical2 = 'https://lvb.kr/ja/news/page/2/'; Next = '/ja/news/page/2/'; Previous = '/ja/news/' },
-  [PSCustomObject]@{ Locale = 'zh-cn'; Page1 = 'dist\zh-cn\news\index.html'; Page2 = 'dist\zh-cn\news\page\2\index.html'; Canonical1 = 'https://lvb.kr/zh-cn/news/'; Canonical2 = 'https://lvb.kr/zh-cn/news/page/2/'; Next = '/zh-cn/news/page/2/'; Previous = '/zh-cn/news/' }
+  [PSCustomObject]@{ Locale = 'en'; Page1 = 'dist\news\index.html'; Page2 = 'dist\news\page\2\index.html'; Page3 = 'dist\news\page\3\index.html'; Canonical1 = 'https://lvb.kr/news/'; Canonical2 = 'https://lvb.kr/news/page/2/'; Canonical3 = 'https://lvb.kr/news/page/3/'; Page2Path = '/news/page/2/'; Page3Path = '/news/page/3/'; RootPath = '/news/' },
+  [PSCustomObject]@{ Locale = 'ko'; Page1 = 'dist\ko\news\index.html'; Page2 = 'dist\ko\news\page\2\index.html'; Page3 = 'dist\ko\news\page\3\index.html'; Canonical1 = 'https://lvb.kr/ko/news/'; Canonical2 = 'https://lvb.kr/ko/news/page/2/'; Canonical3 = 'https://lvb.kr/ko/news/page/3/'; Page2Path = '/ko/news/page/2/'; Page3Path = '/ko/news/page/3/'; RootPath = '/ko/news/' },
+  [PSCustomObject]@{ Locale = 'ja'; Page1 = 'dist\ja\news\index.html'; Page2 = 'dist\ja\news\page\2\index.html'; Page3 = 'dist\ja\news\page\3\index.html'; Canonical1 = 'https://lvb.kr/ja/news/'; Canonical2 = 'https://lvb.kr/ja/news/page/2/'; Canonical3 = 'https://lvb.kr/ja/news/page/3/'; Page2Path = '/ja/news/page/2/'; Page3Path = '/ja/news/page/3/'; RootPath = '/ja/news/' },
+  [PSCustomObject]@{ Locale = 'zh-cn'; Page1 = 'dist\zh-cn\news\index.html'; Page2 = 'dist\zh-cn\news\page\2\index.html'; Page3 = 'dist\zh-cn\news\page\3\index.html'; Canonical1 = 'https://lvb.kr/zh-cn/news/'; Canonical2 = 'https://lvb.kr/zh-cn/news/page/2/'; Canonical3 = 'https://lvb.kr/zh-cn/news/page/3/'; Page2Path = '/zh-cn/news/page/2/'; Page3Path = '/zh-cn/news/page/3/'; RootPath = '/zh-cn/news/' }
 )
 $englishNewsHrefs = @()
 $englishNewsDates = @()
 foreach ($route in $newsListRoutes) {
   $page1Html = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $route.Page1)
   $page2Html = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $route.Page2)
+  $page3Html = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $route.Page3)
   foreach ($pageSpec in @(
-      [PSCustomObject]@{ Name = $route.Page1; Html = $page1Html; Canonical = $route.Canonical1; External = 5; Internal = 1 },
-      [PSCustomObject]@{ Name = $route.Page2; Html = $page2Html; Canonical = $route.Canonical2; External = 6; Internal = 0 }
+      [PSCustomObject]@{ Name = $route.Page1; Html = $page1Html; Canonical = $route.Canonical1; Total = 6; External = 4; Internal = 2 },
+      [PSCustomObject]@{ Name = $route.Page2; Html = $page2Html; Canonical = $route.Canonical2; Total = 6; External = 5; Internal = 1 },
+      [PSCustomObject]@{ Name = $route.Page3; Html = $page3Html; Canonical = $route.Canonical3; Total = 3; External = 3; Internal = 0 }
     )) {
     $canonicalPattern = '<link rel="canonical" href="' + [regex]::Escape($pageSpec.Canonical) + '">'
-    Assert-Equal ([regex]::Matches($pageSpec.Html, '<a class="news-card news-card--').Count) 6 "News page size: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, '<a class="news-card news-card--').Count) $pageSpec.Total "News page size: $($pageSpec.Name)"
     Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card news-card--external"').Count) $pageSpec.External "External News card count: $($pageSpec.Name)"
     Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card news-card--internal"').Count) $pageSpec.Internal "Internal News card count: $($pageSpec.Name)"
     Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card news-card--external" href="https?://[^\"]+" target="_blank" rel="noopener noreferrer"').Count) $pageSpec.External "External News link security: $($pageSpec.Name)"
@@ -696,31 +724,32 @@ foreach ($route in $newsListRoutes) {
     Assert-Equal ([regex]::Matches($pageSpec.Html, '<nav class="news-pagination"').Count) 1 "News pagination count: $($pageSpec.Name)"
     Assert-Equal ([regex]::Matches($pageSpec.Html, $canonicalPattern).Count) 1 "News canonical: $($pageSpec.Name)"
     Assert-Equal ([regex]::Matches($pageSpec.Html, 'rel="alternate" hreflang=').Count) 5 "News hreflang count: $($pageSpec.Name)"
-    Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card__byline"').Count) 6 "News metadata first row: $($pageSpec.Name)"
-    Assert-Equal ([regex]::Matches($pageSpec.Html, '<time class="news-card__date" datetime="').Count) 6 "News date second row: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card__byline"').Count) $pageSpec.Total "News metadata first row: $($pageSpec.Name)"
+    Assert-Equal ([regex]::Matches($pageSpec.Html, '<time class="news-card__date" datetime="').Count) $pageSpec.Total "News date second row: $($pageSpec.Name)"
     Assert-Equal ([regex]::Matches($pageSpec.Html, 'news-card__cta|news-card__internal-cta').Count) 0 "Removed News text CTA: $($pageSpec.Name)"
   }
-  $nextPattern = 'href="' + [regex]::Escape($route.Next) + '" rel="next"'
-  $previousPattern = 'href="' + [regex]::Escape($route.Previous) + '" rel="prev"'
-  Assert-Equal ([regex]::Matches($page1Html, $nextPattern).Count) 1 "News next link: $($route.Locale)"
-  Assert-Equal ([regex]::Matches($page2Html, $previousPattern).Count) 1 "News previous link: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($page1Html, 'href="' + [regex]::Escape($route.Page2Path) + '" rel="next"').Count) 1 "News page 1 next link: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($page2Html, 'href="' + [regex]::Escape($route.RootPath) + '" rel="prev"').Count) 1 "News page 2 previous link: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($page2Html, 'href="' + [regex]::Escape($route.Page3Path) + '" rel="next"').Count) 1 "News page 2 next link: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($page3Html, 'href="' + [regex]::Escape($route.Page2Path) + '" rel="prev"').Count) 1 "News page 3 previous link: $($route.Locale)"
   Assert-Equal ([regex]::Matches($page1Html, 'class="news-pagination__page" aria-current="page"').Count) 1 "News page 1 current state: $($route.Locale)"
   Assert-Equal ([regex]::Matches($page2Html, 'class="news-pagination__page" aria-current="page"').Count) 1 "News page 2 current state: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($page3Html, 'class="news-pagination__page" aria-current="page"').Count) 1 "News page 3 current state: $($route.Locale)"
   if ($route.Locale -eq 'en') {
     $newsHrefPattern = '<a class="news-card news-card--[^"]+" href="([^"]+)"'
-    foreach ($html in @($page1Html, $page2Html)) {
+    foreach ($html in @($page1Html, $page2Html, $page3Html)) {
       $englishNewsHrefs += [regex]::Matches($html, $newsHrefPattern) | ForEach-Object { $_.Groups[1].Value }
       $englishNewsDates += [regex]::Matches($html, '<time class="news-card__date" datetime="([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
     }
   }
 }
-Assert-Equal $englishNewsHrefs.Count 12 'News data count'
-Assert-Equal (@($englishNewsHrefs | Sort-Object -Unique).Count) 12 'Unique News destination count'
+Assert-Equal $englishNewsHrefs.Count 15 'News data count'
+Assert-Equal (@($englishNewsHrefs | Sort-Object -Unique).Count) 15 'Unique News destination count'
 Assert-Equal ($englishNewsDates -join '|') (($englishNewsDates | Sort-Object -Descending) -join '|') 'News published date order'
-Assert-Equal (Test-Path -LiteralPath (Join-Path $siteRoot 'dist\news\page\3\index.html')) $false 'Unexpected News page 3 route'
+Assert-Equal (Test-Path -LiteralPath (Join-Path $siteRoot 'dist\news\page\4\index.html')) $false 'Unexpected News page 4 route'
 $newsSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\news.ts')
-Assert-Equal ([regex]::Matches($newsSource, "type:\s*'internal'").Count) 1 'Internal News source count'
-Assert-Equal ([regex]::Matches($newsSource, "type:\s*'external'").Count) 11 'External News source count'
+Assert-Equal ([regex]::Matches($newsSource, "type:\s*'internal'").Count) 3 'Internal News source count'
+Assert-Equal ([regex]::Matches($newsSource, "type:\s*'external'").Count) 12 'External News source count'
 Assert-Equal ([regex]::Matches($newsSource, "kind:\s*'blog-review'").Count) 5 'Blog review source count'
 foreach ($approvedBlogUrl in @(
     'https://blog.naver.com/kuromi01/223567525541',
@@ -729,6 +758,17 @@ foreach ($approvedBlogUrl in @(
     'https://blog.naver.com/tunacanzorim/223565100540'
   )) {
   Assert-Equal ([regex]::Matches($newsSource, [regex]::Escape($approvedBlogUrl)).Count) 1 "Approved Naver blog source: $approvedBlogUrl"
+}
+foreach ($verifiedNewsUrl in @(
+    'https://blog.naver.com/busangamecenter/224075915782',
+    'https://www.instagram.com/reel/DY4kaMzhD7R/',
+    'https://www.instagram.com/p/DY9pSqohPZK/',
+    'https://www.instagram.com/reel/DZAT_iSB1XN/',
+    'https://www.instagram.com/reel/DZFk-3TB9lN/',
+    'https://www.instagram.com/reel/DZKuybUhBqF/',
+    'https://www.instagram.com/p/DN16Q4l5uch/'
+  )) {
+  Assert-Equal (([regex]::Matches($newsSource, [regex]::Escape($verifiedNewsUrl)).Count) -gt 0) $true "Verified News source: $verifiedNewsUrl"
 }
 $newsCardSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\components\news\NewsItemCard.astro')
 Assert-Equal ([regex]::Matches($newsCardSource, '<a[\s\S]*?class:list=\{\[').Count) 1 'Whole News card link source'
@@ -1067,8 +1107,17 @@ foreach ($gameDetailPath in @('dist\games\mushhero\index.html', 'dist\games\mush
   $gameDetailHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $gameDetailPath)
   Assert-Equal ([regex]::Matches($gameDetailHtml, 'class="media-gallery__item"').Count) 3 "Game gallery item count: $gameDetailPath"
   Assert-Equal ([regex]::Matches($gameDetailHtml, '<dialog class="media-lightbox"').Count) 1 "Game lightbox count: $gameDetailPath"
-  Assert-Equal ([regex]::Matches($gameDetailHtml, '<iframe').Count) 0 "Unverified video iframe count: $gameDetailPath"
+  Assert-Equal ([regex]::Matches($gameDetailHtml, '<iframe').Count) 0 "Initial video iframe count: $gameDetailPath"
+  Assert-Equal ([regex]::Matches($gameDetailHtml, 'i\.ytimg\.com|ytimg\.com').Count) 0 "External YouTube thumbnail count: $gameDetailPath"
+  $expectedVideoCards = if ($gameDetailPath -match 'mushhero') { 2 } else { 0 }
+  Assert-Equal ([regex]::Matches($gameDetailHtml, '<article class="click-video"').Count) $expectedVideoCards "Click-to-load video card count: $gameDetailPath"
+  Assert-Equal ([regex]::Matches($gameDetailHtml, 'youtube-nocookie\.com/embed/').Count) $expectedVideoCards "Privacy-enhanced embed URL count: $gameDetailPath"
 }
+$gamesSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\games.ts')
+foreach ($videoId in @('at6bQPAzLkI', 'GMaEwI8qMpA')) {
+  Assert-Equal ([regex]::Matches($gamesSource, 'https://www\.youtube-nocookie\.com/embed/' + [regex]::Escape($videoId) + '\?playsinline=1&rel=0&autoplay=1').Count) 1 "Allowed YouTube embed ID: $videoId"
+}
+Assert-Equal ([regex]::Matches($gamesSource, 'https://www\.youtube\.com/embed/').Count) 0 'Direct youtube.com embed count'
 foreach ($legalPath in @('dist\privacy\index.html', 'dist\terms\index.html')) {
   $legalHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $legalPath)
   Assert-Equal ([regex]::Matches($legalHtml, '<(?:main|article|div|section)[^>]*\sdata-motion-page(?:\s|=|>)').Count) 0 "Legal motion opt-in count: $legalPath"

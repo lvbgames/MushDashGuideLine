@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from '../../config/site';
+import { getSocialImage } from '../../data/socialImages';
 import { getLocalePath, type Locale } from '../../i18n/config';
 import type { InternalNewsItem } from '../../types/news';
 
@@ -12,6 +13,7 @@ const { article, locale } = Astro.props;
 const site = Astro.site ?? new URL(siteConfig.url);
 const canonical = new URL(getLocalePath(locale, 'news-article', article.slug), site).href;
 const languageMap: Record<Locale, string> = { en: 'en', ko: 'ko', ja: 'ja', 'zh-cn': 'zh-CN' };
+const socialImage = getSocialImage(article.socialImage, locale);
 const organization = {
   '@type': 'Organization',
   '@id': `${siteConfig.url}/#organization`,
@@ -22,7 +24,7 @@ const structuredData = {
   '@type': 'Article',
   headline: article.localizedTitle[locale],
   description: article.localizedSummary[locale],
-  image: article.heroImage.src,
+  image: new URL(socialImage.path, site).href,
   datePublished: article.publishedAt,
   dateModified: article.updatedAt,
   author: organization,

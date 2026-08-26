@@ -46,7 +46,7 @@
 | 외부 JavaScript | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | 외부 `<script src>` 0건; 모바일 메뉴 스크립트는 자체 빌드 자산 | Not used |
 | Google Maps iframe | About 4개 locale 방문 | Google | IP 주소, 요청 URL, 시각, 브라우저·OS·요청 헤더 등 Google Maps 요청 로그 | 스튜디오 위치 지도 표시 | Google 인프라 | Google 정책에 따름 | Google Maps | 가능 | `site/src/data/company.ts`, `AboutPage.astro`, Google 공식 문서 | Confirmed |
 | Steam CDN 이미지 | Home·Games·게임 상세 등 | Valve/Steam CDN | IP 주소, 이미지 URL, 시각, 브라우저·요청 헤더 등 CDN 요청 정보 | 게임 이미지 전송 | Valve 또는 CDN 인프라 | Valve 정책에 따름 | Steam | 가능 | `site/src/data/games.ts`의 `shared.akamai.steamstatic.com` URL | Confirmed |
-| 외부 영상 embed | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | `youtubeTrailerUrl: null`, iframe은 Google Maps 1종뿐 | Not used |
+| YouTube 영상 재생 | MushHero 상세에서 재생을 선택한 이용자 | Google/YouTube | IP 주소, 요청 URL, 브라우저·기기 정보, 접속 시각 및 YouTube 정책에 따른 기술 정보 | 이용자가 선택한 공식 MushHero 영상 재생 | YouTube/Google 인프라; Lv.B 자체 DB에는 시청 정보 저장 없음 | Google/YouTube 정책에 따름 | Google/YouTube (`youtube-nocookie.com`) | 가능 | `games.ts`의 검증된 영상 2건, `ClickToLoadVideo.astro`; 초기 iframe·외부 썸네일 0건, 클릭 후 선택 영상만 로드 | Confirmed 2026-08-26 |
 | mailto 문의 | Contact·Privacy | Lv.B, 발신·수신 이메일 사업자 | 이름·표시 이름, 이메일 주소, 본문, 첨부 파일과 첨부 내 로그·스크린샷·기타 정보 | 문의 확인·답변·후속 연락·기술 지원·비즈니스 협의·계약/거래 기록·분쟁 대응 | 발신자 메일함, NAVER 메일함 및 관련 보관 위치 | 일반 문의·게임 지원은 처리 완료 후 1년; 계약·거래·분쟁은 법정 기간 또는 종료 시점 중 적용 근거에 따른 기간 | NAVER 및 발신자 이메일 사업자 | 사업자 인프라에 따라 가능 | `site/src/data/contact.ts`, `ContactPage.astro`, 사용자 운영 확인(2026-07-31) | Confirmed |
 | 이메일 문의 삭제 | Lv.B 수신 메일 | Lv.B | 문의 기록과 첨부 | 보유기간 종료 후 파기 | NAVER 메일함 및 관련 보관 위치 | 보유기간 종료 시 운영자가 직접 확인·삭제; 법정 보존 대상은 분리 보관 | NAVER | 가능 | 사용자 운영 정책 확인(2026-07-31); 자동 삭제 시스템은 사용하지 않음 | Confirmed |
 | 검색엔진 인증 meta | 모든 페이지 | NAVER Search Advisor가 검증 토큰 확인 | 개인 식별 정보가 아닌 고정 사이트 인증 토큰; 방문 요청은 일반 호스팅 요청에 포함 가능 | 사이트 소유권 인증 | 빌드 HTML, NAVER 시스템 | NAVER 정책에 따름 | NAVER | 정책에 따름 | `site/src/config/site.ts`, `BaseLayout.astro` | Confirmed |
@@ -105,6 +105,6 @@ MushDash 실제 게임 프로젝트 `E:\MushDash`의 2026-07-31 현재 작업 �
 6. Netlify, Google, Valve, Epic, NAVER의 계약상 역할과 국외 처리·이전의 법적 분류를 법률적으로 확인한다.
 7. Steam·Epic에서 요청자와 UserCloud 계정의 소유 관계를 안전하게 확인할 절차를 확정한다. 현재 구현에는 검증된 절차가 없다.
 8. 개인정보 요청 처리 기록의 보유기간과 삭제 담당자를 확정한다.
-9. 개인정보 처리방침의 실제 운영 배포일과 Effective date는 사용자 승인에 따라 `2026-08-03`으로 확정했다.
+9. click-to-load YouTube 고지 추가에 따라 개인정보 처리방침의 Last updated와 Effective date를 `2026-08-26`으로 갱신했다.
 
 운영 확인 결과가 현재 코드 감사와 다르면 `site/src/data/privacy.ts`, `docs/PRIVACY_USERCLOUD_AUDIT.md`와 본 인벤토리를 함께 갱신하고 네 언어 의미 검증과 전체 빌드를 다시 수행한다.

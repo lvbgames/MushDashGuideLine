@@ -8,14 +8,16 @@ interface Props {
   fit?: 'cover' | 'contain';
   fallbackText?: string;
   className?: string;
+  srcset?: string;
+  sizes?: string;
 }
 
-const { image, alt, loading = 'lazy', fit = 'cover', fallbackText = 'Game image unavailable', className } = Astro.props;
+const { image, alt, loading = 'lazy', fit = 'cover', fallbackText = 'Game image unavailable', className, srcset, sizes } = Astro.props;
 ---
 
 <div class:list={['game-media', `game-media--${fit}`, className]}>
   {image ? (
-    <img src={image.src} width={image.width} height={image.height} alt={alt} loading={loading} decoding="async" fetchpriority={loading === 'eager' ? 'high' : 'auto'} />
+    <img src={image.src} srcset={srcset} sizes={sizes} width={image.width} height={image.height} alt={alt} loading={loading} decoding="async" fetchpriority={loading === 'eager' ? 'high' : 'auto'} />
   ) : (
     <span class="game-media__fallback">{fallbackText}</span>
   )}

@@ -204,6 +204,8 @@ export const ja: Translation = {
     allTitle: 'ニュース＆プレス',
     kindLabels: {
       'studio-update': 'スタジオニュース',
+      'development-update': '開発日誌',
+      announcement: 'お知らせ',
       interview: 'インタビュー',
       'press-coverage': 'メディア掲載',
       'blog-review': '試遊レポート',
@@ -240,6 +242,11 @@ export const ja: Translation = {
     ],
     featuredScreenshotEyebrow: '戦場へ',
     featuredScreenshotTitle: 'ウェーブを読み、新しい答えを作ろう。',
+    videosEyebrow: '公式動画',
+    videosTitle: '映像で見るMushHero。',
+    videosDescription: '再生を選択した後にのみYouTube動画を読み込みます。',
+    videoPosterAlt: '{title}の動画プレビュー',
+    watchOnYouTube: 'YouTubeで見る',
     galleryEyebrow: '公式スクリーンショット',
     galleryTitle: 'MushHeroの世界をさらに詳しく。',
     screenshotAlts: [
@@ -276,6 +283,11 @@ export const ja: Translation = {
     ],
     featuredScreenshotEyebrow: 'コースへ',
     featuredScreenshotTitle: '障害物を抜けるルートを見つけよう。',
+    videosEyebrow: '公式動画',
+    videosTitle: '映像で見るMushDash。',
+    videosDescription: '再生を選択した後にのみYouTube動画を読み込みます。',
+    videoPosterAlt: '{title}の動画プレビュー',
+    watchOnYouTube: 'YouTubeで見る',
     galleryEyebrow: '公式スクリーンショット',
     galleryTitle: 'MushDashのレースをさらに詳しく。',
     screenshotAlts: [

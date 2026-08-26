@@ -2,21 +2,46 @@
 import type { GameImage } from '../../types/game';
 
 interface Props {
-  url: string;
+  embedUrl: string;
+  sourceUrl: string;
   poster: GameImage;
   title: string;
+  description: string;
+  posterAlt: string;
   playLabel: string;
+  sourceLabel: string;
 }
 
-const { url, poster, title, playLabel } = Astro.props;
+const { embedUrl, sourceUrl, poster, title, description, posterAlt, playLabel, sourceLabel } = Astro.props;
+const embed = new URL(embedUrl);
+const source = new URL(sourceUrl);
+const videoId = embed.pathname.match(/^\/embed\/([A-Za-z0-9_-]{11})$/)?.[1];
+
+if (
+  embed.hostname !== 'www.youtube-nocookie.com'
+  || source.hostname !== 'www.youtube.com'
+  || source.pathname !== `/shorts/${videoId}`
+  || embed.searchParams.get('playsinline') !== '1'
+  || embed.searchParams.get('rel') !== '0'
+  || embed.searchParams.get('autoplay') !== '1'
+) {
+  throw new Error(`Unsupported click-to-load video URL: ${sourceUrl}`);
+}
 ---
 
-<section class="click-video page-section" aria-label={title} data-click-video data-video-url={url}>
-  <button class="click-video__poster" type="button" aria-label={`${playLabel}: ${title}`} data-video-play>
-    <img src={poster.src} width={poster.width} height={poster.height} alt="" loading="lazy" decoding="async" />
-    <span aria-hidden="true">▶</span>
-  </button>
-</section>
+<article class="click-video" data-click-video data-video-url={embedUrl}>
+  <div class="click-video__frame">
+    <button class="click-video__poster" type="button" aria-label={`${playLabel}: ${title}`} data-video-play>
+      <img src={poster.src} width={poster.width} height={poster.height} alt={posterAlt} loading="lazy" decoding="async" />
+      <span class="click-video__play" aria-hidden="true">▶</span>
+    </button>
+  </div>
+  <div class="click-video__copy">
+    <h3>{title}</h3>
+    <p>{description}</p>
+    <a href={sourceUrl} target="_blank" rel="noopener noreferrer">{sourceLabel}<span aria-hidden="true"> ↗</span></a>
+  </div>
+</article>
 
 <script>
   document.querySelectorAll<HTMLElement>('[data-click-video]').forEach((root) => {
@@ -27,10 +52,12 @@ const { url, poster, title, playLabel } = Astro.props;
       const iframe = document.createElement('iframe');
       iframe.src = url;
       iframe.title = button.getAttribute('aria-label') ?? 'Game video';
-      iframe.loading = 'lazy';
-      iframe.allow = 'accelerometer; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
       iframe.allowFullscreen = true;
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.tabIndex = 0;
       button.replaceWith(iframe);
+      iframe.focus();
     }, { once: true });
   });
 </script>

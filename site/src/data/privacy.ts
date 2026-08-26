@@ -8,7 +8,7 @@ import {
   type PrivacySection
 } from '../types/privacy';
 
-const policyDate = '2026-08-03';
+const policyDate = '2026-08-26';
 
 const externalPolicies = {
   netlify: 'https://www.netlify.com/privacy/',
@@ -78,6 +78,7 @@ const koSections: readonly PrivacySection[] = [
     '외부 서비스 및 플랫폼',
     [
       `웹사이트는 Netlify에서 정적으로 호스팅되며, About 페이지의 Google Maps iframe과 Steam 서버의 게임 이미지를 사용합니다. 문의 메일은 NAVER 메일 주소로 수신하고, 게임 및 스토어 링크는 Steam과 Epic Games Store로 연결됩니다. MushDash의 온라인 기능에는 EOS가 사용됩니다.`,
+      `MushHero 페이지의 공식 영상은 이용자가 재생을 선택한 뒤에만 YouTube의 개인정보 보호 강화 모드 도메인(youtube-nocookie.com)에서 불러옵니다. Lv.B는 영상 시청 정보를 자체 데이터베이스에 저장하지 않으며, 영상을 불러온 뒤에는 Google 또는 YouTube의 정책이 적용될 수 있습니다.`,
       `외부 콘텐츠를 불러오거나 링크를 방문하면 IP 주소, 요청 URL, 브라우저·기기 정보, 접속 시각 같은 기술 정보가 해당 사업자에게 전달될 수 있습니다. Lv.B는 외부 사업자의 계정·로그·보유기간을 직접 관리하지 않습니다.`
     ],
     undefined,
@@ -170,6 +171,7 @@ const enSections: readonly PrivacySection[] = [
     'External services and platforms',
     [
       `The website is statically hosted on Netlify, embeds Google Maps on the About page and loads game images from Steam servers. Inquiries are received at a NAVER Mail address, while game and store links lead to Steam and the Epic Games Store. MushDash uses EOS for its online features.`,
+      `Official videos on the MushHero page load from YouTube's privacy-enhanced domain (youtube-nocookie.com) only after the visitor selects Play. Lv.B does not store video-viewing data in its own database; after a video is loaded, Google or YouTube policies may apply.`,
       `Loading external content or following a link may give that provider technical data such as an IP address, requested URL, browser or device information and access time. Lv.B does not directly manage those providers’ accounts, logs or retention periods.`
     ],
     undefined,
@@ -262,6 +264,7 @@ const jaSections: readonly PrivacySection[] = [
     '外部サービスとプラットフォーム',
     [
       `本サイトはNetlifyで静的にホスティングされ、AboutページではGoogle Mapsのiframe、ゲーム画像にはSteamのサーバーを利用しています。お問い合わせはNAVERメールで受信し、ゲームとストアのリンクはSteamおよびEpic Games Storeへ移動します。MushDashのオンライン機能にはEOSを利用します。`,
+      `MushHeroページの公式動画は、利用者が再生を選択した後に限り、YouTubeのプライバシー強化モードのドメイン（youtube-nocookie.com）から読み込まれます。Lv.Bは動画の視聴情報を独自データベースへ保存しません。動画の読み込み後は、GoogleまたはYouTubeのポリシーが適用される場合があります。`,
       `外部コンテンツの読み込みやリンク先への移動により、IPアドレス、リクエストURL、ブラウザ・端末情報、アクセス日時などが各事業者へ送信される場合があります。Lv.Bは各事業者のアカウント、ログ、保存期間を直接管理しません。`
     ],
     undefined,
@@ -354,6 +357,7 @@ const zhSections: readonly PrivacySection[] = [
     '外部服务与平台',
     [
       `网站由Netlify进行静态托管，About页面嵌入Google Maps iframe，游戏图片从Steam服务器加载。咨询邮件由NAVER邮箱接收，游戏和商店链接则指向Steam与Epic Games Store。MushDash的在线功能使用EOS。`,
+      `MushHero页面中的官方视频仅会在用户选择播放后，从YouTube的隐私增强模式域名（youtube-nocookie.com）加载。Lv.B不会在自有数据库中保存视频观看信息；视频加载后，可能适用Google或YouTube的相关政策。`,
       `加载外部内容或访问链接时，IP地址、请求URL、浏览器或设备信息、访问时间等技术信息可能会发送给相应服务商。Lv.B不直接管理这些服务商的账户、日志或保存期限。`
     ],
     undefined,
@@ -419,10 +423,10 @@ const documents: Record<Locale, PrivacyDocumentContent> = {
     summary: 'How Lv.B handles information across its website, games and email support.',
     lastUpdatedLabel: 'Last updated:',
     lastUpdated: policyDate,
-    lastUpdatedDisplay: 'August 3, 2026',
+    lastUpdatedDisplay: 'August 26, 2026',
     effectiveDateLabel: 'Effective date:',
     effectiveDate: policyDate,
-    effectiveDateDisplay: 'August 3, 2026',
+    effectiveDateDisplay: 'August 26, 2026',
     tableOfContentsLabel: 'On this page',
     externalLinkLabel: 'opens in a new tab',
     controllerCardTitle: 'Lv.B privacy contact',
@@ -438,10 +442,10 @@ const documents: Record<Locale, PrivacyDocumentContent> = {
     summary: 'Lv.B 웹사이트, 게임 및 이메일 지원에서 정보를 처리하는 방식을 안내합니다.',
     lastUpdatedLabel: '최종 수정일:',
     lastUpdated: policyDate,
-    lastUpdatedDisplay: '2026년 8월 3일',
+    lastUpdatedDisplay: '2026년 8월 26일',
     effectiveDateLabel: '시행일:',
     effectiveDate: policyDate,
-    effectiveDateDisplay: '2026년 8월 3일',
+    effectiveDateDisplay: '2026년 8월 26일',
     tableOfContentsLabel: '목차',
     externalLinkLabel: '새 탭에서 열림',
     controllerCardTitle: 'Lv.B 개인정보 문의',
@@ -457,10 +461,10 @@ const documents: Record<Locale, PrivacyDocumentContent> = {
     summary: 'Lv.Bのサイト、ゲーム、メールサポートにおける情報の取扱いについてご案内します。',
     lastUpdatedLabel: '最終更新日：',
     lastUpdated: policyDate,
-    lastUpdatedDisplay: '2026年8月3日',
+    lastUpdatedDisplay: '2026年8月26日',
     effectiveDateLabel: '施行日：',
     effectiveDate: policyDate,
-    effectiveDateDisplay: '2026年8月3日',
+    effectiveDateDisplay: '2026年8月26日',
     tableOfContentsLabel: '目次',
     externalLinkLabel: '新しいタブで開きます',
     controllerCardTitle: 'Lv.Bプライバシー窓口',
@@ -476,10 +480,10 @@ const documents: Record<Locale, PrivacyDocumentContent> = {
     summary: '了解Lv.B网站、游戏和邮件支持中的信息处理方式。',
     lastUpdatedLabel: '最后更新日期：',
     lastUpdated: policyDate,
-    lastUpdatedDisplay: '2026年8月3日',
+    lastUpdatedDisplay: '2026年8月26日',
     effectiveDateLabel: '生效日期：',
     effectiveDate: policyDate,
-    effectiveDateDisplay: '2026年8月3日',
+    effectiveDateDisplay: '2026年8月26日',
     tableOfContentsLabel: '目录',
     externalLinkLabel: '在新标签页中打开',
     controllerCardTitle: 'Lv.B隐私咨询',
