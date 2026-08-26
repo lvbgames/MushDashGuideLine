@@ -7,6 +7,7 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 $sourceRoot = Join-Path $repoRoot 'references\LvbResult\press-kit'
 $outputRoot = Join-Path $repoRoot 'site\public\press\downloads'
 $contentPath = Join-Path $PSScriptRoot 'press-kit-content.json'
+$factsPath = Join-Path $repoRoot 'site\src\data\siteFacts.json'
 
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -14,8 +15,12 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 if (-not (Test-Path -LiteralPath $contentPath -PathType Leaf)) {
   throw "Press Kit text source is missing: $contentPath"
 }
+if (-not (Test-Path -LiteralPath $factsPath -PathType Leaf)) {
+  throw "Canonical site facts are missing: $factsPath"
+}
 
-$pressContent = Get-Content -Raw -Encoding utf8 -LiteralPath $contentPath | ConvertFrom-Json
+$pressCopy = Get-Content -Raw -Encoding utf8 -LiteralPath $contentPath | ConvertFrom-Json
+$siteFacts = Get-Content -Raw -Encoding utf8 -LiteralPath $factsPath | ConvertFrom-Json
 $textEncoding = [System.Text.UTF8Encoding]::new($true)
 $emDash = [char]0x2014
 
@@ -36,17 +41,39 @@ function Get-LocaleValue {
   return $property.Value
 }
 
+function Get-AbsoluteSiteUrl {
+  param([Parameter(Mandatory = $true)][string]$Path)
+
+  return $siteFacts.studio.website.TrimEnd('/') + $Path
+}
+
+function Get-GameFacts {
+  param([Parameter(Mandatory = $true)][string]$GameKey)
+
+  $property = $siteFacts.games.PSObject.Properties[$GameKey]
+  if ($null -eq $property) { throw "Canonical game facts are missing: $GameKey" }
+  return $property.Value
+}
+
+function Get-GameCopy {
+  param([Parameter(Mandatory = $true)][string]$GameKey)
+
+  $property = $pressCopy.gameCopy.PSObject.Properties[$GameKey]
+  if ($null -eq $property) { throw "Press Kit game copy is missing: $GameKey" }
+  return $property.Value
+}
+
 function New-BrandReadme {
-  $gameNames = $pressContent.brand.officialGameNames -join ', '
+  $gameNames = @($siteFacts.games.PSObject.Properties | ForEach-Object { $_.Value.name }) -join ', '
   return Join-TextLines @(
     'Lv.B Brand Assets'
     '================='
     ''
     'These assets are provided for editorial and media coverage of Lv.B and its games.'
     ''
-    "Official Studio Name: $($pressContent.brand.officialName)"
-    "Website: $($pressContent.brand.website)"
-    "Press Contact: $($pressContent.brand.pressContact)"
+    "Official Studio Name: $($siteFacts.studio.name)"
+    "Website: $($siteFacts.studio.website)"
+    "Press Contact: $($siteFacts.studio.pressEmail)"
     "Official Game Names: $gameNames"
     ''
     'Included Assets:'
@@ -69,12 +96,12 @@ function New-BrandGuide {
     ''
     'Official Name'
     '-------------'
-    $pressContent.brand.officialName
+    $siteFacts.studio.name
     ''
     'Primary Colors'
     '--------------'
   )) { $lines.Add([string]$line) }
-  foreach ($color in $pressContent.brand.colors) {
+  foreach ($color in $pressCopy.brand.colors) {
     $lines.Add("- $($color.name): $($color.hex)")
   }
   foreach ($line in @(
@@ -93,11 +120,11 @@ function New-BrandGuide {
     ''
     'Website'
     '-------'
-    $pressContent.brand.website
+    $siteFacts.studio.website
     ''
     'Contact'
     '-------'
-    $pressContent.brand.pressContact
+    $siteFacts.studio.pressEmail
   )) { $lines.Add([string]$line) }
   return Join-TextLines $lines
 }
@@ -105,7 +132,8 @@ function New-BrandGuide {
 function New-GameReadme {
   param([Parameter(Mandatory = $true)][string]$GameKey)
 
-  $game = $pressContent.games.$GameKey
+  $game = Get-GameFacts $GameKey
+  $gamePage = Get-AbsoluteSiteUrl $game.gamePath
   $included = if ($GameKey -eq 'mushhero') {
     @(
       "- Key-Art/ $emDash official key art"
@@ -123,16 +151,16 @@ function New-GameReadme {
   }
 
   return Join-TextLines @(
-    "$($game.officialName) Press Kit"
-    ('=' * ($game.officialName.Length + 10))
+    "$($game.name) Press Kit"
+    ('=' * ($game.name.Length + 10))
     ''
-    "These assets are provided for editorial and media coverage of $($game.officialName)."
+    "These assets are provided for editorial and media coverage of $($game.name)."
     ''
-    "Official Game Name: $($game.officialName)"
+    "Official Game Name: $($game.name)"
     "Developer: $($game.developer)"
-    "Official Website: $($pressContent.brand.website)"
-    "Game Page: $($game.gamePage)"
-    "Press Contact: $($pressContent.brand.pressContact)"
+    "Official Website: $($siteFacts.studio.website)"
+    "Game Page: $gamePage"
+    "Press Contact: $($siteFacts.studio.pressEmail)"
     ''
     'Included Files:'
     $included
@@ -141,7 +169,7 @@ function New-GameReadme {
     "- FACT_SHEET_JA.txt $emDash Japanese fact sheet"
     "- FACT_SHEET_ZH-CN.txt $emDash Simplified Chinese fact sheet"
     ''
-    "Use the supplied logo and images only in connection with $($game.officialName) or Lv.B coverage. Keep artwork proportions unchanged and do not present edited material as official artwork."
+    "Use the supplied logo and images only in connection with $($game.name) or Lv.B coverage. Keep artwork proportions unchanged and do not present edited material as official artwork."
   )
 }
 
@@ -151,42 +179,46 @@ function New-FactSheet {
     [Parameter(Mandatory = $true)][string]$Locale
   )
 
-  $game = $pressContent.games.$GameKey
-  $localized = Get-LocaleValue $game.locales $Locale
-  $labels = Get-LocaleValue $pressContent.labels $Locale
+  $game = Get-GameFacts $GameKey
+  $copy = Get-GameCopy $GameKey
+  $localizedFacts = Get-LocaleValue $game.localizedFacts $Locale
+  $localizedCopy = Get-LocaleValue $copy.locales $Locale
+  $labels = Get-LocaleValue $pressCopy.labels $Locale
+  $gamePage = Get-AbsoluteSiteUrl $game.gamePath
+  $pressKit = Get-AbsoluteSiteUrl $game.pressKitPath
   $lines = [System.Collections.Generic.List[string]]::new()
-  $lines.Add($game.officialName)
-  $lines.Add('=' * $game.officialName.Length)
+  $lines.Add($game.name)
+  $lines.Add('=' * $game.name.Length)
   $lines.Add('')
   $lines.Add("$($labels.developer): $($game.developer)")
   $lines.Add("$($labels.publisher): $($game.publisher)")
-  $lines.Add("$($labels.officialWebsite): $($pressContent.brand.website)")
-  $lines.Add("$($labels.gamePage): $($game.gamePage)")
-  $lines.Add("Steam: $($game.steam)")
-  if ($null -ne $game.epicGamesStore -and -not [string]::IsNullOrWhiteSpace($game.epicGamesStore)) {
-    $lines.Add("Epic Games Store: $($game.epicGamesStore)")
+  $lines.Add("$($labels.officialWebsite): $($siteFacts.studio.website)")
+  $lines.Add("$($labels.gamePage): $gamePage")
+  $lines.Add("Steam: $($game.steamStoreUrl)")
+  if ($null -ne $game.epicStoreUrl -and -not [string]::IsNullOrWhiteSpace($game.epicStoreUrl)) {
+    $lines.Add("Epic Games Store: $($game.epicStoreUrl)")
   }
-  $lines.Add("$($labels.genre): $($localized.genre)")
-  $lines.Add("$($labels.platform): $($game.platform)")
-  $lines.Add("$($labels.release): $($localized.release)")
-  if ($localized.PSObject.Properties['players']) {
-    $lines.Add("$($labels.players): $($localized.players)")
+  $lines.Add("$($labels.genre): $($localizedFacts.genre)")
+  $lines.Add("$($labels.platform): $($game.platforms -join ', ')")
+  $lines.Add("$($labels.release): $($localizedFacts.release)")
+  if ($null -ne $localizedFacts.players -and -not [string]::IsNullOrWhiteSpace($localizedFacts.players)) {
+    $lines.Add("$($labels.players): $($localizedFacts.players)")
   }
   $lines.Add('')
   $lines.Add($labels.about)
   $lines.Add('-' * $labels.about.Length)
-  $lines.Add($localized.about)
+  $lines.Add($localizedCopy.about)
   $lines.Add('')
   $lines.Add($labels.keyFeatures)
   $lines.Add('-' * $labels.keyFeatures.Length)
-  foreach ($feature in $localized.features) { $lines.Add("- $feature") }
+  foreach ($feature in $localizedCopy.features) { $lines.Add("- $feature") }
   $lines.Add('')
-  $lines.Add("$($labels.pressContact): $($pressContent.brand.pressContact)")
-  $lines.Add("$($labels.pressKit): $($game.pressKit)")
+  $lines.Add("$($labels.pressContact): $($siteFacts.studio.pressEmail)")
+  $lines.Add("$($labels.pressKit): $pressKit")
   $lines.Add('')
   $lines.Add($labels.social)
   $lines.Add('-' * $labels.social.Length)
-  foreach ($socialLink in $pressContent.social) {
+  foreach ($socialLink in $siteFacts.studio.socialLinks | Where-Object { $_.enabled }) {
     $lines.Add("- $($socialLink.label): $($socialLink.url)")
   }
   return Join-TextLines $lines

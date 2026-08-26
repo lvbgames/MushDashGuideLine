@@ -7,11 +7,12 @@ interface NavigationLink {
 
 interface Props {
   links: readonly NavigationLink[];
+  cta?: NavigationLink;
   navigationLabel: string;
   toggleLabel: string;
 }
 
-const { links, navigationLabel, toggleLabel } = Astro.props;
+const { links, cta, navigationLabel, toggleLabel } = Astro.props;
 const panelId = 'mobile-navigation-panel';
 ---
 
@@ -24,6 +25,7 @@ const panelId = 'mobile-navigation-panel';
     <nav aria-label={navigationLabel}>
       {links.map((link) => <a href={link.href} aria-current={link.current ? 'page' : undefined}>{link.label}</a>)}
     </nav>
+    {cta && <a class="mobile-navigation__press-cta" href={cta.href} aria-current={cta.current ? 'page' : undefined}>{cta.label}</a>}
     <slot />
   </div>
 </div>

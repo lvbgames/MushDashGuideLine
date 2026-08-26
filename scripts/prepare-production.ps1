@@ -97,8 +97,12 @@ $netlify = Get-Content -Raw -Encoding utf8 $netlifyPath
 if ($netlify -notmatch '(?m)^\s*base\s*=\s*"site"\s*$') { throw 'netlify.toml base must be "site".' }
 if ($netlify -notmatch '(?m)^\s*command\s*=\s*"npm run build"\s*$') { throw 'netlify.toml command must be "npm run build".' }
 if ($netlify -notmatch '(?m)^\s*publish\s*=\s*"dist"\s*$') { throw 'netlify.toml publish must be "dist".' }
-if ($netlify -match '(?im)@netlify/plugin-nextjs|^\s*\[functions\]|^\s*\[edge_functions\]') {
-  throw 'Next.js Runtime, Functions or Edge Functions configuration is not allowed.'
+if ($netlify -match '(?im)@netlify/plugin-nextjs|^\s*\[functions\]|^\s*\[edge_functions\]\s*$') {
+  throw 'Next.js Runtime, Netlify Functions or a custom edge-functions directory is not allowed.'
+}
+Assert-Equal ([regex]::Matches($netlify, '(?m)^\s*\[\[edge_functions\]\]\s*$').Count) 1 'Netlify Edge Function declaration count'
+if ($netlify -notmatch '(?ms)^\s*\[\[edge_functions\]\]\s*$.*?^\s*path\s*=\s*"/"\s*$.*?^\s*function\s*=\s*"locale-redirect"\s*$') {
+  throw 'The locale redirect Edge Function must be bound only to the root path.'
 }
 if ($netlify -match '(?im)^\s*from\s*=\s*"/robots\.txt/?"\s*$') {
   throw 'robots.txt must be served directly from site/public without a redirect or rewrite.'
@@ -124,6 +128,42 @@ if ($netlify -notmatch '(?ms)from\s*=\s*"/terms\.html".*?to\s*=\s*"/terms/".*?st
 $astroConfig = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'astro.config.mjs')
 Assert-Equal ([bool]($astroConfig -match "output:\s*'static'")) $true 'Astro static output'
 if ($astroConfig -match 'adapter') { throw 'An Astro server adapter is not allowed for production.' }
+
+$localePreferencePath = Join-Path $siteRoot 'src\i18n\localePreference.ts'
+$edgeLocaleRedirectPath = Join-Path $siteRoot 'netlify\edge-functions\locale-redirect.ts'
+$languageSwitcherPath = Join-Path $siteRoot 'src\components\layout\LanguageSwitcher.astro'
+foreach ($requiredPath in @($localePreferencePath, $edgeLocaleRedirectPath, $languageSwitcherPath)) {
+  if (-not (Test-Path -LiteralPath $requiredPath)) {
+    throw "Locale preference source is missing: $requiredPath"
+  }
+}
+
+$localePreferenceSource = Get-Content -Raw -Encoding utf8 $localePreferencePath
+$edgeLocaleRedirectSource = Get-Content -Raw -Encoding utf8 $edgeLocaleRedirectPath
+$languageSwitcherSource = Get-Content -Raw -Encoding utf8 $languageSwitcherPath
+Assert-Equal ([regex]::Matches($localePreferenceSource, "name:\s*'lvb_locale'").Count) 1 'Locale preference cookie name'
+Assert-Equal ([regex]::Matches($localePreferenceSource, 'maxAgeSeconds:\s*31_536_000').Count) 1 'Locale preference cookie lifetime'
+Assert-Equal ([regex]::Matches($localePreferenceSource, "sameSite:\s*'Lax'").Count) 1 'Locale preference cookie SameSite policy'
+Assert-Equal ([regex]::Matches($localePreferenceSource, "KR:\s*'ko'").Count) 1 'KR locale mapping'
+Assert-Equal ([regex]::Matches($localePreferenceSource, "JP:\s*'ja'").Count) 1 'JP locale mapping'
+Assert-Equal ([regex]::Matches($localePreferenceSource, "CN:\s*'zh-cn'").Count) 1 'CN locale mapping'
+Assert-Equal ([regex]::Matches($localePreferenceSource, "en:\s*'/'").Count) 1 'English locale root'
+Assert-Equal ([regex]::Matches($localePreferenceSource, 'return normalizedCountry \? countryLocaleMap\[normalizedCountry\] \?\? defaultLocale : defaultLocale').Count) 1 'Unknown country English fallback'
+Assert-Equal ([regex]::Matches($edgeLocaleRedirectSource, "requestUrl\.pathname !== '/'").Count) 1 'Edge root-only source guard'
+Assert-Equal ([regex]::Matches($edgeLocaleRedirectSource, 'context\.geo\?\.country\?\.code').Count) 1 'Netlify country code field use'
+Assert-Equal ([regex]::Matches($edgeLocaleRedirectSource, "selectedLocale === 'en'").Count) 1 'English pass-through'
+Assert-Equal ([regex]::Matches($edgeLocaleRedirectSource, "status:\s*307").Count) 1 'Temporary locale redirect status'
+Assert-Equal ([regex]::Matches($edgeLocaleRedirectSource, "'Cache-Control':\s*'private, no-store'").Count) 1 'Personalized redirect cache policy'
+Assert-Equal ([regex]::Matches($edgeLocaleRedirectSource, "Vary:\s*'Cookie, User-Agent'").Count) 1 'Personalized redirect Vary policy'
+foreach ($crawlerName in @('Googlebot', 'bingbot', 'Yeti', 'DuckDuckBot', 'Applebot', 'facebookexternalhit', 'Twitterbot', 'Discordbot', 'Slackbot')) {
+  Assert-Equal ([regex]::Matches($edgeLocaleRedirectSource, [regex]::Escape($crawlerName)).Count) 1 "Crawler bypass: $crawlerName"
+}
+Assert-Equal ([regex]::Matches($languageSwitcherSource, 'data-locale-preference=\{target\}').Count) 1 'Language selector preference marker'
+Assert-Equal ([regex]::Matches($languageSwitcherSource, 'document\.cookie = attributes\.join').Count) 1 'Language selector cookie write'
+Assert-Equal ([regex]::Matches($languageSwitcherSource, "window\.location\.protocol === 'https:'").Count) 1 'Secure cookie protocol guard'
+$geoSources = $localePreferenceSource + "`n" + $edgeLocaleRedirectSource + "`n" + $languageSwitcherSource
+Assert-Equal ([regex]::Matches($geoSources, '(?i)ipinfo|ip-api|ipapi|maxmind|google\s*geolocation|navigator\.geolocation').Count) 0 'External Geo or browser geolocation reference count'
+Assert-Equal ([regex]::Matches($edgeLocaleRedirectSource, '(?i)context\.ip|\.city|latitude|longitude|postalCode|subdivision').Count) 0 'Unused location field reference count'
 
 if (-not (Test-Path -LiteralPath (Join-Path $siteRoot 'package-lock.json'))) {
   throw 'site/package-lock.json is required.'
@@ -784,21 +824,39 @@ foreach ($asset in $homeResponsiveFiles) {
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $pressKitContentPath = Join-Path $repoRoot 'scripts\press-kit-content.json'
+$siteFactsPath = Join-Path $siteRoot 'src\data\siteFacts.json'
 $pressKitContent = Get-Content -Raw -Encoding utf8 -LiteralPath $pressKitContentPath | ConvertFrom-Json
+$siteFacts = Get-Content -Raw -Encoding utf8 -LiteralPath $siteFactsPath | ConvertFrom-Json
+$pressKitBuildSource = Get-Content -Raw -Encoding utf8 (Join-Path $repoRoot 'scripts\build-press-kits.ps1')
 $gameDataSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\games.ts')
 $contactDataSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\contact.ts')
 $socialDataSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\socialLinks.ts')
-Assert-Equal $pressKitContent.brand.officialName 'Lv.B' 'Press Kit official studio name source'
-Assert-Equal $pressKitContent.brand.website 'https://lvb.kr/' 'Press Kit official website source'
-Assert-Equal ([bool]($contactDataSource -match [regex]::Escape($pressKitContent.brand.pressContact))) $true 'Press Kit contact matches site data'
-Assert-Equal ([bool]($gameDataSource -match [regex]::Escape($pressKitContent.games.mushhero.steam))) $true 'MushHero Steam URL matches site data'
-Assert-Equal ([bool]($gameDataSource -match [regex]::Escape($pressKitContent.games.mushdash.steam))) $true 'MushDash Steam URL matches site data'
-Assert-Equal ([bool]($gameDataSource -match [regex]::Escape($pressKitContent.games.mushdash.epicGamesStore))) $true 'MushDash Epic URL matches site data'
-Assert-Equal $pressKitContent.games.mushhero.officialName 'MushHero' 'MushHero official name in Press text source'
-Assert-Equal $pressKitContent.games.mushdash.officialName 'MushDash' 'MushDash official name in Press text source'
-foreach ($socialLink in $pressKitContent.social) {
-  Assert-Equal ([bool]($socialDataSource -match [regex]::Escape($socialLink.url))) $true "Press Kit social URL matches site data: $($socialLink.label)"
+Assert-Equal $siteFacts.studio.name 'Lv.B' 'Canonical official studio name'
+Assert-Equal $siteFacts.studio.website 'https://lvb.kr/' 'Canonical official website'
+Assert-Equal $siteFacts.studio.pressEmail 'lvb909@naver.com' 'Canonical Press contact'
+Assert-Equal $siteFacts.games.mushhero.name 'MushHero' 'Canonical MushHero name'
+Assert-Equal $siteFacts.games.mushdash.name 'MushDash' 'Canonical MushDash name'
+Assert-Equal $siteFacts.games.mushhero.developer 'Lv.B' 'Canonical MushHero developer'
+Assert-Equal $siteFacts.games.mushhero.publisher 'Lv.B' 'Canonical MushHero publisher'
+Assert-Equal $siteFacts.games.mushdash.developer 'Lv.B' 'Canonical MushDash developer'
+Assert-Equal $siteFacts.games.mushdash.publisher 'Lv.B' 'Canonical MushDash publisher'
+Assert-Equal $siteFacts.games.mushdash.storePublisherLabel 'Lv.B Games' 'External MushDash Store publisher label'
+Assert-Equal (($pressKitContent.brand.PSObject.Properties.Name | Sort-Object) -join '|') 'colors' 'Press copy brand-only fields'
+Assert-Equal (($pressKitContent.gameCopy.PSObject.Properties.Name | Sort-Object) -join '|') 'mushdash|mushhero' 'Press copy game keys'
+foreach ($gameKey in @('mushhero', 'mushdash')) {
+  $gameCopy = $pressKitContent.gameCopy.$gameKey
+  Assert-Equal (($gameCopy.PSObject.Properties.Name | Sort-Object) -join '|') 'locales' "Press copy container fields: $gameKey"
+  foreach ($locale in @('en', 'ko', 'ja', 'zh-cn')) {
+    $localeCopy = $gameCopy.locales.PSObject.Properties[$locale].Value
+    Assert-Equal (($localeCopy.PSObject.Properties.Name | Sort-Object) -join '|') 'about|features' "Press-only locale copy fields: $gameKey/$locale"
+  }
 }
+Assert-Equal ([regex]::Matches($gameDataSource, "import siteFacts from './siteFacts\.json'").Count) 1 'Games use canonical site facts'
+Assert-Equal ([regex]::Matches($contactDataSource, "import siteFacts from './siteFacts\.json'").Count) 1 'Contact uses canonical site facts'
+Assert-Equal ([regex]::Matches($socialDataSource, "import siteFacts from './siteFacts\.json'").Count) 1 'Social links use canonical site facts'
+Assert-Equal ([regex]::Matches($pressKitBuildSource, 'site\\src\\data\\siteFacts\.json').Count) 1 'Press builder uses canonical site facts'
+Assert-Equal ([regex]::Matches($pressKitBuildSource, '\$siteFacts\.studio\.pressEmail').Count -gt 0) $true 'Press builder contact source'
+Assert-Equal ([regex]::Matches($pressKitBuildSource, '\$siteFacts\.studio\.socialLinks').Count) 1 'Press builder social source'
 $pressArchives = @(
   [PSCustomObject]@{ Name = 'lvb-brand-assets.zip'; Bytes = 256641; Hash = '07682DAFE439CDEB4ABC6A01A34D7026669BDFF6507E47069925ACAF16B6FB08'; Entries = @('LvB-Brand-Assets/Logo/lvb-logo-horizontal-transparent.png', 'LvB-Brand-Assets/Logo/lvb-logo-stacked-transparent.png', 'LvB-Brand-Assets/Preview/lvb-brand-card-yellow.png', 'LvB-Brand-Assets/Preview/lvb-brand-press-preview.png', 'LvB-Brand-Assets/Symbol/lvb-symbol-transparent.png', 'LvB-Brand-Assets/README.txt', 'LvB-Brand-Assets/BRAND_GUIDE.txt') },
   [PSCustomObject]@{ Name = 'mushhero-press-kit.zip'; Bytes = 2304239; Hash = 'AAAE718EFBC3E4B39DC54E0D610BE0CD0C90523598D9FD04EB06601335222D33'; Entries = @('MushHero-Press-Kit/Key-Art/mushhero-keyart-alt-01.jpg', 'MushHero-Press-Kit/Key-Art/mushhero-keyart-primary.jpg', 'MushHero-Press-Kit/Logo/mushhero-logo-transparent.png', 'MushHero-Press-Kit/Press-Image/mushhero-press-wide-1920.jpg', 'MushHero-Press-Kit/Screenshots/mushhero-screenshot-01.jpg', 'MushHero-Press-Kit/Screenshots/mushhero-screenshot-02.jpg', 'MushHero-Press-Kit/Screenshots/mushhero-screenshot-03.jpg', 'MushHero-Press-Kit/README.txt', 'MushHero-Press-Kit/FACT_SHEET_EN.txt', 'MushHero-Press-Kit/FACT_SHEET_KO.txt', 'MushHero-Press-Kit/FACT_SHEET_JA.txt', 'MushHero-Press-Kit/FACT_SHEET_ZH-CN.txt') },
@@ -884,6 +942,37 @@ foreach ($pressPath in @('dist\press\index.html', 'dist\ko\press\index.html', 'd
   Assert-Equal ([regex]::Matches($pressHtml, 'press-recent|press-recent-title|class="news-card"').Count) 0 "Removed Press recent coverage UI: $pressPath"
 }
 
+$sharedLayoutRoutes = @('', 'games', 'games\mushhero', 'games\mushdash', 'about', 'news', 'press', 'contact', 'privacy', 'terms')
+$sharedLayoutLocales = @(
+  [PSCustomObject]@{ Prefix = ''; PressHref = '/press/' },
+  [PSCustomObject]@{ Prefix = 'ko'; PressHref = '/ko/press/' },
+  [PSCustomObject]@{ Prefix = 'ja'; PressHref = '/ja/press/' },
+  [PSCustomObject]@{ Prefix = 'zh-cn'; PressHref = '/zh-cn/press/' }
+)
+foreach ($localeSpec in $sharedLayoutLocales) {
+  foreach ($routePath in $sharedLayoutRoutes) {
+    $pathParts = @('dist')
+    if ($localeSpec.Prefix) { $pathParts += $localeSpec.Prefix }
+    if ($routePath) { $pathParts += $routePath }
+    $pathParts += 'index.html'
+    $layoutPath = $pathParts -join '\'
+    $layoutHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $layoutPath)
+    $pressHrefPattern = [regex]::Escape($localeSpec.PressHref)
+    Assert-Equal ([regex]::Matches($layoutHtml, 'class="site-header__press-cta"[^>]+href="' + $pressHrefPattern + '"').Count) 1 "Desktop Header Press CTA: $layoutPath"
+    Assert-Equal ([regex]::Matches($layoutHtml, 'class="mobile-navigation__press-cta"[^>]+href="' + $pressHrefPattern + '"').Count) 1 "Mobile Header Press CTA: $layoutPath"
+    Assert-Equal ([regex]::Matches($layoutHtml, 'class="site-footer__press-cta button-link button-link--primary"[^>]+href="' + $pressHrefPattern + '"').Count) 1 "Footer Press CTA: $layoutPath"
+    foreach ($preferenceLocale in @('en', 'ko', 'ja', 'zh-cn')) {
+      Assert-Equal ([regex]::Matches($layoutHtml, 'data-locale-preference="' + [regex]::Escape($preferenceLocale) + '"').Count) 2 "Desktop and mobile locale preference links ($preferenceLocale): $layoutPath"
+    }
+    $footerNavigation = [regex]::Match($layoutHtml, '(?s)<footer class="site-footer">.*?<nav[^>]*>(.*?)</nav>')
+    Assert-Equal $footerNavigation.Success $true "Footer navigation: $layoutPath"
+    Assert-Equal ([regex]::Matches($footerNavigation.Groups[1].Value, 'href="' + $pressHrefPattern + '"').Count) 0 "Removed duplicate Footer Press text link: $layoutPath"
+    if ($routePath -eq 'press') {
+      Assert-Equal ([regex]::Matches($layoutHtml, 'class="(?:site-header__press-cta|mobile-navigation__press-cta|site-footer__press-cta button-link button-link--primary)"[^>]+aria-current="page"').Count) 3 "Press CTA active state: $layoutPath"
+    }
+  }
+}
+
 Assert-Equal ([regex]::Matches($indexHtml, '<button[^>]+data-hero-game-tab').Count) 0 'Removed Home Hero game selector count'
 Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-background-slide').Count) 4 'Home Hero background slide count'
 Assert-Equal ([regex]::Matches($indexHtml, '<div[^>]+data-hero-background-slide[^>]+data-slide-game="mushhero"').Count) 2 'Home MushHero background slide count'
@@ -960,6 +1049,9 @@ Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='zh-cn'\]:lang\(zh-cn\
 Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='zh-cn'\]:lang\(zh-cn\) h3\s*\{\s*letter-spacing:\s*0\.015em").Count) 1 'Simplified Chinese h3 tracking'
 Assert-Equal ([regex]::Matches($globalStyles, '(?s):lang\(ko\) h1,\s*:lang\(ko\) h2,\s*:lang\(ko\) h3\s*\{\s*letter-spacing:\s*-0\.035em').Count) 1 'Protected Korean heading tracking'
 Assert-Equal ([regex]::Matches($globalStyles, '(?s)\.site-brand\s*\{[^}]*letter-spacing:\s*normal').Count) 1 'Brand lockup tracking exclusion'
+Assert-Equal ([regex]::Matches($globalStyles, '(?s)\.mobile-navigation__press-cta\s*\{[^}]*min-height:\s*3rem').Count) 1 'Mobile Header Press CTA hit area'
+Assert-Equal ([regex]::Matches($globalStyles, '(?s)\.site-header__press-cta\s*\{[^}]*min-height:\s*2\.5rem').Count) 1 'Desktop Header Press CTA height'
+Assert-Equal ([regex]::Matches($globalStyles, '(?s)\.site-footer__press-cta\s*\{[^}]*min-height:\s*2\.75rem').Count) 1 'Footer Press CTA hit area'
 Assert-Equal ([regex]::Matches($homeStyles, 'filter:\s*brightness').Count) 0 'Home Hero artificial image brightness filter count'
 
 foreach ($aboutPath in @('dist\about\index.html', 'dist\ko\about\index.html', 'dist\ja\about\index.html', 'dist\zh-cn\about\index.html')) {

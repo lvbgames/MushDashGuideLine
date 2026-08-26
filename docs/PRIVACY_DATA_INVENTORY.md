@@ -26,7 +26,7 @@
 | Contact form | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | `site/src/components/pages/ContactPage.astro` | Not used |
 | Netlify Forms | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | `data-netlify`, form-name 전체 검색 0건 | Not used |
 | Netlify Functions | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | `netlify.toml`, `site/astro.config.mjs` | Not used |
-| Netlify Edge Functions | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | `netlify.toml`, `site/astro.config.mjs` | Not used |
+| Netlify Edge locale redirect | 홈페이지 루트 `/` 일반 방문 | Netlify 및 locale 선택 기능을 제공하는 Lv.B | Netlify가 요청 시 제공하는 국가 코드, 사용자가 직접 선택한 언어 preference cookie | 최초 루트 방문의 언어 경로 선택과 명시적 언어 선택 유지 | Netlify Edge 실행 중 처리; 국가 코드는 Lv.B DB·analytics·cookie에 저장하지 않음 | 국가 코드는 요청 처리 중에만 사용; 언어 preference는 이용자 브라우저에 1년 | Netlify | 가능 | `netlify.toml`, `site/netlify/edge-functions/locale-redirect.ts`, `site/src/i18n/localePreference.ts` | Confirmed in source; deployment pending |
 | 자체 API | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | Astro static output, API route 0건 | Not used |
 | 자체 DB | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | DB 연결·환경변수·adapter 0건, `docs/ARCHITECTURE.md` | Not used |
 | CMS | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | CMS 패키지·연결 설정 0건 | Not used |
@@ -38,7 +38,7 @@
 | Netlify Real User Monitoring | 운영 사이트 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | 저장소 코드 0건 및 사용자 운영 확인(2026-07-31): 비활성 | Not used |
 | Netlify Log Drains | 운영 사이트 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | 저장소 설정 0건 및 사용자 운영 확인(2026-07-31): 비활성 | Not used |
 | Netlify 정적 호스팅 | 모든 홈페이지 방문 | Netlify | IP 주소, 요청 URL, 시각, 브라우저·기기·요청 헤더 등 일반적인 CDN 요청 정보 가능 | 정적 파일 제공, 운영·보안 | Netlify 인프라 | Netlify 정책·프로젝트 설정에 따름 | Netlify | 가능 | `netlify.toml`, `site/astro.config.mjs`, Netlify 공식 정책 | Confirmed |
-| 자체 쿠키 | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | cookie 설정·`document.cookie` 검색 0건 | Not used |
+| 언어 preference cookie | 사용자가 언어 전환 링크를 직접 선택한 홈페이지 방문 | 이용자 브라우저와 Lv.B 홈페이지 | `lvb_locale` 및 `en`·`ko`·`ja`·`zh-cn` 중 선택값 | 이용자의 명시적 언어 선택을 Geo 자동 선택보다 우선 | 이용자 브라우저의 1st-party cookie | 선택 시점부터 1년(`Max-Age=31536000`) | 없음 | 없음 | `site/src/components/layout/LanguageSwitcher.astro`, `site/src/i18n/localePreference.ts`; 자동 Geo 이동은 cookie를 만들지 않음 | Confirmed in source; deployment pending |
 | localStorage | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | `localStorage` 검색 0건 | Not used |
 | sessionStorage | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | `sessionStorage` 검색 0건 | Not used |
 | IndexedDB | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | `IndexedDB` 검색 0건 | Not used |

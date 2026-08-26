@@ -4,8 +4,9 @@
 - 네 locale Press 페이지는 `site/src/data/press.ts`의 로컬 자산 manifest와 기존 회사·게임·연락처 데이터를 조합한다. 레이아웃은 Hero → About → Games → Brand → Downloads → Game Images → Key Facts → Contact이고 Recent Press는 표시하지 않는다.
 - MushDash의 `promo-*`는 실제 플레이 스크린샷이 아닌 프로모션 이미지다. 화면과 ZIP 모두 이 분류를 유지한다.
 - 기존 Steam 스크린샷 6개는 Home의 source image로 계속 참조되므로 삭제하지 않지만 Press 페이지와 새 ZIP에는 포함하지 않는다.
-- `scripts/press-kit-content.json`은 브랜드 정보와 두 게임의 공통 사실·4개 언어 소개·주요 특징을 한 번에 관리한다. 현재 사이트의 `games.ts`, `contact.ts`, `socialLinks.ts`, 번역 데이터와 이 문서에 확정된 내용만 반영한다.
-- `scripts/build-press-kits.ps1`은 승인 이미지와 위 콘텐츠 원본에서 고정 entry 이름·순서·timestamp로 ZIP 3개를 재생성하며, 모든 TXT를 Windows 메모장과 호환되는 UTF-8 BOM·CRLF로 기록한다. `scripts/prepare-production.ps1`은 public/dist SHA, ZIP 크기·entry·중복·0-byte·TXT BOM/strict UTF-8, replacement character·의도하지 않은 `??` 부재와 README `—` separator 수, 화면 링크와 OG 출력을 검증한다.
+- `site/src/data/siteFacts.json`은 공식명·홈페이지·Press 이메일·SNS·게임명·게임/Store/Press 경로·플랫폼·출시 상태·Press용 locale fact를 관리하는 canonical factual source다. `games.ts`·`contact.ts`·`socialLinks.ts`와 Press ZIP 생성기가 같은 값을 읽는다. 외부 Store의 `Lv.B Games` 원문 표기는 별도 store label로만 보존한다.
+- `scripts/press-kit-content.json`은 Brand Guide 색상, Fact Sheet label, 두 게임의 4개 언어 About·Key Features처럼 Press 전용 문구만 관리한다.
+- `scripts/build-press-kits.ps1`은 canonical facts와 Press copy, 승인 이미지를 결합해 고정 entry 이름·순서·timestamp의 ZIP 3개를 재생성하며, 모든 TXT를 Windows 메모장과 호환되는 UTF-8 BOM·CRLF로 기록한다. `scripts/prepare-production.ps1`은 source 역할 분리, public/dist SHA, ZIP 크기·entry·중복·0-byte·TXT BOM/strict UTF-8, replacement character·의도하지 않은 `??` 부재와 README `—` separator 수, 화면 링크와 OG 출력을 검증한다.
 
 ## Public OG assets
 
@@ -50,6 +51,6 @@
 
 1. 새 승인 파일을 `references/LvbResult/press-kit/`의 해당 게임 또는 브랜드 폴더에 반영하고 해상도·포맷·공개 권한을 확인한다.
 2. 같은 파일명으로 `site/public/press/assets/`에 복사하고 원본·public SHA가 일치하는지 확인한다.
-3. 게임 정보·URL·연락처·브랜드 토큰이 변경되면 사이트 data source를 먼저 갱신하고 `scripts/press-kit-content.json`을 같은 사실로 동기화한다. 확인할 수 없는 플레이 인원·출시일·플랫폼은 새로 추측하지 않는다.
+3. 게임 정보·URL·연락처 같은 사실은 `site/src/data/siteFacts.json`, Press 전용 소개·특징·label·Brand Guide 색상은 `scripts/press-kit-content.json`에서 갱신한다. 확인할 수 없는 플레이 인원·출시일·플랫폼은 새로 추측하지 않는다.
 4. `scripts/build-press-kits.ps1`을 실행하고 실제 bytes·SHA를 `site/src/data/press.ts`, 이 문서와 production 검증에 반영한다.
 5. `npm run build`와 `scripts/prepare-production.ps1`로 화면 링크, public/dist byte, ZIP entry·UTF-8 TXT와 OG 회귀를 검증한다.

@@ -1,6 +1,7 @@
 ---
 import { socialLinks } from '../../data/socialLinks';
 import { newsItems } from '../../data/news';
+import { pressTranslations } from '../../data/press';
 import { getLocalePath, type Locale, type SiteRoute } from '../../i18n/config';
 import type { Translation } from '../../i18n/translations/en';
 import Container from '../ui/Container.astro';
@@ -21,6 +22,7 @@ const gamesPath = getLocalePath(locale, 'games');
 const aboutPath = getLocalePath(locale, 'about');
 const newsPath = getLocalePath(locale, 'news');
 const contactPath = getLocalePath(locale, 'contact');
+const pressPath = getLocalePath(locale, 'press');
 const gamesCurrent = route === 'games' || route === 'mushhero' || route === 'mushdash';
 const links = [
   { label: translation.nav.games, href: gamesPath, current: gamesCurrent },
@@ -33,6 +35,11 @@ const links = [
     : []),
   { label: translation.nav.contact, href: contactPath, current: route === 'contact' }
 ] as const;
+const pressLink = {
+  label: pressTranslations[locale].navLabel,
+  href: pressPath,
+  current: route === 'press'
+} as const;
 ---
 
 <header class="site-header">
@@ -44,8 +51,9 @@ const links = [
     <nav class="desktop-navigation" aria-label={translation.nav.primaryLabel}>
       {links.map((link) => <a href={link.href} aria-current={link.current ? 'page' : undefined}>{link.label}</a>)}
     </nav>
+    <a class="site-header__press-cta" href={pressLink.href} aria-current={pressLink.current ? 'page' : undefined}>{pressLink.label}</a>
     <LanguageSwitcher locale={locale} currentPath={currentPath} route={route} routeParam={routeParam} label={translation.nav.language} className="desktop-language" />
-    <MobileNavigation links={links} navigationLabel={translation.nav.mobileLabel} toggleLabel={translation.nav.toggleMenu}>
+    <MobileNavigation links={links} cta={pressLink} navigationLabel={translation.nav.mobileLabel} toggleLabel={translation.nav.toggleMenu}>
       <LanguageSwitcher locale={locale} currentPath={currentPath} route={route} routeParam={routeParam} label={translation.nav.language} className="mobile-language" />
     </MobileNavigation>
   </Container>

@@ -42,13 +42,14 @@ Node 기준은 `.nvmrc`, 패키지 고정은 `package-lock.json`을 따른다.
 - `src/components/pages/NewsArticlePage.astro`와 동적 `[slug].astro`가 네 locale 자체 글을 생성하고 `ArticleStructuredData.astro`가 Article JSON-LD를 출력한다.
 - `src/components/pages/GamesPage.astro`가 네 locale Our Games 구조를 공유하고 `src/components/games/`가 주력·출시작 위계를 구성한다.
 - `src/components/game-detail/`은 공통 섹션 컴포넌트다.
-- `src/data/games.ts`는 확인된 Store URL·출시 상태·Steam CDN 이미지·상세 태그를 관리한다.
-- `src/data/contact.ts`는 공개 비즈니스 이메일, business category, 선택적 Discord URL을 관리한다.
+- `src/data/siteFacts.json`은 공식명·홈페이지·Press 이메일·SNS와 게임명·Store URL·플랫폼·출시 상태 같은 안정적인 사실의 canonical source다. `games.ts`·`contact.ts`·`socialLinks.ts`와 Press ZIP 생성기가 이 값을 읽고 각 API shape로 가공한다.
+- `src/data/games.ts`는 canonical game facts와 확인된 Steam CDN 이미지·상세 태그를 결합한다. 외부 Store의 `Lv.B Games` label은 UI 브랜드명과 분리해 canonical facts에 보존한다.
+- `src/data/contact.ts`는 canonical 비즈니스 이메일·Discord와 business category를 조합한다.
 - `src/data/company.ts`는 UI 브랜드명, 한국어 공식 스튜디오 주소, 검증된 Google Maps 공유 iframe URL과 검색 URL 생성을 관리한다.
 - `src/data/structuredData.ts`는 site config·`company.ts`·`contact.ts`·`socialLinks.ts`를 조합해 루트 `/` 전용 WebSite·Organization JSON-LD를 관리하고, `src/components/seo/RootStructuredData.astro`가 BaseLayout `<head>`에 단일 script로 출력한다. 회사 정보 변경 시 각 원본 데이터를 수정하며 추측 정보를 추가하지 않는다.
 - 색인 페이지 title·description은 `src/i18n/translations/*.ts`의 `meta`에서 locale별로 관리하고 `src/layouts/BaseLayout.astro`가 canonical·hreflang·Open Graph·Twitter를 출력한다. 공유 이미지는 `src/data/games.ts`의 검증된 Steam 스크린샷과 기존 locale별 이미지 alt를 사용하며 가짜 경로나 비율이 부적절한 placeholder를 추가하지 않는다.
 - `src/data/team.ts`와 `src/types/team.ts`는 팀원 이름·역할·담당·프로필 PNG fallback과 640·1024 WebP srcset을 관리한다. 로드 실패 또는 경로가 `null`이면 기존 Lv.B symbol을 대체 표시한다. 승인 원본과 교체 절차는 `public/team/profiles/README.md`를 따른다.
-- `src/data/socialLinks.ts`는 공식 X·Instagram·Discord·Steam Developer 링크를 한 번만 관리한다.
+- `src/data/socialLinks.ts`는 canonical facts의 공식 X·Instagram·Discord·Steam Developer 링크를 공통 UI shape로 제공한다.
 - `src/data/news.ts`는 검증한 외부 자료 11건과 Lv.B 자체 Studio Update 1건을 구분해 관리한다. 항목을 추가하면 최신순 분배와 다음 pagination route가 자동 계산되며, 내부 글은 네 locale 상세 route를 함께 생성한다.
 - `src/data/privacy.ts`와 `src/types/privacy.ts`는 네 locale Privacy의 메타데이터와 동일 순서 19개 section을 관리한다. `src/data/terms.ts`와 `src/types/terms.ts`는 한국어 기준 원문과 네 locale Terms의 동일 순서 16개 section을 관리한다. 두 문서는 `src/components/legal/LegalTableOfContents.astro`와 `src/styles/privacy.css`의 Legal·print 레이아웃만 안전하게 공유하고 본문 컴포넌트는 분리한다.
 - Privacy에는 사용자 확인 운영 사실인 Netlify 분석 기능 3종 미사용, MushDash의 Epic Online Services(EOS) 온라인 기능과 UserCloud, 자체 서버·DB·텔레메트리·자동 크래시 전송 미사용, 이메일 보관·아동 정책·Lv.B 담당부서를 반영한다. UserCloud 공개 범주는 `E:\MushDash` 현재 작업 트리의 SaveManager·server/local data struct 감사 결과만 사용하며 세부 파일·field 근거는 `../docs/PRIVACY_USERCLOUD_AUDIT.md`, 공개하지 않는 이메일 권리 요청 절차는 `../docs/PRIVACY_REQUEST_RUNBOOK.md`에서 관리한다.
@@ -70,13 +71,13 @@ Contact 문의 범위는 비즈니스, 파트너십, 행사·전시, 크리에�
 
 News & Press는 네 locale route와 Header·Footer 링크를 제공한다. 외부 11건은 카드 전체로 원문 새 탭, 내부 글은 카드 전체로 대응 locale 상세 route의 같은 탭에 연결한다. 총 12건은 최신순으로 한 번씩 표시하고 페이지당 6건으로 정적 분리한다. 기사 본문·이미지 복제·Featured 분리·자동 수집 기능은 포함하지 않는다. 추가 기준은 `../docs/NEWS.md`를 따른다.
 
-Press 다운로드는 `public/press/downloads/`의 정적 ZIP 3개와 `public/press/assets/`의 공식 게임 이미지를 사용한다. ZIP의 Brand README/Guide와 두 게임의 4개 언어 Fact Sheet/README는 `../scripts/press-kit-content.json`에서 `../scripts/build-press-kits.ps1`로 생성한다. 개별 브랜드 PNG·게임 JPG도 로컬 파일로 내려받으며 source URL·SHA·archive 내용과 재생성 절차는 `../docs/PRESS_KIT.md`가 단일 운영 기록이다. 서버 Function이나 runtime scraping은 사용하지 않는다.
+Press 다운로드는 `public/press/downloads/`의 정적 ZIP 3개와 `public/press/assets/`의 공식 게임 이미지를 사용한다. `../scripts/build-press-kits.ps1`은 `siteFacts.json`의 공통 사실과 `../scripts/press-kit-content.json`의 Press 전용 문구를 결합해 Brand README/Guide와 두 게임의 4개 언어 Fact Sheet/README를 생성한다. 개별 브랜드 PNG·게임 JPG도 로컬 파일로 내려받으며 source URL·SHA·archive 내용과 재생성 절차는 `../docs/PRESS_KIT.md`가 단일 운영 기록이다. 서버 Function이나 runtime scraping은 사용하지 않는다.
 
 Home은 같은 로컬 Press screenshot manifest에서 MushHero·MushDash 각각 첫 2장을 통합 Hero slideshow에 사용하고 최초 진입에는 MushHero 첫 이미지 한 장만 로드한다. Hero 아래는 Featured Game → Games Overview → About → Community → Contact 순서이며, Hero와 Games Overview에서 이미 노출되는 별도 하단 MushDash 대형 소개는 두지 않는다. About은 같은 철학을 반복하지 않고 하나의 3원칙 영역만 사용한다. 화면 전송은 Home 전용 640/1280 WebP 파생본을 우선하고 Press JPG 원본을 fallback으로 보존한다. 향후 사용자 승인 자산의 검토·교체 작업 공간은 `../references/press-assets/README.md`를 따른다. 이 references 폴더는 자동으로 public 자산과 동기화되지 않는다.
 
 자체 News 상세 route는 sitemap과 Article JSON-LD에 포함한다. RSS는 자체 글 운영량과 배포 요구가 확정될 때 재검토한다.
 
-루트 `netlify.toml`은 직접 요청된 `index.html` URL을 같은 trailing-slash canonical URL로 보내는 forced 301 규칙과 `/privacy.html` → `/privacy/`, `/terms.html` → `/terms/` 호환 301을 정의한다. 실제 응답은 배포 후 `../docs/VALIDATION.md` 절차로 확인한다.
+루트 `netlify.toml`은 직접 요청된 `index.html` URL을 같은 trailing-slash canonical URL로 보내는 forced 301 규칙과 `/privacy.html` → `/privacy/`, `/terms.html` → `/terms/` 호환 301을 정의한다. `netlify/edge-functions/locale-redirect.ts`는 일반 루트 `/` 요청에서만 `geo.country.code`와 사용자가 직접 선택한 `lvb_locale` preference를 적용하며 정적 Astro 출력·deep link·crawler SEO는 그대로 유지한다. 실제 응답은 배포 후 `../docs/VALIDATION.md` 절차로 확인한다.
 
 기존 `public/privacy.html`은 폐기했으며 역사 보관본은 `../legacy-site/public/privacy.html`에만 남긴다. 신규 정책 source 변경 시 `../docs/PRIVACY_DATA_INVENTORY.md`와 `../docs/PRIVACY_USERCLOUD_AUDIT.md`의 근거·수동 확인 항목, 네 언어 section 순서 및 의미를 함께 검토한다. 생성 HTML raw hash는 사용하지 않으며, 네 언어의 최종 수정일과 시행일은 사용자 승인 운영 배포일 `2026-08-03`으로 확정했다. 이후 정책 변경 시 두 날짜와 전체 검증을 함께 갱신한다.
 

@@ -2,7 +2,7 @@
 
 - 브랜드 공통은 로고에서 추출한 ink `#231f20`, cream `#fff08c`, yellow `#ffd746`, honey `#ffb400`을 기준으로 한다.
 - Header·Hero의 deepest charcoal은 `#0f0d0c`를 유지하고, 일반 page `#1a1714`, primary surface `#221e19`, raised surface `#29241e`, warm elevated surface `#302a22`를 사용한다. 본문은 warm white `#f7f1e5`, secondary `#d5caba`, muted `#bdb2a2`다. 기본 decorative border는 `#51483d`, interactive/strong border는 `#82725c`를 사용해 기존 Warm Bright Charcoal보다 체감 밝기를 약 8~12% 높이면서도 page < surface < raised < warm 위계와 interactive boundary 3:1 대비를 보존한다.
-- Header·Footer는 원본에서 분리한 투명 `lvb-symbol.png`와 semibold CSS `Lv.B` 텍스트를 결합한 compact mark를 무배경·무테두리·무그림자로 사용한다. Header symbol은 약 28px, Footer symbol은 약 34px이며 전체 가로 로고는 넓은 브랜드 영역용으로 보존한다.
+- Header·Footer는 원본에서 분리한 투명 `lvb-symbol.png`와 semibold CSS `Lv.B` 텍스트를 결합한 compact mark를 무배경·무테두리·무그림자로 사용한다. Header symbol은 약 28px, Footer symbol은 약 34px이며 전체 가로 로고는 넓은 브랜드 영역용으로 보존한다. Press Kit은 desktop Header의 compact yellow outline CTA, mobile navigation panel과 Footer의 단일 compact CTA로 구분하며 같은 영역에 일반 Press text link를 반복하지 않는다.
 - About Hero의 넓은 브랜드 패널에서만 보존 전체 로고 `lvb-logo.png`를 원본 비율로 사용한다. 밝은 warm-neutral 패널은 로고를 변형하지 않고 담으며 전체 폭 plate·glow·큰 그림자를 사용하지 않는다.
 - 브랜드 yellow는 공통 primary CTA·eyebrow·active navigation·focus ring에 제한한다. 기본 divider는 warm neutral이며 cream은 hover와 제한적인 badge에 사용한다.
 - MushHero accent는 브랜드 honey 계열(`--color-mushhero-accent`)을 사용한다.

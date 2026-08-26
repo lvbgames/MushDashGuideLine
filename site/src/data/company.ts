@@ -1,3 +1,5 @@
+import siteFacts from './siteFacts.json';
+
 const postalAddress = {
   streetAddress: '수영강변대로 140, 9층 905호',
   addressLocality: '부산광역시',
@@ -6,8 +8,8 @@ const postalAddress = {
 } as const;
 
 export const company = {
-  name: 'Lv.B',
-  alternateName: '레벨비',
+  name: siteFacts.studio.name,
+  alternateName: siteFacts.studio.alternateName,
   address: `${postalAddress.addressLocality} ${postalAddress.streetAddress}`,
   postalAddress,
   googleMapsEmbedUrl:

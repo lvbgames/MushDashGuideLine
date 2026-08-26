@@ -17,6 +17,9 @@
 - 지원 locale별 route, canonical, `hreflang`, `x-default`를 확인한다.
 - 중국어 locale route는 `/zh-cn/`을 유지하되 HTML `hreflang` 값은 BCP 47 표기 `zh-CN`인지 확인한다.
 - `LanguageSwitcher`는 현재 페이지 종류와 게임 상세 slug를 유지해야 한다.
+- Netlify Edge locale redirect는 `site/netlify/edge-functions/locale-redirect.ts` 한 개이며 `netlify.toml`에서 정확한 `/`에만 연결한다. KR→KO, JP→JA, CN→ZH-CN, 기타·미확인→EN과 유효한 `lvb_locale` 우선순위를 검사한다.
+- 루트 Geo redirect는 307, `private, no-store`, query string 보존이어야 한다. locale·deep link에는 적용하지 않고 알려진 crawler·preview bot은 English root를 받아야 하며 redirect loop가 없어야 한다.
+- 언어 선택 링크는 `lvb_locale` 값만 `Path=/`, 1년, `SameSite=Lax`로 저장하고 HTTPS에서는 `Secure`를 사용한다. 외부 Geo/IP API·브라우저 위치 권한·국가 코드 저장은 없어야 한다.
 - Header·Footer와 본문 CTA가 현재 locale의 의도한 경로를 사용해야 한다.
 - sitemap은 공개 정규 Astro route만 포함하고 404와 네 Astro Privacy·Terms route는 제외한다.
 - `robots.txt`는 공개 sitemap index를 가리켜야 하며 404는 `noindex`이고 복잡한 locale 자동 감지나 JavaScript를 사용하지 않아야 한다.

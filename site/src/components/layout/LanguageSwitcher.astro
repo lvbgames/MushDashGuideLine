@@ -15,6 +15,43 @@ const { locale, route = 'home', routeParam, label, className } = Astro.props;
 
 <nav class:list={['language-switcher', className]} aria-label={label}>
   {locales.map((target) => (
-    <a href={getLocalePath(target, route, routeParam)} aria-current={target === locale ? 'page' : undefined} lang={target}>{localeLabels[target]}</a>
+    <a
+      href={getLocalePath(target, route, routeParam)}
+      aria-current={target === locale ? 'page' : undefined}
+      lang={target}
+      data-locale-preference={target}
+    >
+      {localeLabels[target]}
+    </a>
   ))}
 </nav>
+
+<script>
+  import { getValidLocalePreference, localePreferenceCookie } from '../../i18n/localePreference';
+
+  document.addEventListener('click', (event) => {
+    const eventTarget = event.target;
+    if (!(eventTarget instanceof Element)) {
+      return;
+    }
+
+    const localeLink = eventTarget.closest<HTMLAnchorElement>('a[data-locale-preference]');
+    const selectedLocale = getValidLocalePreference(localeLink?.dataset.localePreference);
+    if (!localeLink || !selectedLocale) {
+      return;
+    }
+
+    const attributes = [
+      `${localePreferenceCookie.name}=${selectedLocale}`,
+      'Path=/',
+      `Max-Age=${localePreferenceCookie.maxAgeSeconds}`,
+      `SameSite=${localePreferenceCookie.sameSite}`
+    ];
+
+    if (window.location.protocol === 'https:') {
+      attributes.push('Secure');
+    }
+
+    document.cookie = attributes.join('; ');
+  });
+</script>

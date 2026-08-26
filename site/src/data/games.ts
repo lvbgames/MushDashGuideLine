@@ -1,21 +1,24 @@
 import type { Game } from '../types/game';
+import siteFacts from './siteFacts.json';
+
+const { mushhero, mushdash } = siteFacts.games;
 
 export const games: readonly Game[] = [
   {
     slug: 'mushhero',
-    title: 'MushHero',
+    title: mushhero.name,
     status: 'unknown',
     priority: 'primary',
-    releaseStatus: 'upcoming',
-    releaseDisplay: '2027',
-    releaseDate: null,
-    developer: 'Lv.B',
-    publisher: 'Lv.B',
-    genres: ['Action', 'Casual', 'Indie', 'Strategy'],
+    releaseStatus: mushhero.releaseStatus as Game['releaseStatus'],
+    releaseDisplay: mushhero.releaseDisplay,
+    releaseDate: mushhero.releaseDate,
+    developer: mushhero.developer,
+    publisher: mushhero.publisher,
+    genres: mushhero.storeGenres,
     detailTags: {},
-    steamAppId: 4711200,
-    steamStoreUrl: 'https://store.steampowered.com/app/4711200/MushHero/',
-    epicStoreUrl: null,
+    steamAppId: mushhero.steamAppId,
+    steamStoreUrl: mushhero.steamStoreUrl,
+    epicStoreUrl: mushhero.epicStoreUrl,
     youtubeTrailerUrl: null,
     videoTitleKey: null,
     videoPoster: null,
@@ -74,28 +77,28 @@ export const games: readonly Game[] = [
     sourceText: 'MushHero is a cooperative roguelite defense game where players fight together against waves of monsters and powerful bosses. Build unique strategies through randomized weapons, evolving skills, and a node-based progression system that creates a different combat experience every run.',
     homepageDescription: null,
     localizedDescription: {},
-    platforms: ['Windows']
+    platforms: mushhero.platforms
   },
   {
     slug: 'mushdash',
-    title: 'MushDash',
+    title: mushdash.name,
     status: 'unknown',
     priority: 'secondary',
-    releaseStatus: 'early-access',
-    releaseDisplay: '26 Aug, 2025',
-    releaseDate: '2025-08-26',
-    developer: 'Lv.B Games',
-    publisher: 'Lv.B Games',
-    genres: ['Adventure', 'Casual', 'Indie', 'Racing', 'Early Access'],
+    releaseStatus: mushdash.releaseStatus as Game['releaseStatus'],
+    releaseDisplay: mushdash.releaseDisplay,
+    releaseDate: mushdash.releaseDate,
+    developer: mushdash.developer,
+    publisher: mushdash.publisher,
+    genres: mushdash.storeGenres,
     detailTags: {
       en: ['Online Party Race', 'Platformer', 'Up to 7 Players', 'Obstacle Courses'],
       ko: ['온라인 파티 레이스', '플랫포머', '최대 7인', '장애물 코스'],
       ja: ['オンラインパーティーレース', 'プラットフォーマー', '最大7人', '障害物コース'],
       'zh-cn': ['在线派对竞速', '平台跳跃', '最多7人', '障碍赛道']
     },
-    steamAppId: 3153140,
-    steamStoreUrl: 'https://store.steampowered.com/app/3153140/Mush_Dash/',
-    epicStoreUrl: 'https://store.epicgames.com/p/mushdash-75c4c9',
+    steamAppId: mushdash.steamAppId,
+    steamStoreUrl: mushdash.steamStoreUrl,
+    epicStoreUrl: mushdash.epicStoreUrl,
     youtubeTrailerUrl: null,
     videoTitleKey: null,
     videoPoster: null,
@@ -154,6 +157,6 @@ export const games: readonly Game[] = [
     sourceText: 'Cute mushrooms are running for their lives in a chaotic online party race! Dash, jump and dodge deadly traps with up to 7 players, read tricky bomb patterns, collect Mushroom Coins and claim the final crown before you end up as an ingredient.',
     homepageDescription: null,
     localizedDescription: {},
-    platforms: ['Windows']
+    platforms: mushdash.platforms
   }
 ];

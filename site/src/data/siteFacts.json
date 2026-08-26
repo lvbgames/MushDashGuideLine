@@ -1,0 +1,92 @@
+{
+  "studio": {
+    "name": "Lv.B",
+    "alternateName": "레벨비",
+    "website": "https://lvb.kr/",
+    "pressEmail": "lvb909@naver.com",
+    "socialLinks": [
+      {
+        "id": "x",
+        "label": "X",
+        "url": "https://x.com/Lv_B_Games",
+        "enabled": true,
+        "source": "User-verified official link",
+        "lastVerifiedAt": "2026-07-31"
+      },
+      {
+        "id": "instagram",
+        "label": "Instagram",
+        "url": "https://www.instagram.com/lv.b_games/",
+        "enabled": true,
+        "source": "User-verified official link",
+        "lastVerifiedAt": "2026-07-31"
+      },
+      {
+        "id": "discord",
+        "label": "Discord",
+        "url": "https://discord.gg/yuphyAWWUr",
+        "enabled": true,
+        "source": "User-verified official link",
+        "lastVerifiedAt": "2026-07-31"
+      },
+      {
+        "id": "steam-developer",
+        "label": "Steam Developer Page",
+        "url": "https://store.steampowered.com/search/?developer=Lv.B",
+        "enabled": true,
+        "source": "User-verified official link",
+        "lastVerifiedAt": "2026-07-31"
+      }
+    ]
+  },
+  "games": {
+    "mushhero": {
+      "slug": "mushhero",
+      "name": "MushHero",
+      "developer": "Lv.B",
+      "publisher": "Lv.B",
+      "storeDeveloperLabel": "Lv.B",
+      "storePublisherLabel": "Lv.B",
+      "gamePath": "/games/mushhero/",
+      "pressKitPath": "/press/downloads/mushhero-press-kit.zip",
+      "steamAppId": 4711200,
+      "steamStoreUrl": "https://store.steampowered.com/app/4711200/MushHero/",
+      "epicStoreUrl": null,
+      "platforms": ["Windows"],
+      "releaseStatus": "upcoming",
+      "releaseDisplay": "2027",
+      "releaseDate": null,
+      "storeGenres": ["Action", "Casual", "Indie", "Strategy"],
+      "localizedFacts": {
+        "en": { "genre": "Cooperative Roguelite Defense", "release": "Planned for 2027", "players": null },
+        "ko": { "genre": "협동 로그라이트 디펜스", "release": "2027년 출시 예정", "players": null },
+        "ja": { "genre": "協力型ローグライトディフェンス", "release": "2027年リリース予定", "players": null },
+        "zh-cn": { "genre": "合作 Roguelite 防守游戏", "release": "预计于 2027 年推出", "players": null }
+      }
+    },
+    "mushdash": {
+      "slug": "mushdash",
+      "name": "MushDash",
+      "developer": "Lv.B",
+      "publisher": "Lv.B",
+      "storeDeveloperLabel": "Lv.B Games",
+      "storePublisherLabel": "Lv.B Games",
+      "gamePath": "/games/mushdash/",
+      "pressKitPath": "/press/downloads/mushdash-press-kit.zip",
+      "steamAppId": 3153140,
+      "steamStoreUrl": "https://store.steampowered.com/app/3153140/Mush_Dash/",
+      "epicStoreUrl": "https://store.epicgames.com/p/mushdash-75c4c9",
+      "platforms": ["Windows"],
+      "releaseStatus": "early-access",
+      "releaseDisplay": "26 Aug, 2025",
+      "releaseDate": "2025-08-26",
+      "storeGenres": ["Adventure", "Casual", "Indie", "Racing", "Early Access"],
+      "localizedFacts": {
+        "en": { "genre": "Online Party Racing", "release": "Available in Early Access since 26 August 2025", "players": "Up to 7 players online" },
+        "ko": { "genre": "온라인 파티 레이스", "release": "2025년 8월 26일부터 앞서 해보기 제공", "players": "온라인 최대 7인" },
+        "ja": { "genre": "オンラインパーティーレース", "release": "2025年8月26日より早期アクセス配信中", "players": "オンライン最大7人" },
+        "zh-cn": { "genre": "在线派对竞速", "release": "自 2025 年 8 月 26 日起提供抢先体验", "players": "最多七名玩家在线游玩" }
+      }
+    }
+  }
+}

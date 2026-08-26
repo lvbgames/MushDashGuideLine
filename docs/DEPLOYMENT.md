@@ -3,7 +3,7 @@
 - GitHub: `https://github.com/lvbgames/MushDashGuideLine`, branch `main`, 기존 배포 소스 기준 HEAD `fcba5a78ba02adeaff0bef9c18bc3ab6825f32dd`. 로컬 `legacy-site/`는 보관 영역이다.
 - 공식 도메인: `lvb.kr`; DNS는 카페24 관리로 제공되었으나 실제 DNS/Netlify site 값은 저장소에서 확인되지 않는다.
 - legacy `netlify.toml`과 `next.config.ts`는 `legacy-site/`에 있다. 기존 실서비스 설정은 변경하지 않았다.
-- 신규 root `netlify.toml`: base `site`, command `npm run build`, publish `dist`. Astro adapter·Next plugin·functions·serverless 설정은 사용하지 않는다. 실행 권한과 배포 전 검증은 `VALIDATION.md`를 따른다.
+- 신규 root `netlify.toml`: base `site`, command `npm run build`, publish `dist`. Astro adapter·Next plugin·Functions·SSR은 사용하지 않는다. 정적 출력 앞에서 루트 `/`만 처리하는 `site/netlify/edge-functions/locale-redirect.ts` 한 개를 사용하며 실행 권한과 배포 전 검증은 `VALIDATION.md`를 따른다.
 - 대표 URL 정책: HTTP와 `www`는 Netlify에서 `https://lvb.kr/`로 301 처리한다. root와 최대 3개 경로 segment의 명시적 `index.html` 요청은 `netlify.toml`의 forced 301 규칙으로 같은 trailing-slash 대표 URL에 통합한다. 기존 `/privacy.html`과 호환용 `/terms.html`은 generic 규칙보다 앞선 명시적 forced 301로 각각 `/privacy/`, `/terms/`에 연결한다.
 - Naver 사이트 소유확인은 HTML 파일이 아니라 `site/src/config/site.ts`의 `naverSiteVerification` 값을 `BaseLayout.astro`가 정적 `<head>` meta로 출력하는 방식을 사용한다. 과거 `naver799482ce0e5e513c37daff06412293c5.html` 파일은 사용하거나 배포하지 않는다.
 - 기존 운영 `/privacy`는 영어 단일 static HTML이고 `/privacy/`가 `/privacy`로 이동하며 `/privacy.html`도 200이었다. 신규 배포에서는 `/privacy/`와 세 locale Privacy를 Astro 정규 URL로 제공하고, `/privacy.html` 및 각 `index.html` 직접 경로는 trailing-slash canonical로 301 처리한다.
@@ -11,6 +11,14 @@
 - 신규 생성 HTML은 빌드 포맷과 줄바꿈에 따라 byte가 달라지므로 raw SHA-256 잠금을 사용하지 않는다. `prepare-production.ps1`은 네 route, 19개 section 순서, canonical·hreflang·robots, Footer·언어 경로, 금지 문구와 sitemap 제외를 의미 기반으로 검사한다.
 
 무료 운영 정책: 정적 배포만 사용하고 유료 기능·자동 결제·대용량 영상 자체 호스팅을 사용하지 않는다. production deploy는 최소화하고 Deploy Preview를 우선한다. 무료 사용량 소진 가능성은 운영 시 관리한다.
+
+## 루트 Geo locale
+
+- Netlify가 Edge context에 제공하는 `geo.country.code`만 읽으며 외부 Geo/IP API, client IP, 도시·좌표·우편번호를 사용하거나 저장하지 않는다.
+- cookie가 없는 일반 `/` 요청은 KR→`/ko/`, JP→`/ja/`, CN→`/zh-cn/`으로 307 이동한다. 그 외·미확인은 English root를 제공하고 query string을 유지한다.
+- 사용자가 언어 링크에서 직접 선택한 `lvb_locale=en|ko|ja|zh-cn`이 Geo보다 우선한다. cookie는 `Path=/`, `Max-Age=31536000`, `SameSite=Lax`이며 HTTPS에서 `Secure`다. 자동 Geo 이동은 cookie를 만들지 않는다.
+- crawler·preview bot과 모든 deep link는 우회한다. redirect 응답은 `Cache-Control: private, no-store`와 `Vary: Cookie, User-Agent`를 사용한다.
+- 로컬 runtime은 `netlify dev --geo=mock --country=KR` 형식으로 국가별 검증하고, 배포 후 운영 도메인에서 실제 country 판정·cookie override·loop 0을 다시 확인한다.
 
 ## robots.txt 운영
 

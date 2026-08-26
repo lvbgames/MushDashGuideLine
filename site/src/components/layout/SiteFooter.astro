@@ -34,13 +34,13 @@ const year = new Date().getFullYear();
         <span class="site-brand__wordmark" aria-hidden="true">Lv.B</span>
       </a>
       <p class="site-footer__muted">{translation.footer.tagline}</p>
+      <a class="site-footer__press-cta button-link button-link--primary" href={pressPath} aria-current={route === 'press' ? 'page' : undefined}>{pressTranslations[locale].navLabel}</a>
     </div>
     <nav aria-label={translation.footer.navigationLabel}>
       <a href={gamesPath} aria-current={gamesCurrent ? 'page' : undefined}>{translation.nav.games}</a>
       <a href={aboutPath} aria-current={route === 'about' ? 'page' : undefined}>{translation.nav.about}</a>
       {newsItems.length > 0 && <a href={newsPath} aria-current={route === 'news' || route === 'news-article' ? 'page' : undefined}>{translation.nav.news}</a>}
       <a href={contactPath} aria-current={route === 'contact' ? 'page' : undefined}>{translation.nav.contact}</a>
-      <a href={pressPath} aria-current={route === 'press' ? 'page' : undefined}>{pressTranslations[locale].navLabel}</a>
       <a href={privacyPath} aria-current={route === 'privacy' ? 'page' : undefined}>{translation.common.privacy}</a>
       <a href={termsPath} aria-current={route === 'terms' ? 'page' : undefined}>{translation.common.terms}</a>
     </nav>
