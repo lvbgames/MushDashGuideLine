@@ -797,7 +797,7 @@ foreach ($asset in $homeSourceScreenshotFiles) {
 
 Add-Type -AssemblyName System.Drawing
 $socialImageFiles = @(
-  [PSCustomObject]@{ Path = 'og\lvb-og-primary.png'; Hash = 'F07E9FECEF39CB37A7FE1523D6E9EBFD56C3FD1247AE67C90819DC608F816FBA'; Width = 1200; Height = 630 },
+  [PSCustomObject]@{ Path = 'og\lvb-og-primary.png'; Hash = '16FBF6BD0FE9BC30AC4AD6982788C3AE93C193B928F9F55E562FDC24A408C490'; Width = 1200; Height = 630 },
   [PSCustomObject]@{ Path = 'og\mushhero-og-primary.jpg'; Hash = '558408C081859B7B345344FD203C806D4DD16E714DB2EF4FEDB5F4B0232F6481'; Width = 1200; Height = 630 },
   [PSCustomObject]@{ Path = 'og\mushdash-og-primary.jpg'; Hash = '8C90AA12908B9222FB1CF7DD0136FF5CB4C390DB9A88A6166D21CC8CB9E2C215'; Width = 1200; Height = 630 }
 )

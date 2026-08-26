@@ -12,7 +12,7 @@
 
 | 공개 URL | 규격 | bytes | SHA-256 | 사용 위치 |
 |---|---:|---:|---|---|
-| `/og/lvb-og-primary.png` | 1200×630 PNG | 44558 | `F07E9FECEF39CB37A7FE1523D6E9EBFD56C3FD1247AE67C90819DC608F816FBA` | Home, About, Games, News, Press, Contact |
+| `/og/lvb-og-primary.png` | 1200×630 PNG | 54998 | `16FBF6BD0FE9BC30AC4AD6982788C3AE93C193B928F9F55E562FDC24A408C490` | Home, About, Games, News, Press, Contact |
 | `/og/mushhero-og-primary.jpg` | 1200×630 JPEG | 108786 | `558408C081859B7B345344FD203C806D4DD16E714DB2EF4FEDB5F4B0232F6481` | MushHero 상세, BIC 2026 자체 News |
 | `/og/mushdash-og-primary.jpg` | 1200×630 JPEG | 141107 | `8C90AA12908B9222FB1CF7DD0136FF5CB4C390DB9A88A6166D21CC8CB9E2C215` | MushDash 상세 |
 
