@@ -60,9 +60,9 @@ export const pressMedia: readonly PressMedia[] = [
 ];
 
 export const pressDownloads: readonly PressDownload[] = [
-  { id: 'brand', path: '/press/downloads/lvb-brand-assets.zip', fileName: 'lvb-brand-assets.zip', bytes: 255565, sha256: '035DEF47F8B06BF19ABC5855475FC4EC44D12DAC0C78584C711E2C1E19A6367F', contents: '5 PNG' },
-  { id: 'mushhero', path: '/press/downloads/mushhero-press-kit.zip', fileName: 'mushhero-press-kit.zip', bytes: 2300078, sha256: 'CC05D7A934288FF39BC5902AAA4AB35A346C9AF817AF1ABCD3E3BEBA973CCE2C', contents: '6 JPG + 1 PNG' },
-  { id: 'mushdash', path: '/press/downloads/mushdash-press-kit.zip', fileName: 'mushdash-press-kit.zip', bytes: 914628, sha256: 'FA846A03159BCE14DA55BA9604A5AD509AED49DA7394E36EAFE3555C82093890', contents: '5 JPG + 1 PNG' }
+  { id: 'brand', path: '/press/downloads/lvb-brand-assets.zip', fileName: 'lvb-brand-assets.zip', bytes: 256641, sha256: '07682DAFE439CDEB4ABC6A01A34D7026669BDFF6507E47069925ACAF16B6FB08', contents: '5 PNG + 2 TXT' },
+  { id: 'mushhero', path: '/press/downloads/mushhero-press-kit.zip', fileName: 'mushhero-press-kit.zip', bytes: 2304239, sha256: 'AAAE718EFBC3E4B39DC54E0D610BE0CD0C90523598D9FD04EB06601335222D33', contents: '6 JPG + 1 PNG + 5 TXT' },
+  { id: 'mushdash', path: '/press/downloads/mushdash-press-kit.zip', fileName: 'mushdash-press-kit.zip', bytes: 918996, sha256: '31A85D8D1FBAC9ABD293D7CE63868B1179B51C3B6348641C33DE93C71CDE9F37', contents: '5 JPG + 1 PNG + 5 TXT' }
 ];
 
 export const pressTranslations: PressTranslations = {
@@ -92,7 +92,7 @@ export const pressTranslations: PressTranslations = {
     downloadsTitle: 'Download press materials',
     downloadZip: 'Download ZIP',
     downloadLabels: { brand: 'Lv.B Brand Assets', mushhero: 'MushHero Press Kit', mushdash: 'MushDash Press Kit' },
-    downloadDescriptions: { brand: 'Official transparent Lv.B logos, symbol and brand preview images.', mushhero: 'Official key art, logo, press image and gameplay screenshots.', mushdash: 'Official key art, logo, press image and promotional images.' },
+    downloadDescriptions: { brand: 'Official transparent Lv.B logos, symbol, preview images and a concise brand guide.', mushhero: 'Official key art, logo, press image, gameplay screenshots and fact sheets in four languages.', mushdash: 'Official key art, logo, press image, promotional images and fact sheets in four languages.' },
     screenshotsEyebrow: 'Official media',
     screenshotsTitle: 'Game images',
     factsEyebrow: 'At a glance',
@@ -131,7 +131,7 @@ export const pressTranslations: PressTranslations = {
     downloadsTitle: '보도 자료 다운로드',
     downloadZip: 'ZIP 다운로드',
     downloadLabels: { brand: 'Lv.B 브랜드 자산', mushhero: 'MushHero 프레스 키트', mushdash: 'MushDash 프레스 키트' },
-    downloadDescriptions: { brand: 'Lv.B 투명 로고, 심볼과 브랜드 미리보기 이미지입니다.', mushhero: '공식 키아트, 로고, 언론용 이미지와 게임플레이 스크린샷입니다.', mushdash: '공식 키아트, 로고, 언론용 이미지와 프로모션 이미지입니다.' },
+    downloadDescriptions: { brand: 'Lv.B 투명 로고, 심볼, 브랜드 미리보기와 간단한 브랜드 가이드입니다.', mushhero: '공식 키아트, 로고, 언론용 이미지, 게임플레이 스크린샷과 4개 언어 팩트 시트입니다.', mushdash: '공식 키아트, 로고, 언론용 이미지, 프로모션 이미지와 4개 언어 팩트 시트입니다.' },
     screenshotsEyebrow: '공식 미디어',
     screenshotsTitle: '게임 이미지',
     factsEyebrow: '한눈에 보기',
@@ -170,7 +170,7 @@ export const pressTranslations: PressTranslations = {
     downloadsTitle: 'プレス素材をダウンロード',
     downloadZip: 'ZIPをダウンロード',
     downloadLabels: { brand: 'Lv.Bブランド素材', mushhero: 'MushHeroプレスキット', mushdash: 'MushDashプレスキット' },
-    downloadDescriptions: { brand: 'Lv.Bの透過ロゴ、シンボル、ブランドプレビュー画像です。', mushhero: '公式キーアート、ロゴ、プレス画像、ゲームプレイ画像です。', mushdash: '公式キーアート、ロゴ、プレス画像、プロモーション画像です。' },
+    downloadDescriptions: { brand: 'Lv.Bの透過ロゴ、シンボル、ブランドプレビュー、簡易ブランドガイドです。', mushhero: '公式キーアート、ロゴ、プレス画像、ゲームプレイ画像、4言語のファクトシートです。', mushdash: '公式キーアート、ロゴ、プレス画像、プロモーション画像、4言語のファクトシートです。' },
     screenshotsEyebrow: '公式メディア',
     screenshotsTitle: 'ゲーム画像',
     factsEyebrow: '基本情報',
@@ -209,7 +209,7 @@ export const pressTranslations: PressTranslations = {
     downloadsTitle: '下载媒体资料',
     downloadZip: '下载 ZIP',
     downloadLabels: { brand: 'Lv.B 品牌素材', mushhero: 'MushHero 媒体资料包', mushdash: 'MushDash 媒体资料包' },
-    downloadDescriptions: { brand: '包含 Lv.B 透明背景标志、图形标志和品牌预览图片。', mushhero: '包含官方主视觉图、标志、媒体图片和游戏截图。', mushdash: '包含官方主视觉图、标志、媒体图片和宣传图片。' },
+    downloadDescriptions: { brand: '包含 Lv.B 透明背景标志、图形标志、品牌预览图片及简明品牌指南。', mushhero: '包含官方主视觉图、标志、媒体图片、游戏截图及四种语言的资料说明。', mushdash: '包含官方主视觉图、标志、媒体图片、宣传图片及四种语言的资料说明。' },
     screenshotsEyebrow: '官方媒体素材',
     screenshotsTitle: '游戏图片',
     factsEyebrow: '基本信息',

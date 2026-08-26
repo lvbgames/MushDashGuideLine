@@ -783,10 +783,26 @@ foreach ($asset in $homeResponsiveFiles) {
 }
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
+$pressKitContentPath = Join-Path $repoRoot 'scripts\press-kit-content.json'
+$pressKitContent = Get-Content -Raw -Encoding utf8 -LiteralPath $pressKitContentPath | ConvertFrom-Json
+$gameDataSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\games.ts')
+$contactDataSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\contact.ts')
+$socialDataSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\socialLinks.ts')
+Assert-Equal $pressKitContent.brand.officialName 'Lv.B' 'Press Kit official studio name source'
+Assert-Equal $pressKitContent.brand.website 'https://lvb.kr/' 'Press Kit official website source'
+Assert-Equal ([bool]($contactDataSource -match [regex]::Escape($pressKitContent.brand.pressContact))) $true 'Press Kit contact matches site data'
+Assert-Equal ([bool]($gameDataSource -match [regex]::Escape($pressKitContent.games.mushhero.steam))) $true 'MushHero Steam URL matches site data'
+Assert-Equal ([bool]($gameDataSource -match [regex]::Escape($pressKitContent.games.mushdash.steam))) $true 'MushDash Steam URL matches site data'
+Assert-Equal ([bool]($gameDataSource -match [regex]::Escape($pressKitContent.games.mushdash.epicGamesStore))) $true 'MushDash Epic URL matches site data'
+Assert-Equal $pressKitContent.games.mushhero.officialName 'MushHero' 'MushHero official name in Press text source'
+Assert-Equal $pressKitContent.games.mushdash.officialName 'MushDash' 'MushDash official name in Press text source'
+foreach ($socialLink in $pressKitContent.social) {
+  Assert-Equal ([bool]($socialDataSource -match [regex]::Escape($socialLink.url))) $true "Press Kit social URL matches site data: $($socialLink.label)"
+}
 $pressArchives = @(
-  [PSCustomObject]@{ Name = 'lvb-brand-assets.zip'; Bytes = 255565; Hash = '035DEF47F8B06BF19ABC5855475FC4EC44D12DAC0C78584C711E2C1E19A6367F'; Entries = @('LvB-Brand-Assets/Logo/lvb-logo-horizontal-transparent.png', 'LvB-Brand-Assets/Logo/lvb-logo-stacked-transparent.png', 'LvB-Brand-Assets/Preview/lvb-brand-card-yellow.png', 'LvB-Brand-Assets/Preview/lvb-brand-press-preview.png', 'LvB-Brand-Assets/Symbol/lvb-symbol-transparent.png') },
-  [PSCustomObject]@{ Name = 'mushhero-press-kit.zip'; Bytes = 2300078; Hash = 'CC05D7A934288FF39BC5902AAA4AB35A346C9AF817AF1ABCD3E3BEBA973CCE2C'; Entries = @('MushHero-Press-Kit/Key-Art/mushhero-keyart-alt-01.jpg', 'MushHero-Press-Kit/Key-Art/mushhero-keyart-primary.jpg', 'MushHero-Press-Kit/Logo/mushhero-logo-transparent.png', 'MushHero-Press-Kit/Press-Image/mushhero-press-wide-1920.jpg', 'MushHero-Press-Kit/Screenshots/mushhero-screenshot-01.jpg', 'MushHero-Press-Kit/Screenshots/mushhero-screenshot-02.jpg', 'MushHero-Press-Kit/Screenshots/mushhero-screenshot-03.jpg') },
-  [PSCustomObject]@{ Name = 'mushdash-press-kit.zip'; Bytes = 914628; Hash = 'FA846A03159BCE14DA55BA9604A5AD509AED49DA7394E36EAFE3555C82093890'; Entries = @('MushDash-Press-Kit/Key-Art/mushdash-keyart-primary.jpg', 'MushDash-Press-Kit/Logo/mushdash-logo-transparent.png', 'MushDash-Press-Kit/Press-Image/mushdash-press-wide-1920.jpg', 'MushDash-Press-Kit/Promotional-Images/mushdash-promo-01.jpg', 'MushDash-Press-Kit/Promotional-Images/mushdash-promo-02.jpg', 'MushDash-Press-Kit/Promotional-Images/mushdash-promo-03.jpg') }
+  [PSCustomObject]@{ Name = 'lvb-brand-assets.zip'; Bytes = 256641; Hash = '07682DAFE439CDEB4ABC6A01A34D7026669BDFF6507E47069925ACAF16B6FB08'; Entries = @('LvB-Brand-Assets/Logo/lvb-logo-horizontal-transparent.png', 'LvB-Brand-Assets/Logo/lvb-logo-stacked-transparent.png', 'LvB-Brand-Assets/Preview/lvb-brand-card-yellow.png', 'LvB-Brand-Assets/Preview/lvb-brand-press-preview.png', 'LvB-Brand-Assets/Symbol/lvb-symbol-transparent.png', 'LvB-Brand-Assets/README.txt', 'LvB-Brand-Assets/BRAND_GUIDE.txt') },
+  [PSCustomObject]@{ Name = 'mushhero-press-kit.zip'; Bytes = 2304239; Hash = 'AAAE718EFBC3E4B39DC54E0D610BE0CD0C90523598D9FD04EB06601335222D33'; Entries = @('MushHero-Press-Kit/Key-Art/mushhero-keyart-alt-01.jpg', 'MushHero-Press-Kit/Key-Art/mushhero-keyart-primary.jpg', 'MushHero-Press-Kit/Logo/mushhero-logo-transparent.png', 'MushHero-Press-Kit/Press-Image/mushhero-press-wide-1920.jpg', 'MushHero-Press-Kit/Screenshots/mushhero-screenshot-01.jpg', 'MushHero-Press-Kit/Screenshots/mushhero-screenshot-02.jpg', 'MushHero-Press-Kit/Screenshots/mushhero-screenshot-03.jpg', 'MushHero-Press-Kit/README.txt', 'MushHero-Press-Kit/FACT_SHEET_EN.txt', 'MushHero-Press-Kit/FACT_SHEET_KO.txt', 'MushHero-Press-Kit/FACT_SHEET_JA.txt', 'MushHero-Press-Kit/FACT_SHEET_ZH-CN.txt') },
+  [PSCustomObject]@{ Name = 'mushdash-press-kit.zip'; Bytes = 918996; Hash = '31A85D8D1FBAC9ABD293D7CE63868B1179B51C3B6348641C33DE93C71CDE9F37'; Entries = @('MushDash-Press-Kit/Key-Art/mushdash-keyart-primary.jpg', 'MushDash-Press-Kit/Logo/mushdash-logo-transparent.png', 'MushDash-Press-Kit/Press-Image/mushdash-press-wide-1920.jpg', 'MushDash-Press-Kit/Promotional-Images/mushdash-promo-01.jpg', 'MushDash-Press-Kit/Promotional-Images/mushdash-promo-02.jpg', 'MushDash-Press-Kit/Promotional-Images/mushdash-promo-03.jpg', 'MushDash-Press-Kit/README.txt', 'MushDash-Press-Kit/FACT_SHEET_EN.txt', 'MushDash-Press-Kit/FACT_SHEET_KO.txt', 'MushDash-Press-Kit/FACT_SHEET_JA.txt', 'MushDash-Press-Kit/FACT_SHEET_ZH-CN.txt') }
 )
 foreach ($archiveSpec in $pressArchives) {
   $publicArchive = Join-Path $siteRoot "public\press\downloads\$($archiveSpec.Name)"
@@ -800,7 +816,53 @@ foreach ($archiveSpec in $pressArchives) {
     $actualEntries = @($archive.Entries | Where-Object { -not $_.FullName.EndsWith('/') } | ForEach-Object { $_.FullName })
     Assert-Equal ($actualEntries -join '|') ($archiveSpec.Entries -join '|') "Press archive entries: $($archiveSpec.Name)"
     Assert-Equal (@($actualEntries | Sort-Object -Unique).Count) $actualEntries.Count "Unique Press archive entries: $($archiveSpec.Name)"
+    Assert-Equal (@($archive.Entries | Where-Object { -not $_.FullName.EndsWith('/') -and $_.Length -eq 0 }).Count) 0 "Zero-byte Press archive entries: $($archiveSpec.Name)"
     Assert-Equal (@($actualEntries | Where-Object { $_ -match '(?i)(contact-sheet|^docs/|/docs/|^previews/|/previews/)' }).Count) 0 "Excluded Press archive working files: $($archiveSpec.Name)"
+    $textEntries = @($archive.Entries | Where-Object { $_.FullName.EndsWith('.txt', [System.StringComparison]::OrdinalIgnoreCase) })
+    $expectedTextCount = if ($archiveSpec.Name -eq 'lvb-brand-assets.zip') { 2 } else { 5 }
+    Assert-Equal $textEntries.Count $expectedTextCount "Press archive text entry count: $($archiveSpec.Name)"
+    $decodedText = [System.Collections.Generic.List[string]]::new()
+    $strictUtf8 = [System.Text.UTF8Encoding]::new($true, $true)
+    $expectedReadmeSeparator = [char]0x2014
+    $expectedReadmeSeparatorCount = if ($archiveSpec.Name -eq 'lvb-brand-assets.zip') { 6 } else { 8 }
+    $koreanDeveloperLabel = ([char]0xAC1C).ToString() + [char]0xBC1C + [char]0xC0AC
+    $japaneseDeveloperLabel = ([char]0x958B).ToString() + [char]0x767A
+    $chineseDeveloperLabel = ([char]0x5F00).ToString() + [char]0x53D1 + [char]0x5546
+    foreach ($textEntry in $textEntries) {
+      $entryStream = $textEntry.Open()
+      $memory = [System.IO.MemoryStream]::new()
+      try {
+        $entryStream.CopyTo($memory)
+        $bytes = $memory.ToArray()
+      } finally {
+        $memory.Dispose()
+        $entryStream.Dispose()
+      }
+      Assert-Equal (($bytes[0..2] -join '-')) '239-187-191' "UTF-8 BOM in Press text: $($textEntry.FullName)"
+      $text = $strictUtf8.GetString($bytes, 3, $bytes.Length - 3)
+      if ($text.Contains([char]0xFFFD)) { throw "Invalid replacement character in Press text: $($textEntry.FullName)" }
+      if ($text.Contains('??')) { throw "Unexpected double question mark in Press text: $($textEntry.FullName)" }
+      if ($textEntry.FullName.EndsWith('README.txt', [System.StringComparison]::OrdinalIgnoreCase)) {
+        Assert-Equal ([regex]::Matches($text, [regex]::Escape($expectedReadmeSeparator)).Count) $expectedReadmeSeparatorCount "README separator count: $($textEntry.FullName)"
+      }
+      $decodedText.Add($text)
+      if ($textEntry.FullName -match 'FACT_SHEET_KO\.txt$') { Assert-Equal $text.Contains($koreanDeveloperLabel) $true "Korean Press text decode: $($textEntry.FullName)" }
+      if ($textEntry.FullName -match 'FACT_SHEET_JA\.txt$') { Assert-Equal $text.Contains($japaneseDeveloperLabel) $true "Japanese Press text decode: $($textEntry.FullName)" }
+      if ($textEntry.FullName -match 'FACT_SHEET_ZH-CN\.txt$') { Assert-Equal $text.Contains($chineseDeveloperLabel) $true "Simplified Chinese Press text decode: $($textEntry.FullName)" }
+    }
+    $allText = $decodedText -join "`n"
+    Assert-Equal ([bool]($allText -match 'lvb909@naver\.com')) $true "Press contact in archive text: $($archiveSpec.Name)"
+    Assert-Equal ([bool]($allText -match 'https://lvb\.kr/')) $true "Official website in archive text: $($archiveSpec.Name)"
+    if ($archiveSpec.Name -eq 'lvb-brand-assets.zip') {
+      Assert-Equal ([bool]($allText -match '#FFD746')) $true 'Brand guide Yellow token'
+      Assert-Equal ([bool]($allText -match '#231F20')) $true 'Brand guide Ink token'
+      Assert-Equal ([bool]($allText -match '#0F0D0C')) $true 'Brand guide Charcoal token'
+      Assert-Equal ([bool]($allText -match '#FFF08C')) $true 'Brand guide Cream token'
+    } else {
+      Assert-Equal ([regex]::Matches($allText, 'FACT_SHEET_').Count) 4 "Fact sheet index in archive README: $($archiveSpec.Name)"
+      Assert-Equal ([bool]($allText -match 'https://store\.steampowered\.com/')) $true "Steam URL in archive text: $($archiveSpec.Name)"
+      Assert-Equal ([bool]($allText -match 'https://discord\.gg/yuphyAWWUr')) $true "Discord URL in archive text: $($archiveSpec.Name)"
+    }
     foreach ($entry in $archive.Entries) {
       if ($entry.Length -le 0) { continue }
       $entryStream = $entry.Open()
@@ -884,6 +946,20 @@ Assert-Equal ([regex]::Matches($globalStyles, '--color-brand-surface-raised:\s*#
 Assert-Equal ([regex]::Matches($globalStyles, '--color-brand-surface-warm:\s*#302a22').Count) 1 'Warm bright charcoal warm token'
 Assert-Equal ([regex]::Matches($globalStyles, '--color-brand-border-strong:\s*#82725c').Count) 1 'Interactive border contrast token'
 Assert-Equal ([regex]::Matches($globalStyles, '--color-brand-text-muted:\s*#bdb2a2').Count) 1 'Readable muted text token'
+Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='en'\] body\s*\{\s*letter-spacing:\s*0\.008em").Count) 1 'English body tracking'
+Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='en'\]:lang\(en\) h1\s*\{\s*letter-spacing:\s*-0\.028em").Count) 1 'English h1 tracking'
+Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='en'\]:lang\(en\) h2\s*\{\s*letter-spacing:\s*-0\.022em").Count) 1 'English h2 tracking'
+Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='en'\]:lang\(en\) h3\s*\{\s*letter-spacing:\s*-0\.015em").Count) 1 'English h3 tracking'
+Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='ja'\] body\s*\{\s*letter-spacing:\s*0\.02em").Count) 1 'Japanese body tracking'
+Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='zh-cn'\] body\s*\{\s*letter-spacing:\s*0\.018em").Count) 1 'Simplified Chinese body tracking'
+Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='ja'\]:lang\(ja\) h1\s*\{\s*letter-spacing:\s*0\.012em").Count) 1 'Japanese h1 tracking'
+Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='ja'\]:lang\(ja\) h2\s*\{\s*letter-spacing:\s*0\.015em").Count) 1 'Japanese h2 tracking'
+Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='ja'\]:lang\(ja\) h3\s*\{\s*letter-spacing:\s*0\.018em").Count) 1 'Japanese h3 tracking'
+Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='zh-cn'\]:lang\(zh-cn\) h1\s*\{\s*letter-spacing:\s*0\.008em").Count) 1 'Simplified Chinese h1 tracking'
+Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='zh-cn'\]:lang\(zh-cn\) h2\s*\{\s*letter-spacing:\s*0\.012em").Count) 1 'Simplified Chinese h2 tracking'
+Assert-Equal ([regex]::Matches($globalStyles, "html\[lang='zh-cn'\]:lang\(zh-cn\) h3\s*\{\s*letter-spacing:\s*0\.015em").Count) 1 'Simplified Chinese h3 tracking'
+Assert-Equal ([regex]::Matches($globalStyles, '(?s):lang\(ko\) h1,\s*:lang\(ko\) h2,\s*:lang\(ko\) h3\s*\{\s*letter-spacing:\s*-0\.035em').Count) 1 'Protected Korean heading tracking'
+Assert-Equal ([regex]::Matches($globalStyles, '(?s)\.site-brand\s*\{[^}]*letter-spacing:\s*normal').Count) 1 'Brand lockup tracking exclusion'
 Assert-Equal ([regex]::Matches($homeStyles, 'filter:\s*brightness').Count) 0 'Home Hero artificial image brightness filter count'
 
 foreach ($aboutPath in @('dist\about\index.html', 'dist\ko\about\index.html', 'dist\ja\about\index.html', 'dist\zh-cn\about\index.html')) {

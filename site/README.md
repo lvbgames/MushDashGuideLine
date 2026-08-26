@@ -70,7 +70,7 @@ Contact 문의 범위는 비즈니스, 파트너십, 행사·전시, 크리에�
 
 News & Press는 네 locale route와 Header·Footer 링크를 제공한다. 외부 11건은 카드 전체로 원문 새 탭, 내부 글은 카드 전체로 대응 locale 상세 route의 같은 탭에 연결한다. 총 12건은 최신순으로 한 번씩 표시하고 페이지당 6건으로 정적 분리한다. 기사 본문·이미지 복제·Featured 분리·자동 수집 기능은 포함하지 않는다. 추가 기준은 `../docs/NEWS.md`를 따른다.
 
-Press 다운로드는 `public/press/downloads/`의 정적 ZIP 3개와 `public/press/assets/`의 공식 게임 스크린샷 6개를 사용한다. 개별 브랜드 PNG·게임 JPG도 로컬 파일로 내려받으며 source URL·SHA·archive 내용과 재생성 절차는 `../docs/PRESS_KIT.md`가 단일 운영 기록이다. 서버 Function이나 runtime scraping은 사용하지 않는다.
+Press 다운로드는 `public/press/downloads/`의 정적 ZIP 3개와 `public/press/assets/`의 공식 게임 이미지를 사용한다. ZIP의 Brand README/Guide와 두 게임의 4개 언어 Fact Sheet/README는 `../scripts/press-kit-content.json`에서 `../scripts/build-press-kits.ps1`로 생성한다. 개별 브랜드 PNG·게임 JPG도 로컬 파일로 내려받으며 source URL·SHA·archive 내용과 재생성 절차는 `../docs/PRESS_KIT.md`가 단일 운영 기록이다. 서버 Function이나 runtime scraping은 사용하지 않는다.
 
 Home은 같은 로컬 Press screenshot manifest에서 MushHero·MushDash 각각 첫 2장을 통합 Hero slideshow에 사용하고 최초 진입에는 MushHero 첫 이미지 한 장만 로드한다. Hero 아래는 Featured Game → Games Overview → About → Community → Contact 순서이며, Hero와 Games Overview에서 이미 노출되는 별도 하단 MushDash 대형 소개는 두지 않는다. About은 같은 철학을 반복하지 않고 하나의 3원칙 영역만 사용한다. 화면 전송은 Home 전용 640/1280 WebP 파생본을 우선하고 Press JPG 원본을 fallback으로 보존한다. 향후 사용자 승인 자산의 검토·교체 작업 공간은 `../references/press-assets/README.md`를 따른다. 이 references 폴더는 자동으로 public 자산과 동기화되지 않는다.
 

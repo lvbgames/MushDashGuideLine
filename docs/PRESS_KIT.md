@@ -4,7 +4,8 @@
 - 네 locale Press 페이지는 `site/src/data/press.ts`의 로컬 자산 manifest와 기존 회사·게임·연락처 데이터를 조합한다. 레이아웃은 Hero → About → Games → Brand → Downloads → Game Images → Key Facts → Contact이고 Recent Press는 표시하지 않는다.
 - MushDash의 `promo-*`는 실제 플레이 스크린샷이 아닌 프로모션 이미지다. 화면과 ZIP 모두 이 분류를 유지한다.
 - 기존 Steam 스크린샷 6개는 Home의 source image로 계속 참조되므로 삭제하지 않지만 Press 페이지와 새 ZIP에는 포함하지 않는다.
-- `scripts/build-press-kits.ps1`은 승인 원본에서 고정 entry 이름·순서·timestamp로 ZIP 3개를 재생성한다. `scripts/prepare-production.ps1`은 public/dist SHA, ZIP 크기·entry·중복, 화면 링크와 OG 출력을 검증한다.
+- `scripts/press-kit-content.json`은 브랜드 정보와 두 게임의 공통 사실·4개 언어 소개·주요 특징을 한 번에 관리한다. 현재 사이트의 `games.ts`, `contact.ts`, `socialLinks.ts`, 번역 데이터와 이 문서에 확정된 내용만 반영한다.
+- `scripts/build-press-kits.ps1`은 승인 이미지와 위 콘텐츠 원본에서 고정 entry 이름·순서·timestamp로 ZIP 3개를 재생성하며, 모든 TXT를 Windows 메모장과 호환되는 UTF-8 BOM·CRLF로 기록한다. `scripts/prepare-production.ps1`은 public/dist SHA, ZIP 크기·entry·중복·0-byte·TXT BOM/strict UTF-8, replacement character·의도하지 않은 `??` 부재와 README `—` separator 수, 화면 링크와 OG 출력을 검증한다.
 
 ## Public OG assets
 
@@ -41,13 +42,14 @@
 
 | 공개 URL | bytes | SHA-256 | 내용 |
 |---|---:|---|---|
-| `/press/downloads/lvb-brand-assets.zip` | 255565 | `035DEF47F8B06BF19ABC5855475FC4EC44D12DAC0C78584C711E2C1E19A6367F` | 가로·세로 투명 로고, 심볼, 브랜드 카드·미리보기 PNG 5개 |
-| `/press/downloads/mushhero-press-kit.zip` | 2300078 | `CC05D7A934288FF39BC5902AAA4AB35A346C9AF817AF1ABCD3E3BEBA973CCE2C` | 키아트 2, 로고 1, 와이드 1, 게임플레이 스크린샷 3 |
-| `/press/downloads/mushdash-press-kit.zip` | 914628 | `FA846A03159BCE14DA55BA9604A5AD509AED49DA7394E36EAFE3555C82093890` | 키아트 1, 로고 1, 와이드 1, 프로모션 이미지 3 |
+| `/press/downloads/lvb-brand-assets.zip` | 256641 | `07682DAFE439CDEB4ABC6A01A34D7026669BDFF6507E47069925ACAF16B6FB08` | PNG 5개 + `README.txt` + `BRAND_GUIDE.txt` (총 7 entry) |
+| `/press/downloads/mushhero-press-kit.zip` | 2304239 | `AAAE718EFBC3E4B39DC54E0D610BE0CD0C90523598D9FD04EB06601335222D33` | 이미지 7개 + EN·KO·JA·ZH-CN Fact Sheet 4개 + README (총 12 entry) |
+| `/press/downloads/mushdash-press-kit.zip` | 918996 | `31A85D8D1FBAC9ABD293D7CE63868B1179B51C3B6348641C33DE93C71CDE9F37` | 이미지 6개 + EN·KO·JA·ZH-CN Fact Sheet 4개 + README (총 11 entry) |
 
 ## Update procedure
 
 1. 새 승인 파일을 `references/LvbResult/press-kit/`의 해당 게임 또는 브랜드 폴더에 반영하고 해상도·포맷·공개 권한을 확인한다.
 2. 같은 파일명으로 `site/public/press/assets/`에 복사하고 원본·public SHA가 일치하는지 확인한다.
-3. `scripts/build-press-kits.ps1`을 실행하고 실제 bytes·SHA를 `site/src/data/press.ts`, 이 문서와 production 검증에 반영한다.
-4. `npm run build`와 `scripts/prepare-production.ps1`로 화면 링크, public/dist byte, ZIP entry와 OG 회귀를 검증한다.
+3. 게임 정보·URL·연락처·브랜드 토큰이 변경되면 사이트 data source를 먼저 갱신하고 `scripts/press-kit-content.json`을 같은 사실로 동기화한다. 확인할 수 없는 플레이 인원·출시일·플랫폼은 새로 추측하지 않는다.
+4. `scripts/build-press-kits.ps1`을 실행하고 실제 bytes·SHA를 `site/src/data/press.ts`, 이 문서와 production 검증에 반영한다.
+5. `npm run build`와 `scripts/prepare-production.ps1`로 화면 링크, public/dist byte, ZIP entry·UTF-8 TXT와 OG 회귀를 검증한다.

@@ -6,9 +6,203 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $sourceRoot = Join-Path $repoRoot 'references\LvbResult\press-kit'
 $outputRoot = Join-Path $repoRoot 'site\public\press\downloads'
+$contentPath = Join-Path $PSScriptRoot 'press-kit-content.json'
 
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+if (-not (Test-Path -LiteralPath $contentPath -PathType Leaf)) {
+  throw "Press Kit text source is missing: $contentPath"
+}
+
+$pressContent = Get-Content -Raw -Encoding utf8 -LiteralPath $contentPath | ConvertFrom-Json
+$textEncoding = [System.Text.UTF8Encoding]::new($true)
+$emDash = [char]0x2014
+
+function Join-TextLines {
+  param([Parameter(Mandatory = $true)][object[]]$Lines)
+
+  return (($Lines | ForEach-Object { [string]$_ }) -join "`r`n") + "`r`n"
+}
+
+function Get-LocaleValue {
+  param(
+    [Parameter(Mandatory = $true)][object]$Object,
+    [Parameter(Mandatory = $true)][string]$Locale
+  )
+
+  $property = $Object.PSObject.Properties[$Locale]
+  if ($null -eq $property) { throw "Press Kit locale is missing: $Locale" }
+  return $property.Value
+}
+
+function New-BrandReadme {
+  $gameNames = $pressContent.brand.officialGameNames -join ', '
+  return Join-TextLines @(
+    'Lv.B Brand Assets'
+    '================='
+    ''
+    'These assets are provided for editorial and media coverage of Lv.B and its games.'
+    ''
+    "Official Studio Name: $($pressContent.brand.officialName)"
+    "Website: $($pressContent.brand.website)"
+    "Press Contact: $($pressContent.brand.pressContact)"
+    "Official Game Names: $gameNames"
+    ''
+    'Included Assets:'
+    "- Logo/lvb-logo-horizontal-transparent.png $emDash transparent horizontal logo"
+    "- Logo/lvb-logo-stacked-transparent.png $emDash transparent stacked logo"
+    "- Symbol/lvb-symbol-transparent.png $emDash transparent Lv.B symbol"
+    "- Preview/lvb-brand-card-yellow.png $emDash brand card preview"
+    "- Preview/lvb-brand-press-preview.png $emDash press presentation preview"
+    "- BRAND_GUIDE.txt $emDash concise name, color and logo-use guidance"
+    ''
+    'Use the assets in connection with Lv.B, MushHero or MushDash coverage. Keep logo proportions unchanged and choose a background with sufficient contrast.'
+  )
+}
+
+function New-BrandGuide {
+  $lines = [System.Collections.Generic.List[string]]::new()
+  foreach ($line in @(
+    'Lv.B Brand Guide'
+    '================'
+    ''
+    'Official Name'
+    '-------------'
+    $pressContent.brand.officialName
+    ''
+    'Primary Colors'
+    '--------------'
+  )) { $lines.Add([string]$line) }
+  foreach ($color in $pressContent.brand.colors) {
+    $lines.Add("- $($color.name): $($color.hex)")
+  }
+  foreach ($line in @(
+    ''
+    'Logo Usage'
+    '----------'
+    '- Keep the original proportions.'
+    '- Do not stretch, compress or distort the logo or symbol.'
+    '- Use the transparent logo files on an approved light or dark background with sufficient contrast.'
+    '- Do not recolor, redraw or separate elements of the supplied artwork.'
+    ''
+    'Game Names'
+    '----------'
+    '- MushHero'
+    '- MushDash'
+    ''
+    'Website'
+    '-------'
+    $pressContent.brand.website
+    ''
+    'Contact'
+    '-------'
+    $pressContent.brand.pressContact
+  )) { $lines.Add([string]$line) }
+  return Join-TextLines $lines
+}
+
+function New-GameReadme {
+  param([Parameter(Mandatory = $true)][string]$GameKey)
+
+  $game = $pressContent.games.$GameKey
+  $included = if ($GameKey -eq 'mushhero') {
+    @(
+      "- Key-Art/ $emDash official key art"
+      "- Logo/ $emDash official transparent game logo"
+      "- Press-Image/ $emDash official wide press image"
+      "- Screenshots/ $emDash official gameplay screenshots"
+    )
+  } else {
+    @(
+      "- Key-Art/ $emDash official key art"
+      "- Logo/ $emDash official transparent game logo"
+      "- Press-Image/ $emDash official wide press image"
+      "- Promotional-Images/ $emDash official promotional images"
+    )
+  }
+
+  return Join-TextLines @(
+    "$($game.officialName) Press Kit"
+    ('=' * ($game.officialName.Length + 10))
+    ''
+    "These assets are provided for editorial and media coverage of $($game.officialName)."
+    ''
+    "Official Game Name: $($game.officialName)"
+    "Developer: $($game.developer)"
+    "Official Website: $($pressContent.brand.website)"
+    "Game Page: $($game.gamePage)"
+    "Press Contact: $($pressContent.brand.pressContact)"
+    ''
+    'Included Files:'
+    $included
+    "- FACT_SHEET_EN.txt $emDash English fact sheet"
+    "- FACT_SHEET_KO.txt $emDash Korean fact sheet"
+    "- FACT_SHEET_JA.txt $emDash Japanese fact sheet"
+    "- FACT_SHEET_ZH-CN.txt $emDash Simplified Chinese fact sheet"
+    ''
+    "Use the supplied logo and images only in connection with $($game.officialName) or Lv.B coverage. Keep artwork proportions unchanged and do not present edited material as official artwork."
+  )
+}
+
+function New-FactSheet {
+  param(
+    [Parameter(Mandatory = $true)][string]$GameKey,
+    [Parameter(Mandatory = $true)][string]$Locale
+  )
+
+  $game = $pressContent.games.$GameKey
+  $localized = Get-LocaleValue $game.locales $Locale
+  $labels = Get-LocaleValue $pressContent.labels $Locale
+  $lines = [System.Collections.Generic.List[string]]::new()
+  $lines.Add($game.officialName)
+  $lines.Add('=' * $game.officialName.Length)
+  $lines.Add('')
+  $lines.Add("$($labels.developer): $($game.developer)")
+  $lines.Add("$($labels.publisher): $($game.publisher)")
+  $lines.Add("$($labels.officialWebsite): $($pressContent.brand.website)")
+  $lines.Add("$($labels.gamePage): $($game.gamePage)")
+  $lines.Add("Steam: $($game.steam)")
+  if ($null -ne $game.epicGamesStore -and -not [string]::IsNullOrWhiteSpace($game.epicGamesStore)) {
+    $lines.Add("Epic Games Store: $($game.epicGamesStore)")
+  }
+  $lines.Add("$($labels.genre): $($localized.genre)")
+  $lines.Add("$($labels.platform): $($game.platform)")
+  $lines.Add("$($labels.release): $($localized.release)")
+  if ($localized.PSObject.Properties['players']) {
+    $lines.Add("$($labels.players): $($localized.players)")
+  }
+  $lines.Add('')
+  $lines.Add($labels.about)
+  $lines.Add('-' * $labels.about.Length)
+  $lines.Add($localized.about)
+  $lines.Add('')
+  $lines.Add($labels.keyFeatures)
+  $lines.Add('-' * $labels.keyFeatures.Length)
+  foreach ($feature in $localized.features) { $lines.Add("- $feature") }
+  $lines.Add('')
+  $lines.Add("$($labels.pressContact): $($pressContent.brand.pressContact)")
+  $lines.Add("$($labels.pressKit): $($game.pressKit)")
+  $lines.Add('')
+  $lines.Add($labels.social)
+  $lines.Add('-' * $labels.social.Length)
+  foreach ($socialLink in $pressContent.social) {
+    $lines.Add("- $($socialLink.label): $($socialLink.url)")
+  }
+  return Join-TextLines $lines
+}
+
+function New-PressText {
+  param([Parameter(Mandatory = $true)][string]$TextId)
+
+  switch -Regex ($TextId) {
+    '^brand-readme$' { return New-BrandReadme }
+    '^brand-guide$' { return New-BrandGuide }
+    '^game-readme:(mushhero|mushdash)$' { return New-GameReadme $Matches[1] }
+    '^fact-sheet:(mushhero|mushdash):(en|ko|ja|zh-cn)$' { return New-FactSheet $Matches[1] $Matches[2] }
+    default { throw "Unknown Press Kit text template: $TextId" }
+  }
+}
 
 $archives = @(
   [PSCustomObject]@{
@@ -20,6 +214,10 @@ $archives = @(
       'Preview/lvb-brand-card-yellow.png' = 'brand\lvb-brand-card-yellow.png'
       'Preview/lvb-brand-press-preview.png' = 'brand\lvb-brand-press-preview.png'
       'Symbol/lvb-symbol-transparent.png' = 'brand\lvb-symbol-transparent.png'
+    }
+    Text = [ordered]@{
+      'README.txt' = 'brand-readme'
+      'BRAND_GUIDE.txt' = 'brand-guide'
     }
   },
   [PSCustomObject]@{
@@ -34,6 +232,13 @@ $archives = @(
       'Screenshots/mushhero-screenshot-02.jpg' = 'mushhero\mushhero-screenshot-02.jpg'
       'Screenshots/mushhero-screenshot-03.jpg' = 'mushhero\mushhero-screenshot-03.jpg'
     }
+    Text = [ordered]@{
+      'README.txt' = 'game-readme:mushhero'
+      'FACT_SHEET_EN.txt' = 'fact-sheet:mushhero:en'
+      'FACT_SHEET_KO.txt' = 'fact-sheet:mushhero:ko'
+      'FACT_SHEET_JA.txt' = 'fact-sheet:mushhero:ja'
+      'FACT_SHEET_ZH-CN.txt' = 'fact-sheet:mushhero:zh-cn'
+    }
   },
   [PSCustomObject]@{
     Name = 'mushdash-press-kit.zip'
@@ -45,6 +250,13 @@ $archives = @(
       'Promotional-Images/mushdash-promo-01.jpg' = 'mushdash\mushdash-promo-01.jpg'
       'Promotional-Images/mushdash-promo-02.jpg' = 'mushdash\mushdash-promo-02.jpg'
       'Promotional-Images/mushdash-promo-03.jpg' = 'mushdash\mushdash-promo-03.jpg'
+    }
+    Text = [ordered]@{
+      'README.txt' = 'game-readme:mushdash'
+      'FACT_SHEET_EN.txt' = 'fact-sheet:mushdash:en'
+      'FACT_SHEET_KO.txt' = 'fact-sheet:mushdash:ko'
+      'FACT_SHEET_JA.txt' = 'fact-sheet:mushdash:ja'
+      'FACT_SHEET_ZH-CN.txt' = 'fact-sheet:mushdash:zh-cn'
     }
   }
 )
@@ -87,6 +299,20 @@ foreach ($archiveSpec in $archives) {
         } finally {
           $output.Dispose()
           $input.Dispose()
+        }
+      }
+      foreach ($entryName in $archiveSpec.Text.Keys) {
+        $entryPath = "$($archiveSpec.Root)/$entryName"
+        $entry = $archive.CreateEntry($entryPath, [System.IO.Compression.CompressionLevel]::Optimal)
+        $entry.LastWriteTime = $fixedTimestamp
+        $preamble = $textEncoding.GetPreamble()
+        $textBytes = $textEncoding.GetBytes((New-PressText $archiveSpec.Text[$entryName]))
+        $output = $entry.Open()
+        try {
+          $output.Write($preamble, 0, $preamble.Length)
+          $output.Write($textBytes, 0, $textBytes.Length)
+        } finally {
+          $output.Dispose()
         }
       }
     } finally {

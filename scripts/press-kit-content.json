@@ -1,0 +1,203 @@
+{
+  "brand": {
+    "officialName": "Lv.B",
+    "website": "https://lvb.kr/",
+    "pressContact": "lvb909@naver.com",
+    "officialGameNames": [
+      "MushHero",
+      "MushDash"
+    ],
+    "colors": [
+      { "name": "Yellow", "hex": "#FFD746" },
+      { "name": "Ink", "hex": "#231F20" },
+      { "name": "Charcoal", "hex": "#0F0D0C" },
+      { "name": "Cream", "hex": "#FFF08C" }
+    ]
+  },
+  "social": [
+    { "label": "X", "url": "https://x.com/Lv_B_Games" },
+    { "label": "Instagram", "url": "https://www.instagram.com/lv.b_games/" },
+    { "label": "Discord", "url": "https://discord.gg/yuphyAWWUr" },
+    { "label": "Steam Developer Page", "url": "https://store.steampowered.com/search/?developer=Lv.B" }
+  ],
+  "labels": {
+    "en": {
+      "developer": "Developer",
+      "publisher": "Publisher",
+      "officialWebsite": "Official Website",
+      "gamePage": "Game Page",
+      "genre": "Genre",
+      "platform": "Platform",
+      "release": "Release / Status",
+      "players": "Players",
+      "about": "About",
+      "keyFeatures": "Key Features",
+      "pressContact": "Press Contact",
+      "pressKit": "Press Kit",
+      "social": "Social / Community"
+    },
+    "ko": {
+      "developer": "개발사",
+      "publisher": "퍼블리셔",
+      "officialWebsite": "공식 웹사이트",
+      "gamePage": "게임 페이지",
+      "genre": "장르",
+      "platform": "플랫폼",
+      "release": "출시 / 상태",
+      "players": "플레이 인원",
+      "about": "게임 소개",
+      "keyFeatures": "주요 특징",
+      "pressContact": "언론 문의",
+      "pressKit": "프레스 키트",
+      "social": "소셜 / 커뮤니티"
+    },
+    "ja": {
+      "developer": "開発",
+      "publisher": "パブリッシャー",
+      "officialWebsite": "公式サイト",
+      "gamePage": "ゲームページ",
+      "genre": "ジャンル",
+      "platform": "プラットフォーム",
+      "release": "リリース / 配信状況",
+      "players": "プレイ人数",
+      "about": "ゲーム紹介",
+      "keyFeatures": "主な特徴",
+      "pressContact": "メディア窓口",
+      "pressKit": "プレスキット",
+      "social": "ソーシャル / コミュニティ"
+    },
+    "zh-cn": {
+      "developer": "开发商",
+      "publisher": "发行商",
+      "officialWebsite": "官方网站",
+      "gamePage": "游戏页面",
+      "genre": "类型",
+      "platform": "平台",
+      "release": "发行 / 当前状态",
+      "players": "游玩人数",
+      "about": "游戏简介",
+      "keyFeatures": "主要特色",
+      "pressContact": "媒体联系",
+      "pressKit": "媒体资料包",
+      "social": "社交媒体 / 社区"
+    }
+  },
+  "games": {
+    "mushhero": {
+      "officialName": "MushHero",
+      "developer": "Lv.B",
+      "publisher": "Lv.B",
+      "gamePage": "https://lvb.kr/games/mushhero/",
+      "steam": "https://store.steampowered.com/app/4711200/MushHero/",
+      "epicGamesStore": null,
+      "platform": "Windows",
+      "pressKit": "https://lvb.kr/press/downloads/mushhero-press-kit.zip",
+      "locales": {
+        "en": {
+          "genre": "Cooperative Roguelite Defense",
+          "release": "Planned for 2027",
+          "about": "MushHero is a cooperative roguelite defense game where players hold the line together against monster waves and powerful bosses. Randomly graded weapons, evolving abilities and node-based progression let players shape a different strategy each run.",
+          "features": [
+            "Coordinate distinct roles and tactics to defend the battlefield together.",
+            "Face waves of monsters and powerful bosses.",
+            "Build around randomly graded weapons and their unique skills.",
+            "Choose abilities, enhancements and node-based growth routes that reshape each run."
+          ]
+        },
+        "ko": {
+          "genre": "협동 로그라이트 디펜스",
+          "release": "2027년 출시 예정",
+          "about": "MushHero는 동료와 함께 몬스터 무리와 강력한 보스에 맞서 전선을 지키는 협동 로그라이트 디펜스 게임입니다. 무작위 등급 무기와 고유 스킬, 전투 중 얻는 능력과 강화, 노드 기반 성장을 조합해 매번 다른 전략을 완성합니다.",
+          "features": [
+            "서로 다른 역할과 전술을 조합해 전장을 함께 방어합니다.",
+            "몰려오는 몬스터와 강력한 보스에 맞섭니다.",
+            "무작위 등급 무기와 고유 스킬을 중심으로 빌드를 구성합니다.",
+            "능력과 강화, 노드 기반 성장 경로를 선택해 매번 다른 전투를 만듭니다."
+          ]
+        },
+        "ja": {
+          "genre": "協力型ローグライトディフェンス",
+          "release": "2027年リリース予定",
+          "about": "MushHeroは、仲間と共に戦線を守り、モンスターの群れと強力なボスに挑む協力型ローグライトディフェンスゲームです。ランダムな等級の武器、固有スキル、戦闘中に得る能力と強化、ノード型の成長を組み合わせ、プレイするたびに異なる戦略を作り上げます。",
+          "features": [
+            "異なる役割と戦術を組み合わせ、仲間と共に戦場を守ります。",
+            "迫り来るモンスターの群れと強力なボスに挑みます。",
+            "ランダムな等級の武器と固有スキルを軸にビルドを組み立てます。",
+            "能力、強化、ノード型の成長ルートを選び、プレイごとに異なる戦いを作ります。"
+          ]
+        },
+        "zh-cn": {
+          "genre": "合作 Roguelite 防守游戏",
+          "release": "预计于 2027 年推出",
+          "about": "MushHero 是一款合作 Roguelite 防守游戏。玩家与队友共同守住战线，对抗怪物浪潮和强大首领，并通过随机等级武器、独特技能、战斗中的能力强化及节点式成长，在每次挑战中打造不同策略。",
+          "features": [
+            "组合不同角色与战术，与队友共同守护战场。",
+            "迎击接连来袭的怪物和强大首领。",
+            "围绕随机等级武器及其独特技能打造构筑。",
+            "选择能力、强化与节点式成长路线，让每次挑战产生不同变化。"
+          ]
+        }
+      }
+    },
+    "mushdash": {
+      "officialName": "MushDash",
+      "developer": "Lv.B",
+      "publisher": "Lv.B",
+      "gamePage": "https://lvb.kr/games/mushdash/",
+      "steam": "https://store.steampowered.com/app/3153140/Mush_Dash/",
+      "epicGamesStore": "https://store.epicgames.com/p/mushdash-75c4c9",
+      "platform": "Windows",
+      "pressKit": "https://lvb.kr/press/downloads/mushdash-press-kit.zip",
+      "locales": {
+        "en": {
+          "genre": "Online Party Racing",
+          "release": "Available in Early Access since 26 August 2025",
+          "players": "Up to 7 players online",
+          "about": "MushDash is an online party racing game for up to seven players. Racers dash, jump and dodge deadly traps through three-wave matches, collecting Mushroom Coins as finish position and coins together determine the final rank.",
+          "features": [
+            "Race online with up to seven players.",
+            "Read bomb patterns, moving platforms and other obstacle-course traps.",
+            "Play three stages selected from the chosen theme in each match.",
+            "Combine finish position with collected Mushroom Coins for the final rank."
+          ]
+        },
+        "ko": {
+          "genre": "온라인 파티 레이스",
+          "release": "2025년 8월 26일부터 앞서 해보기 제공",
+          "players": "온라인 최대 7인",
+          "about": "MushDash는 최대 7명이 함께 달리는 온라인 파티 레이스 게임입니다. 세 라운드 동안 달리고, 점프하고, 위험한 함정을 피하며 Mushroom Coin을 모으세요. 결승선 순위와 모은 코인을 함께 반영해 최종 순위를 결정합니다.",
+          "features": [
+            "최대 7명이 온라인으로 함께 경주합니다.",
+            "폭탄 패턴, 움직이는 발판과 여러 장애물의 흐름을 읽습니다.",
+            "매 경기 선택한 테마에서 세 스테이지가 정해집니다.",
+            "결승선 순위와 모은 Mushroom Coin을 함께 계산해 최종 순위를 결정합니다."
+          ]
+        },
+        "ja": {
+          "genre": "オンラインパーティーレース",
+          "release": "2025年8月26日より早期アクセス配信中",
+          "players": "オンライン最大7人",
+          "about": "MushDashは、最大7人で競うオンラインパーティーレースゲームです。3つのウェーブを走り、ジャンプし、危険な罠を避けながらMushroom Coinを集めます。ゴール順位と集めたCoinの両方が最終順位に反映されます。",
+          "features": [
+            "オンラインで最大7人のレースを楽しめます。",
+            "爆弾のパターン、動く足場、さまざまな障害物を見極めて進みます。",
+            "各試合では、選んだテーマから3つのステージが選ばれます。",
+            "ゴール順位と集めたMushroom Coinの両方で最終順位を決定します。"
+          ]
+        },
+        "zh-cn": {
+          "genre": "在线派对竞速",
+          "release": "自 2025 年 8 月 26 日起提供抢先体验",
+          "players": "最多七名玩家在线游玩",
+          "about": "MushDash 是一款最多七人参加的在线派对竞速游戏。玩家需要在三个回合中冲刺、跳跃并躲开危险陷阱，同时收集 Mushroom Coin。终点名次与收集到的 Coin 会共同决定最终排名。",
+          "features": [
+            "最多七名玩家在线竞速。",
+            "判断炸弹规律、移动平台和其他障碍赛道陷阱。",
+            "每场比赛会从所选主题中选出三个关卡。",
+            "终点名次与收集到的 Mushroom Coin 共同决定最终排名。"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -157,15 +157,66 @@ button {
 
 :lang(ko) h1,
 :lang(ko) h2,
-:lang(ko) h3,
-:lang(ja) h1,
-:lang(ja) h2,
-:lang(ja) h3,
-:lang(zh-cn) h1,
-:lang(zh-cn) h2,
-:lang(zh-cn) h3 {
+:lang(ko) h3 {
   letter-spacing: -0.035em;
   line-height: 1.1;
+}
+
+html[lang='en'] body {
+  letter-spacing: 0.008em;
+}
+
+html[lang='en']:lang(en) h1 {
+  letter-spacing: -0.028em;
+}
+
+html[lang='en']:lang(en) h2 {
+  letter-spacing: -0.022em;
+}
+
+html[lang='en']:lang(en) h3 {
+  letter-spacing: -0.015em;
+}
+
+html[lang='ja'] body {
+  letter-spacing: 0.02em;
+}
+
+html[lang='ja']:lang(ja) h1 {
+  letter-spacing: 0.012em;
+}
+
+html[lang='ja']:lang(ja) h2 {
+  letter-spacing: 0.015em;
+}
+
+html[lang='ja']:lang(ja) h3 {
+  letter-spacing: 0.018em;
+}
+
+html[lang='zh-cn'] body {
+  letter-spacing: 0.018em;
+}
+
+html[lang='zh-cn']:lang(zh-cn) h1 {
+  letter-spacing: 0.008em;
+}
+
+html[lang='zh-cn']:lang(zh-cn) h2 {
+  letter-spacing: 0.012em;
+}
+
+html[lang='zh-cn']:lang(zh-cn) h3 {
+  letter-spacing: 0.015em;
+}
+
+html[lang='ja']:lang(ja) h1,
+html[lang='ja']:lang(ja) h2,
+html[lang='ja']:lang(ja) h3,
+html[lang='zh-cn']:lang(zh-cn) h1,
+html[lang='zh-cn']:lang(zh-cn) h2,
+html[lang='zh-cn']:lang(zh-cn) h3 {
+  line-height: 1.12;
 }
 
 .screen-reader {
@@ -270,6 +321,7 @@ h3 {
   align-items: center;
   gap: 0.4rem;
   color: var(--color-brand-text);
+  letter-spacing: normal;
   text-decoration: none;
 }
 
