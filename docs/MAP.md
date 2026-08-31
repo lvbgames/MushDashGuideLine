@@ -3,6 +3,7 @@
 ```text
 Homepage/
 ├─ legacy-site/             # 기존 배포 사이트 보관본; 읽기 전용
+├─ analytics/               # Cloudflare Worker + D1 자체 일간 순 방문자 집계; Astro와 독립
 ├─ references/
 │  ├─ Reference.png         # 초기 참고 이미지
 │  ├─ Profile/              # 사용자 제공 팀 프로필 원본; 사이트 복사본과 분리 보존
@@ -33,6 +34,7 @@ Homepage/
 - `site/src/components/about/TeamMembers.astro`: `team.ts` 기반 팀원 카드와 승인 프로필 이미지·브랜드 대체 표시.
 - `site/src/components/layout/`: Header, Footer, 모바일 내비게이션, 언어 전환.
 - `site/src/components/ui/`: 버튼과 공통 표시 요소.
+- `site/src/components/analytics/AnalyticsHit.astro`, `site/src/config/analytics.ts`: 유효한 build-time endpoint가 있을 때만 한 페이지당 한 번 비차단 `/hit` 요청을 출력한다.
 - `site/src/data/games.ts`: 확인된 스토어 URL, 출시 상태, 미디어, 게임별 상세 태그.
 - `site/src/data/contact.ts`: 공개 비즈니스 이메일, 허용된 business category, 선택적 Discord URL.
 - `site/src/data/company.ts`: UI 브랜드명, 한국어 공식 스튜디오 주소, Google Maps 공유 iframe URL과 안전하게 인코딩한 검색 URL.

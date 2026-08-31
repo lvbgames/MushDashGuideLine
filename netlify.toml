@@ -3,6 +3,9 @@
   command = "npm run build"
   publish = "dist"
 
+[context.production.environment]
+  PUBLIC_ANALYTICS_ENDPOINT = "https://lvb-analytics.lvb-analytics-worker.workers.dev/hit"
+
 [[edge_functions]]
   path = "/"
   function = "locale-redirect"

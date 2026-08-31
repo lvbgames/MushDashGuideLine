@@ -39,6 +39,7 @@ Node 기준은 `.nvmrc`, 패키지 고정은 `package-lock.json`을 따른다.
 - `src/components/pages/PressPage.astro`가 `src/data/press.ts`와 기존 회사·게임 데이터를 조합해 네 locale Press Kit을 출력한다. Recent Press는 News 페이지와 중복하지 않는다.
 - `src/components/media/MediaGallery.astro`가 게임 상세와 Press의 native scroll-snap, 무 JavaScript 원본 링크, progressive `dialog` lightbox를 공유한다. `ClickToLoadVideo.astro`는 허용된 공식 Shorts ID와 로컬 poster만 받아 사용자 클릭 뒤 선택 카드의 `youtube-nocookie.com` iframe을 만든다.
 - `src/components/ui/MotionEnhancements.astro`와 `src/styles/motion.css`가 법률 페이지를 제외한 섹션의 일회성 progressive reveal, 내부 block stagger와 reduced-motion 정책을 관리한다. Home Hero는 MushHero 2장 다음 MushDash 2장의 full-bleed 자동 slideshow와 수동 indicator·재생 제어를 제공하며 첫 MushHero 이미지만 초기 연결한다. Home의 공식 JPG fallback은 `src/data/homeMedia.ts`가 `public/home/assets/`의 640/1280 WebP 파생본과 연결한다.
+- `src/config/analytics.ts`와 `src/components/analytics/AnalyticsHit.astro`는 Netlify Production의 build-time `PUBLIC_ANALYTICS_ENDPOINT`가 유효한 HTTPS `/hit` URL일 때 BaseLayout 정상 페이지마다 body 없는 POST를 한 번 보낸다. 404에는 출력하지 않고 fetch 실패는 모두 흡수한다. Worker는 당일 중복 제거용 hash를 임시 보관하고 날짜별 수를 확정한 뒤 삭제하며, 장기 보관은 날짜별 집계뿐이다. Worker·D1 구현과 배포 절차는 독립된 `../analytics/`에서 관리한다.
 - `src/components/pages/NewsArticlePage.astro`와 동적 `[slug].astro`가 네 locale 자체 글을 생성하고 `ArticleStructuredData.astro`가 Article JSON-LD를 출력한다.
 - `src/components/pages/GamesPage.astro`가 네 locale Our Games 구조를 공유하고 `src/components/games/`가 주력·출시작 위계를 구성한다.
 - `src/components/game-detail/`은 공통 섹션 컴포넌트다.
@@ -79,6 +80,6 @@ Home은 같은 로컬 Press screenshot manifest에서 MushHero·MushDash 각각 
 
 루트 `netlify.toml`은 직접 요청된 `index.html` URL을 같은 trailing-slash canonical URL로 보내는 forced 301 규칙과 `/privacy.html` → `/privacy/`, `/terms.html` → `/terms/` 호환 301을 정의한다. `netlify/edge-functions/locale-redirect.ts`는 일반 루트 `/` 요청에서만 `geo.country.code`와 사용자가 직접 선택한 `lvb_locale` preference를 적용하며 정적 Astro 출력·deep link·crawler SEO는 그대로 유지한다. 실제 응답은 배포 후 `../docs/VALIDATION.md` 절차로 확인한다.
 
-기존 `public/privacy.html`은 폐기했으며 역사 보관본은 `../legacy-site/public/privacy.html`에만 남긴다. 신규 정책 source 변경 시 `../docs/PRIVACY_DATA_INVENTORY.md`와 네 언어 section 순서 및 의미를 함께 검토한다. click-to-load YouTube 고지를 반영한 네 언어의 최종 수정일과 시행일은 `2026-08-26`이다.
+기존 `public/privacy.html`은 폐기했으며 역사 보관본은 `../legacy-site/public/privacy.html`에만 남긴다. 신규 정책 source 변경 시 `../docs/PRIVACY_DATA_INVENTORY.md`와 네 언어 section 순서 및 의미를 함께 검토한다. 자체 Analytics 운영 시작을 반영한 네 언어의 최종 수정일과 시행일은 `2026-08-31`이다.
 
 게임 이용약관은 `../docs/TERMS_AUDIT.md`의 실제 기능 근거와 미채택 원칙을 따른다. `Last updated`와 `Effective date`는 사용자 승인 운영 배포일 `2026-08-12`로 확정했으며, 실제 동의·변경 고지와 플랫폼별 Terms/EULA 노출 경로는 별도 운영 확인 항목으로 유지한다.

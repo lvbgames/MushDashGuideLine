@@ -1,6 +1,10 @@
 node_modules/
 site/dist/
 /references/reviews/
+/analytics/node_modules/
+/analytics/.wrangler/
+/analytics/.dev.vars
+/analytics/.dev.vars.*
 /references/lvb/
 /references/LvbResult/
 .codex/**/*.log

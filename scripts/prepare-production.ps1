@@ -8,6 +8,7 @@ $expectedRoot = 'E:\Codex\LvB\Homepage'
 $expectedBranch = 'main'
 $expectedOrigin = 'https://github.com/lvbgames/MushDashGuideLine'
 $expectedLegacyPrivacyHash = '95CA28BD2313111606DDAE18492BEB7C785152911F14CA60618DF88D8FF36F29'
+$expectedAnalyticsEndpoint = 'https://lvb-analytics.lvb-analytics-worker.workers.dev/hit'
 $naverVerification = 'f821633783a66dd8edb7025cb1d83caee98641aa'
 $obsoleteNaverFile = 'naver799482ce0e5e513c37daff06412293c5.html'
 $repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -70,6 +71,9 @@ function Assert-Equal {
   }
 }
 
+$configuredAnalyticsEndpoint = [Environment]::GetEnvironmentVariable('PUBLIC_ANALYTICS_ENDPOINT')
+Assert-Equal $configuredAnalyticsEndpoint $expectedAnalyticsEndpoint 'Production Analytics endpoint'
+
 $gitTopLevel = [System.IO.Path]::GetFullPath((Get-NativeText 'git' @('rev-parse', '--show-toplevel') $repoRoot))
 Assert-Equal $gitTopLevel $expectedRoot 'Git top-level'
 Assert-Equal $repoRoot $expectedRoot 'Script repository root'
@@ -97,6 +101,9 @@ $netlify = Get-Content -Raw -Encoding utf8 $netlifyPath
 if ($netlify -notmatch '(?m)^\s*base\s*=\s*"site"\s*$') { throw 'netlify.toml base must be "site".' }
 if ($netlify -notmatch '(?m)^\s*command\s*=\s*"npm run build"\s*$') { throw 'netlify.toml command must be "npm run build".' }
 if ($netlify -notmatch '(?m)^\s*publish\s*=\s*"dist"\s*$') { throw 'netlify.toml publish must be "dist".' }
+Assert-Equal ([regex]::Matches($netlify, '(?m)^\s*\[context\.production\.environment\]\s*$').Count) 1 'Netlify production environment section count'
+Assert-Equal ([regex]::Matches($netlify, '(?m)^\s*PUBLIC_ANALYTICS_ENDPOINT\s*=\s*"' + [regex]::Escape($expectedAnalyticsEndpoint) + '"\s*$').Count) 1 'Netlify production Analytics endpoint count'
+Assert-Equal ([regex]::Matches($netlify, '(?m)^\s*\[context\.(?:deploy-preview|branch-deploy|dev)\.environment\]\s*$').Count) 0 'Non-production Analytics environment section count'
 if ($netlify -match '(?im)@netlify/plugin-nextjs|^\s*\[functions\]|^\s*\[edge_functions\]\s*$') {
   throw 'Next.js Runtime, Netlify Functions or a custom edge-functions directory is not allowed.'
 }
@@ -273,7 +280,7 @@ $requiredPrivacyFacts = @{
   en = @(
     'Last updated:',
     'Effective date:',
-    'August 26, 2026',
+    'August 31, 2026',
     'Epic Online Services(EOS)',
     'Lobby',
     'Session',
@@ -283,6 +290,8 @@ $requiredPrivacyFacts = @{
     'Netlify Web Analytics',
     'Real User Monitoring',
     'Log Drains',
+    'Cloudflare Workers',
+    'HMAC-SHA256',
     'does not automatically send crash reports',
     'The department responsible for privacy inquiries is Lv.B',
     'selected profile icon, nameplate and avatar settings',
@@ -296,7 +305,7 @@ $requiredPrivacyFacts = @{
   ko = @(
     (ConvertFrom-Utf8Base64 '7LWc7KKFIOyImOygleydvDo='),
     (ConvertFrom-Utf8Base64 '7Iuc7ZaJ7J28Og=='),
-    (ConvertFrom-Utf8Base64 'MjAyNuuFhCA47JuUIDI27J28'),
+    (ConvertFrom-Utf8Base64 'MjAyNuuFhCA47JuUIDMx7J28'),
     'Epic Online Services(EOS)',
     'Lobby',
     'Session',
@@ -306,6 +315,8 @@ $requiredPrivacyFacts = @{
     'Netlify Web Analytics',
     'Real User Monitoring',
     'Log Drains',
+    'Cloudflare Workers',
+    'HMAC-SHA256',
     'lvb909@naver.com',
     (ConvertFrom-Utf8Base64 '7KO86rCEIOuPhOyghCDsi53rs4TsnpDCt+ynhO2WieqwksK37JmE66OMIOyXrOu2gMK367O07IOBIOyImOuguSDsl6zrtoDCt+yjvOywqA=='),
     (ConvertFrom-Utf8Base64 '7KSR67O1IOq1rOunpCDsspjrpqzrpbwg67Cp7KeA7ZWY6riwIOychO2VnCDqsbDrnpgg7Iud67OE7J6Q'),
@@ -315,7 +326,7 @@ $requiredPrivacyFacts = @{
   ja = @(
     (ConvertFrom-Utf8Base64 '5pyA57WC5pu05paw5pel77ya'),
     (ConvertFrom-Utf8Base64 '5pa96KGM5pel77ya'),
-    (ConvertFrom-Utf8Base64 'MjAyNuW5tDjmnIgyNuaXpQ=='),
+    (ConvertFrom-Utf8Base64 'MjAyNuW5tDjmnIgzMeaXpQ=='),
     'Epic Online Services(EOS)',
     'Lobby',
     'Session',
@@ -325,6 +336,8 @@ $requiredPrivacyFacts = @{
     'Netlify Web Analytics',
     'Real User Monitoring',
     'Log Drains',
+    'Cloudflare Workers',
+    'HMAC-SHA256',
     'lvb909@naver.com',
     (ConvertFrom-Utf8Base64 '44Km44Kj44O844Kv44Oq44O844OB44Oj44Os44Oz44K444GuSUTjg7vpgLLooYzlgKTjg7vlrozkuobnirbms4Hjg7vloLHphazlj5flj5bnirbms4Hjg7vpgLHnlarlj7c='),
     (ConvertFrom-Utf8Base64 '6LO85YWl5Yem55CG44Gu6YeN6KSH44KS6Ziy5q2i44GZ44KL44Gf44KB44Gu5Y+W5byV6K2Y5Yil5a2Q'),
@@ -334,7 +347,7 @@ $requiredPrivacyFacts = @{
   'zh-cn' = @(
     (ConvertFrom-Utf8Base64 '5pyA5ZCO5pu05paw5pel5pyf77ya'),
     (ConvertFrom-Utf8Base64 '55Sf5pWI5pel5pyf77ya'),
-    (ConvertFrom-Utf8Base64 'MjAyNuW5tDjmnIgyNuaXpQ=='),
+    (ConvertFrom-Utf8Base64 'MjAyNuW5tDjmnIgzMeaXpQ=='),
     'Epic Online Services(EOS)',
     'Lobby',
     'Session',
@@ -344,6 +357,8 @@ $requiredPrivacyFacts = @{
     'Netlify Web Analytics',
     'Real User Monitoring',
     'Log Drains',
+    'Cloudflare Workers',
+    'HMAC-SHA256',
     'lvb909@naver.com',
     (ConvertFrom-Utf8Base64 '5q+P5ZGo5oyR5oiYSUTjgIHov5vluqbjgIHlrozmiJDnirbmgIHjgIHlpZblirHpooblj5bnirbmgIHkuI7lkajmrKE='),
     (ConvertFrom-Utf8Base64 '55So5LqO6Ziy5q2i6YeN5aSN5aSE55CG6LSt5Lmw5Lqk5piT55qE5Lqk5piT5qCH6K+G56ym'),
@@ -383,7 +398,7 @@ foreach ($route in $privacyRoutes) {
   Assert-Equal ([regex]::Matches($privacyHtml, 'hreflang="x-default" href="https://lvb\.kr/privacy/"').Count) 1 "Privacy x-default: $($route.Locale)"
   Assert-Equal ([regex]::Matches($privacyHtml, '<html lang="' + [regex]::Escape($route.Locale) + '">').Count) 1 "Privacy html lang: $($route.Locale)"
   Assert-Equal ([regex]::Matches($privacyHtml, 'application/ld\+json').Count) 0 "Privacy JSON-LD count: $($route.Locale)"
-  Assert-Equal ([regex]::Matches($privacyHtml, 'datetime="2026-08-26"').Count) 2 "Privacy policy date count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($privacyHtml, 'datetime="2026-08-31"').Count) 2 "Privacy policy date count: $($route.Locale)"
   Assert-Equal ([regex]::Matches($privacyHtml, 'youtube-nocookie\.com').Count) 1 "Privacy-enhanced YouTube disclosure: $($route.Locale)"
 
   foreach ($languagePath in $expectedLanguagePaths) {
@@ -601,6 +616,18 @@ foreach ($relativePath in $requiredFiles) {
 $htmlFiles = @(Get-ChildItem -LiteralPath (Join-Path $siteRoot 'dist') -Recurse -File -Filter '*.html')
 $regularHtml = @($htmlFiles | Where-Object { $_.Name -ne '404.html' })
 Assert-Equal $htmlFiles.Count 61 'Total production HTML count'
+Assert-Equal $regularHtml.Count 60 'Analytics-enabled production HTML count'
+foreach ($htmlFile in $regularHtml) {
+  $html = Get-Content -Raw -Encoding utf8 $htmlFile.FullName
+  Assert-Equal ([regex]::Matches($html, [regex]::Escape($expectedAnalyticsEndpoint)).Count) 1 "Analytics endpoint count: $($htmlFile.FullName)"
+  Assert-Equal ([regex]::Matches($html, 'fetch\(analyticsHitEndpoint,').Count) 1 "Analytics initialization count: $($htmlFile.FullName)"
+  foreach ($forbiddenAnalyticsValue in @('ANALYTICS_ADMIN_USER', 'ANALYTICS_ADMIN_PASSWORD_HASH', 'ANALYTICS_ADMIN_PASSWORD_SALT', 'ANALYTICS_HASH_SECRET', 'a1de719b-17d4-47cb-be41-562c54621657')) {
+    Assert-Equal ([regex]::Matches($html, [regex]::Escape($forbiddenAnalyticsValue)).Count) 0 "Private Analytics value count: $($htmlFile.FullName)"
+  }
+}
+$notFoundHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'dist\404.html')
+Assert-Equal ([regex]::Matches($notFoundHtml, [regex]::Escape($expectedAnalyticsEndpoint)).Count) 0 '404 Analytics endpoint count'
+Assert-Equal ([regex]::Matches($notFoundHtml, 'fetch\(analyticsHitEndpoint,').Count) 0 '404 Analytics initialization count'
 Assert-Equal $regularHtml.Count 60 'Regular production HTML count'
 
 $sitemap = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'dist\sitemap-0.xml')

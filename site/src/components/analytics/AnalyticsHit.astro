@@ -1,0 +1,18 @@
+---
+import { analyticsHitEndpoint } from '../../config/analytics';
+---
+
+{analyticsHitEndpoint && (
+  <script is:inline define:vars={{ analyticsHitEndpoint }}>
+    try {
+      void fetch(analyticsHitEndpoint, {
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'omit',
+        keepalive: true
+      }).catch(() => undefined);
+    } catch {
+      // Analytics must never interrupt page rendering or navigation.
+    }
+  </script>
+)}

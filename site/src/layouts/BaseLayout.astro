@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import AnalyticsHit from '../components/analytics/AnalyticsHit.astro';
 import RootStructuredData from '../components/seo/RootStructuredData.astro';
 import MotionEnhancements from '../components/ui/MotionEnhancements.astro';
 import { siteConfig } from '../config/site';
@@ -104,5 +105,6 @@ const localeMap: Record<Locale, string> = {
   <body>
     <slot />
     <MotionEnhancements />
+    <AnalyticsHit />
   </body>
 </html>

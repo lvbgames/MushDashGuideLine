@@ -1,0 +1,33 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "lvb-analytics",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-28",
+  "workers_dev": true,
+  "preview_urls": false,
+  "triggers": {
+    "crons": [
+      "10 15 * * *"
+    ]
+  },
+  "vars": {
+    "ANALYTICS_ENV": "production",
+    "ALLOWED_ORIGIN": "https://lvb.kr"
+  },
+  "secrets": {
+    "required": [
+      "ANALYTICS_HASH_SECRET",
+      "ANALYTICS_ADMIN_USER",
+      "ANALYTICS_ADMIN_PASSWORD_HASH",
+      "ANALYTICS_ADMIN_PASSWORD_SALT"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "lvb-analytics",
+      "database_id": "a1de719b-17d4-47cb-be41-562c54621657",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

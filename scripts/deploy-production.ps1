@@ -76,7 +76,7 @@ if (-not $stagedFilesText) {
 }
 $stagedFiles = @($stagedFilesText -split "`r?`n" | Where-Object { $_ })
 
-$forbiddenStagedPattern = '^(references/(?:lvb|LvbResult|reviews)/|site/(?:node_modules|dist)/|\.tmp-verification/|\.codex/.+\.log$|\.codex/.+qa-runtime(?:/|$)|(?:.+/)?lighthouse[^/]*$|.+\.log$)'
+$forbiddenStagedPattern = '^(references/(?:lvb|LvbResult|reviews)/|site/(?:node_modules|dist)/|analytics/(?:node_modules|\.wrangler|\.dev\.vars(?:\.|$))/|\.tmp-verification/|\.codex/.+\.log$|\.codex/.+qa-runtime(?:/|$)|(?:.+/)?(?:lighthouse[^/]*|temp|tmp)(?:/|$)|.+\.log$)'
 $forbiddenStaged = @($stagedFiles | Where-Object { $_ -match $forbiddenStagedPattern })
 if ($forbiddenStaged.Count -gt 0) {
   Invoke-GitChecked @('restore', '--staged', '--', '.')

@@ -10,6 +10,17 @@
 4. 생성된 Astro 페이지 수, Privacy를 포함한 전체 HTML 수, sitemap URL 수를 현재 route 목록과 대조한다.
 5. 운영 배포 준비에서는 루트에서 `scripts/prepare-production.ps1`을 실행하고 모든 검사가 성공해야 한다.
 
+## 자체 Analytics
+
+- `analytics/`에서 `npm ci`, `npm audit`, `npm run check`, `npm test`, `npm run qa:local`을 실행한다. local QA는 두 migration, 3·5·2 fixture의 집계 전후 TODAY·WEEK·TOTAL·최근 30일 불변, 과거 날짜의 `daily_stats` 3·5와 오늘 `daily_visitors` 2, 강제 실패 rollback, 재시도·2회 실행 멱등성, 같은 날짜·IP 중복 0, 다음 날짜 같은 IP +1, Googlebot·Yeti·Discordbot 제외, 일반 browser 포함, Origin 거부와 Basic Auth 401/200을 확인한다.
+- production은 Cloudflare가 설정하는 `CF-Connecting-IP`만 사용하고 body/query의 IP를 받지 않아야 한다. 테스트 IP·날짜 header는 development와 명시적 QA flag가 동시에 켜진 local Worker에서만 허용한다.
+- 임시 `daily_visitors` schema에는 `visit_date`, `visitor_hash`, `created_at`만, 장기 `daily_stats`에는 `visit_date`, `unique_visitors`, `finalized_at`만 있어야 한다. User-Agent·URL·referrer·country·raw IP·session 컬럼, 응답 또는 관리자 표시는 0건이어야 한다.
+- Cron은 `10 15 * * *` 한 개여야 한다. 현재 KST 날짜보다 이른 모든 미집계 날짜를 날짜별 D1 batch로 집계한 뒤 hash를 삭제하며, 저장·삭제 중 실패하면 전체 rollback되어야 한다. 실패 backlog는 다음 실행에서 처리하고 두 번 실행해도 수치가 변하지 않아야 한다.
+- TODAY는 오늘의 `daily_visitors`, WEEK·TOTAL·최근 30일은 확정 `daily_stats`와 아직 처리되지 않은 visitor row를 합쳐 계산한다. Tracking since는 두 table의 최소 날짜이며 빈 DB에서는 값이 없다고 표시해야 한다.
+- `/admin/`과 `/api/stats`는 인증 전 통계 데이터를 반환하지 않고 `Cache-Control: private, no-store`, `X-Robots-Tag: noindex, nofollow`를 사용한다.
+- production build는 `PUBLIC_ANALYTICS_ENDPOINT=https://lvb-analytics.lvb-analytics-worker.workers.dev/hit`를 사용한다. 60개 정상 HTML에는 endpoint와 initialization이 각각 한 번, 404에는 0번이어야 하며 fetch rejection이 처리되어야 한다. Admin username·password/hash/salt·HMAC secret·D1 ID는 HTML에 없어야 한다.
+- Worker·D1·사이트 endpoint와 공개 Privacy는 같은 production 승인 작업에서 활성화하며, 네 언어 Last updated·Effective date는 실제 적용일 `2026-08-31`을 사용한다.
+
 ## 링크와 라우팅
 
 - 모든 생성 HTML에서 빈 `href`와 존재하지 않는 내부 경로를 검사한다.
@@ -47,7 +58,7 @@
 - Privacy 화면에서 `TODO`, `FIXME`, `placeholder`, `lvbgames.store`, raw GitHub logo, `Main Project: MushDash`, Epic brand requirement 문구가 0건인지 확인한다.
 - Privacy 네 언어에 첫 언급 `Epic Online Services(EOS)`와 이후 `EOS`, Lobby·Session·P2P·EOS UserCloud, 일반 문의 1년 보관, Netlify Web Analytics·RUM·Log Drains 미사용, 자체 서버·DB·텔레메트리·자동 크래시 전송 미사용, 담당부서 Lv.B가 동일한 의미로 포함되는지 확인한다.
 - 빌드된 Privacy 네 언어 HTML에서 대소문자 구분 없이 내부 구현 명칭 `EIK`가 0건인지 확인한다.
-- 네 언어 Privacy는 최종 수정일과 시행일을 각각 locale별 문구로 표시하고 두 `<time>`의 `datetime` 값이 모두 `2026-08-26`인지 확인한다. 19개 section 순서, `noindex, follow`, sitemap 제외와 youtube-nocookie click-to-load 고지를 함께 확인한다.
+- 네 언어 Privacy는 최종 수정일과 시행일을 각각 locale별 문구로 표시하고 두 `<time>`의 `datetime` 값이 모두 `2026-08-31`인지 확인한다. 19개 section 순서, `noindex, follow`, sitemap 제외와 youtube-nocookie click-to-load 고지를 함께 확인한다.
 - UserCloud 공개 범주는 네 언어 모두에서 튜토리얼 진행, 표시 이름, 선택한 아이콘·이름표·아바타, 재화 잔액, 보유 아이템·인벤토리, Infinity Tower 최고 기록, 주간 도전 ID·진행·완료·보상 수령, 중복 구매 처리를 방지하는 거래 식별자를 포함해야 한다.
 - 네 언어 모두 계정 식별자는 계정별 영역을 찾는 SDK 처리와 save JSON payload를 구분하고, 로컬 언어·매칭 지역·그래픽·오디오 설정은 UserCloud 업로드 범주에서 제외해야 한다.
 - UserCloud 자동 만료·정기 삭제·게임 제거·계정 연결 해제 시 자동 삭제 또는 이메일 요청의 즉시·무조건 삭제를 보장하는 문구는 없어야 한다. 요청 채널, Lv.B 담당부서, 본인·범위 및 플랫폼/EOS 절차 확인과 제한 안내는 있어야 한다.

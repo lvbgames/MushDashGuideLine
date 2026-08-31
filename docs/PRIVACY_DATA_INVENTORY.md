@@ -1,10 +1,11 @@
 # Privacy Data Inventory
 
-조사일: 2026-07-31. 이 문서는 코드·설정·현재 프로젝트 문서에서 확인할 수 있는 개인정보 처리 단서와 운영자 확인이 필요한 사항을 분리한다. 법적 처리 관계를 확정하는 문서가 아니며, `Manual confirmation` 항목을 확인하기 전에는 신규 Privacy를 배포 가능 상태로 간주하지 않는다.
+기준 조사일: 2026-07-31. 자체 Analytics 로컬 구현 상태는 2026-08-28에 추가했다. 이 문서는 코드·설정·현재 프로젝트 문서에서 확인할 수 있는 개인정보 처리 단서와 운영자 확인이 필요한 사항을 분리한다. 법적 처리 관계를 확정하는 문서가 아니며, `Manual confirmation` 항목을 확인하기 전에는 신규 Privacy를 배포 가능 상태로 간주하지 않는다.
 
 상태:
 
 - `Confirmed`: 현재 저장소의 소스·설정 또는 사용자 검증 데이터로 확인됨.
+- `Production active`: 운영 인프라와 홈페이지 endpoint가 연결되어 실제 서비스에 사용 중임.
 - `Manual confirmation`: 저장소 밖의 계정 설정, 계약 또는 게임 런타임을 운영자가 확인해야 함.
 - `Not used`: 현재 홈페이지 소스와 배포 설정에서 사용하지 않음.
 
@@ -13,6 +14,7 @@
 - 개인정보보호위원회, [현재 안내서: 개인정보 처리방침 작성지침(2026.4. 개정)](https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=&nttId=12018) — 2026-04-23 게시된 현재 작성지침. 2026-04-09 의견수렴안과 구분한다.
 - 개인정보보호위원회, [현재 안내서: 개인정보 처리방침 표준(안)(2026.2.)](https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=&nttId=11838) — 분야별 표준안 자료이며 현재 작성지침과 구분한다.
 - [Netlify Privacy Statement](https://www.netlify.com/privacy/), [Netlify Web Analytics 문서](https://docs.netlify.com/manage/monitoring/web-analytics/how-web-analytics-works/)
+- [Cloudflare Privacy Policy](https://www.cloudflare.com/privacypolicy/), [Workers limits](https://developers.cloudflare.com/workers/platform/limits/), [D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/)
 - [Google Maps Platform 데이터 수집·보유 설명](https://developers.google.com/maps/security/compliance/security-compliance), [Google Privacy Policy](https://policies.google.com/privacy)
 - [Steam Privacy Policy](https://store.steampowered.com/privacy_agreement/), [Epic Games Privacy Policy](https://legal.epicgames.com/epicgames/privacy-policy)
 - [NAVER 개인정보 처리방침](https://policy.naver.com/policy/privacy.html)
@@ -27,13 +29,13 @@
 | Netlify Forms | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | `data-netlify`, form-name 전체 검색 0건 | Not used |
 | Netlify Functions | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | `netlify.toml`, `site/astro.config.mjs` | Not used |
 | Netlify Edge locale redirect | 홈페이지 루트 `/` 일반 방문 | Netlify 및 locale 선택 기능을 제공하는 Lv.B | Netlify가 요청 시 제공하는 국가 코드, 사용자가 직접 선택한 언어 preference cookie | 최초 루트 방문의 언어 경로 선택과 명시적 언어 선택 유지 | Netlify Edge 실행 중 처리; 국가 코드는 Lv.B DB·analytics·cookie에 저장하지 않음 | 국가 코드는 요청 처리 중에만 사용; 언어 preference는 이용자 브라우저에 1년 | Netlify | 가능 | `netlify.toml`, `site/netlify/edge-functions/locale-redirect.ts`, `site/src/i18n/localePreference.ts` | Confirmed in source; deployment pending |
-| 자체 API | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | Astro static output, API route 0건 | Not used |
-| 자체 DB | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | DB 연결·환경변수·adapter 0건, `docs/ARCHITECTURE.md` | Not used |
+| 자체 Analytics API | 정상 홈페이지 방문 | 방문 규모를 집계하는 Lv.B, 인프라 제공자 Cloudflare | Worker가 요청 중 일시 처리하는 원본 IP; KST 날짜·당일 HMAC-SHA256 hash·생성 시각 | 일간 중복을 제거한 순 방문자 수 집계 | 원본 IP는 Cloudflare Worker 실행 중에만 처리하고 저장하지 않음; D1 hash는 날짜별 집계 확정 전까지만 임시 저장 | 날짜가 HMAC 입력에 포함되어 날짜 간 연결 불가; 집계 성공 후 hash 삭제, 집계 실패 시 삭제하지 않고 다음 Cron에서 재시도 | Cloudflare Workers·D1 | 가능 | `analytics/src/index.ts`, `analytics/src/core.ts`, `analytics/migrations/0001_initial.sql`, 2026-08-31 원격 Worker QA | Production active |
+| 자체 Analytics DB | 정상 홈페이지 방문 | Lv.B, Cloudflare | 임시 `daily_visitors`: `visit_date`, `visitor_hash`, `created_at`; 장기 `daily_stats`: `visit_date`, `unique_visitors`, `finalized_at` | TODAY·최근 7일·누적·최근 30일 집계 | Cloudflare D1; 집계 저장과 hash 삭제를 날짜별 단일 transaction batch로 처리 | hash row는 해당 날짜의 수가 안전하게 저장된 직후 삭제; 실패 backlog는 다음 날 재시도. 장기 보관은 날짜·최종 수·집계 완료 시각이며 Analytics 운영 목적 동안 유지 | Cloudflare D1 | 가능 | `analytics/migrations/0001_initial.sql`, `analytics/migrations/0002_daily_stats.sql`, local rollback QA와 2026-08-31 원격 scheduled·멱등성 QA | Production active |
 | CMS | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | CMS 패키지·연결 설정 0건 | Not used |
 | Google Analytics | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Google | 없음 | `gtag`, GA measurement ID 전체 검색 0건 | Not used |
 | Google Tag Manager | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Google | 없음 | `GTM-`, tag manager 전체 검색 0건 | Not used |
 | 광고·마케팅 Pixel | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | pixel·광고 SDK 전체 검색 0건 | Not used |
-| 클라이언트 분석·RUM 코드 | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify 등 | 계정 설정에 따라 가능 | RUM·analytics client script 검색 0건 | Not used |
+| 자체 Analytics client | 정상 홈페이지 방문 | Lv.B | request body 없는 `POST /hit`; 브라우저가 network 요청 과정에서 제공하는 IP·User-Agent 가능 | 방문 hit 전달 | browser에서 Cloudflare Worker로 직접 전송; 사이트 bundle·cookie·local storage에 식별자 저장 없음 | 요청 시점 | Cloudflare Workers | 가능 | `site/src/config/analytics.ts`, `site/src/components/analytics/AnalyticsHit.astro`; Netlify Production의 공개 endpoint | Production active |
 | Netlify Web Analytics | 운영 사이트 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | 저장소 코드 0건 및 사용자 운영 확인(2026-07-31): 비활성 | Not used |
 | Netlify Real User Monitoring | 운영 사이트 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | 저장소 코드 0건 및 사용자 운영 확인(2026-07-31): 비활성 | Not used |
 | Netlify Log Drains | 운영 사이트 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | 저장소 설정 0건 및 사용자 운영 확인(2026-07-31): 비활성 | Not used |
@@ -105,6 +107,6 @@ MushDash 실제 게임 프로젝트 `E:\MushDash`의 2026-07-31 현재 작업 �
 6. Netlify, Google, Valve, Epic, NAVER의 계약상 역할과 국외 처리·이전의 법적 분류를 법률적으로 확인한다.
 7. Steam·Epic에서 요청자와 UserCloud 계정의 소유 관계를 안전하게 확인할 절차를 확정한다. 현재 구현에는 검증된 절차가 없다.
 8. 개인정보 요청 처리 기록의 보유기간과 삭제 담당자를 확정한다.
-9. click-to-load YouTube 고지 추가에 따라 개인정보 처리방침의 Last updated와 Effective date를 `2026-08-26`으로 갱신했다.
+9. 자체 Analytics 운영 시작에 따라 개인정보 처리방침의 Last updated와 Effective date를 `2026-08-31`로 갱신했다.
 
 운영 확인 결과가 현재 코드 감사와 다르면 `site/src/data/privacy.ts`, `docs/PRIVACY_USERCLOUD_AUDIT.md`와 본 인벤토리를 함께 갱신하고 네 언어 의미 검증과 전체 빌드를 다시 수행한다.
