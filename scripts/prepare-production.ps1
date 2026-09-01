@@ -111,6 +111,33 @@ Assert-Equal ([regex]::Matches($netlify, '(?m)^\s*\[\[edge_functions\]\]\s*$').C
 if ($netlify -notmatch '(?ms)^\s*\[\[edge_functions\]\]\s*$.*?^\s*path\s*=\s*"/"\s*$.*?^\s*function\s*=\s*"locale-redirect"\s*$') {
   throw 'The locale redirect Edge Function must be bound only to the root path.'
 }
+Assert-Equal ([regex]::Matches($netlify, '(?m)^\s*\[\[headers\]\]\s*$').Count) 1 'Netlify security headers declaration count'
+if ($netlify -notmatch '(?ms)^\s*\[\[headers\]\]\s*$.*?^\s*for\s*=\s*"/\*"\s*$') {
+  throw 'The security headers must apply to all public site paths.'
+}
+foreach ($requiredHeader in @(
+  'X-Content-Type-Options\s*=\s*"nosniff"',
+  'Referrer-Policy\s*=\s*"strict-origin-when-cross-origin"',
+  'Permissions-Policy\s*=\s*"camera=\(\), microphone=\(\), geolocation=\(\)"',
+  'X-Frame-Options\s*=\s*"DENY"',
+  'Content-Security-Policy-Report-Only\s*='
+)) {
+  if ($netlify -notmatch $requiredHeader) { throw "Required Netlify security header is missing: $requiredHeader" }
+}
+if ($netlify -match '(?i)Content-Security-Policy-Report-Only\s*=.*(?:unsafe-eval|\s\*\s)') {
+  throw 'The report-only CSP must not allow unsafe-eval or wildcard sources.'
+}
+foreach ($requiredCspSource in @(
+  "default-src 'self'",
+  "frame-ancestors 'none'",
+  'https://lvb-analytics.lvb-analytics-worker.workers.dev',
+  'https://shared.akamai.steamstatic.com',
+  'https://www.google.com',
+  'https://www.youtube-nocookie.com'
+)) {
+  if ($netlify -notmatch [regex]::Escape($requiredCspSource)) { throw "Required CSP source is missing: $requiredCspSource" }
+}
+Assert-Equal ([regex]::Matches($netlify, '(?im)^\s*Strict-Transport-Security\s*=').Count) 0 'Netlify HSTS override count'
 if ($netlify -match '(?im)^\s*from\s*=\s*"/robots\.txt/?"\s*$') {
   throw 'robots.txt must be served directly from site/public without a redirect or rewrite.'
 }

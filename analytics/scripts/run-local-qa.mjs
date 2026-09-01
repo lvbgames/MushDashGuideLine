@@ -13,12 +13,14 @@ const port = 8791 + (process.pid % 100);
 const baseUrl = `http://127.0.0.1:${port}`;
 const wranglerEntry = path.resolve(analyticsRoot, 'node_modules', 'wrangler', 'bin', 'wrangler.js');
 const configPath = path.resolve(analyticsRoot, 'wrangler.jsonc');
+const qaConfigPath = path.resolve(analyticsRoot, `.wrangler-qa-${process.pid}.jsonc`);
 const adminUser = 'local-owner';
 const adminPassword = 'local-password-not-for-production';
 const adminSalt = 'local-qa-salt';
 const browserUa = 'Mozilla/5.0 Chrome/140.0 Safari/537.36';
 const allowedOrigin = 'http://localhost:4321';
 const basic = `Basic ${Buffer.from(`${adminUser}:${adminPassword}`).toString('base64')}`;
+let statsRequestId = 0;
 
 function run(command, args, options = {}) {
   return new Promise((resolve, reject) => {
@@ -67,11 +69,12 @@ async function hit({ date, ip, userAgent = browserUa, origin = allowedOrigin, me
   });
 }
 
-async function stats(date, authorization = basic) {
+async function stats(date, authorization = basic, ip = `198.18.0.${++statsRequestId}`) {
   return fetch(`${baseUrl}/api/stats`, {
     headers: {
       Authorization: authorization,
-      'X-LvB-Analytics-Test-Date': date
+      'X-LvB-Analytics-Test-Date': date,
+      'X-LvB-Analytics-Test-IP': ip
     }
   });
 }
@@ -138,6 +141,15 @@ try {
   assert.match(statsSchema, /finalized_at TEXT NOT NULL/);
   assert.equal(/visitor_hash|\bip\b|user_agent|url|referrer|country|session/i.test(statsSchema), false);
   const adminHash = await deriveAdminPasswordHash(adminPassword, adminSalt);
+  const qaConfig = JSON.parse(await readFile(configPath, 'utf8'));
+  qaConfig.ratelimits = qaConfig.ratelimits.map((binding) => ({
+    ...binding,
+    simple: {
+      limit: binding.name === 'HIT_RATE_LIMITER' ? 3 : 2,
+      period: 10
+    }
+  }));
+  await writeFile(qaConfigPath, `${JSON.stringify(qaConfig, null, 2)}\n`, 'utf8');
   await writeFile(envPath, [
     'ANALYTICS_ENV=development',
     'ALLOWED_ORIGIN=https://lvb.kr',
@@ -157,7 +169,7 @@ try {
 
   worker = spawn(process.execPath, [wranglerEntry,
     'dev', '--local', '--ip', '127.0.0.1', '--port', String(port),
-    '--persist-to', qaRoot, '--env-file', envPath, '--config', configPath,
+    '--persist-to', qaRoot, '--env-file', envPath, '--config', qaConfigPath,
     '--var', 'ANALYTICS_ENV:development',
     '--var', 'ALLOWED_ORIGIN:https://lvb.kr',
     '--var', 'DEV_ALLOWED_ORIGINS:http://localhost:4321',
@@ -225,7 +237,11 @@ try {
   assert.equal(serialized.includes('203.0.113.'), false);
 
   const dashboard = await fetch(`${baseUrl}/admin/`, {
-    headers: { Authorization: basic, 'X-LvB-Analytics-Test-Date': '2026-08-29' }
+    headers: {
+      Authorization: basic,
+      'X-LvB-Analytics-Test-Date': '2026-08-29',
+      'X-LvB-Analytics-Test-IP': '198.18.1.1'
+    }
   });
   assert.equal(dashboard.status, 200);
   assert.match(dashboard.headers.get('content-type') ?? '', /^text\/html/);
@@ -234,6 +250,32 @@ try {
   assert.match(dashboardBody, /Lv\.B Analytics/);
   assert.equal(dashboardBody.includes('visitor_hash'), false);
   assert.equal(dashboardBody.includes('203.0.113.'), false);
+
+  for (let requestIndex = 0; requestIndex < 2; requestIndex += 1) {
+    assert.equal((await hit({ date: '2026-08-29', ip: '203.0.113.31' })).status, 204);
+  }
+  const limitedHit = await hit({ date: '2026-08-29', ip: '203.0.113.31' });
+  assert.equal(limitedHit.status, 429);
+  assert.equal(limitedHit.headers.get('access-control-allow-origin'), allowedOrigin);
+  assert.equal(await limitedHit.text(), '');
+
+  const sharedAdminLimit = await fetch(`${baseUrl}/admin/`, {
+    headers: {
+      Authorization: basic,
+      'X-LvB-Analytics-Test-Date': '2026-08-29',
+      'X-LvB-Analytics-Test-IP': '198.51.100.200'
+    }
+  });
+  assert.equal(sharedAdminLimit.status, 200);
+  assert.equal((await stats('2026-08-29', 'Basic d3Jvbmc6d3Jvbmc=', '198.51.100.200')).status, 401);
+  const limitedAdmin = await stats('2026-08-29', basic, '198.51.100.200');
+  assert.equal(limitedAdmin.status, 429);
+  assert.equal(limitedAdmin.headers.has('www-authenticate'), false);
+  assert.equal((await limitedAdmin.text()).includes('visitor'), false);
+
+  await new Promise((resolve) => setTimeout(resolve, 10_500));
+  assert.equal((await hit({ date: '2026-08-29', ip: '203.0.113.31' })).status, 204);
+  assert.equal((await stats('2026-08-29', basic, '198.51.100.200')).status, 200);
 
   worker.kill('SIGINT');
   await new Promise((resolve) => worker.once('exit', resolve));
@@ -255,7 +297,7 @@ try {
     ]
   );
 
-  console.log('Local Worker/D1 QA passed: aggregation, rollback safety, idempotency, duplicates, KST dates, bots, auth, CORS, and raw-IP non-disclosure.');
+  console.log('Local Worker/D1 QA passed: HTTPS gate, rate limits, aggregation, rollback safety, idempotency, duplicates, KST dates, bots, auth, CORS, and raw-IP non-disclosure.');
 } finally {
   if (worker && worker.exitCode === null) {
     worker.kill('SIGINT');
@@ -273,4 +315,5 @@ try {
     });
     await rmdir(safeParent).catch(() => undefined);
   }
+  await rm(qaConfigPath, { force: true });
 }

@@ -1,6 +1,6 @@
 # Privacy Data Inventory
 
-기준 조사일: 2026-07-31. 자체 Analytics 로컬 구현 상태는 2026-08-28에 추가했다. 이 문서는 코드·설정·현재 프로젝트 문서에서 확인할 수 있는 개인정보 처리 단서와 운영자 확인이 필요한 사항을 분리한다. 법적 처리 관계를 확정하는 문서가 아니며, `Manual confirmation` 항목을 확인하기 전에는 신규 Privacy를 배포 가능 상태로 간주하지 않는다.
+기준 조사일: 2026-07-31. 자체 Analytics 로컬 구현 상태는 2026-08-28에 추가했고 Worker·D1·Netlify 연동은 2026-08-31 production active로 갱신했다. 이 문서는 코드·설정·현재 프로젝트 문서에서 확인할 수 있는 개인정보 처리 단서와 운영자 확인이 필요한 사항을 분리한다. 법적 처리 관계를 확정하는 문서가 아니며, `Manual confirmation` 항목은 운영자가 별도로 확인한다.
 
 상태:
 
@@ -28,7 +28,7 @@
 | Contact form | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | `site/src/components/pages/ContactPage.astro` | Not used |
 | Netlify Forms | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | `data-netlify`, form-name 전체 검색 0건 | Not used |
 | Netlify Functions | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | `netlify.toml`, `site/astro.config.mjs` | Not used |
-| Netlify Edge locale redirect | 홈페이지 루트 `/` 일반 방문 | Netlify 및 locale 선택 기능을 제공하는 Lv.B | Netlify가 요청 시 제공하는 국가 코드, 사용자가 직접 선택한 언어 preference cookie | 최초 루트 방문의 언어 경로 선택과 명시적 언어 선택 유지 | Netlify Edge 실행 중 처리; 국가 코드는 Lv.B DB·analytics·cookie에 저장하지 않음 | 국가 코드는 요청 처리 중에만 사용; 언어 preference는 이용자 브라우저에 1년 | Netlify | 가능 | `netlify.toml`, `site/netlify/edge-functions/locale-redirect.ts`, `site/src/i18n/localePreference.ts` | Confirmed in source; deployment pending |
+| Netlify Edge locale redirect | 홈페이지 루트 `/` 일반 방문 | Netlify 및 locale 선택 기능을 제공하는 Lv.B | Netlify가 요청 시 제공하는 국가 코드, 사용자가 직접 선택한 언어 preference cookie | 최초 루트 방문의 언어 경로 선택과 명시적 언어 선택 유지 | Netlify Edge 실행 중 처리; 국가 코드는 Lv.B DB·analytics·cookie에 저장하지 않음 | 국가 코드는 요청 처리 중에만 사용; 언어 preference는 이용자 브라우저에 1년 | Netlify | 가능 | `netlify.toml`, `site/netlify/edge-functions/locale-redirect.ts`, `site/src/i18n/localePreference.ts` | Production active |
 | 자체 Analytics API | 정상 홈페이지 방문 | 방문 규모를 집계하는 Lv.B, 인프라 제공자 Cloudflare | Worker가 요청 중 일시 처리하는 원본 IP; KST 날짜·당일 HMAC-SHA256 hash·생성 시각 | 일간 중복을 제거한 순 방문자 수 집계 | 원본 IP는 Cloudflare Worker 실행 중에만 처리하고 저장하지 않음; D1 hash는 날짜별 집계 확정 전까지만 임시 저장 | 날짜가 HMAC 입력에 포함되어 날짜 간 연결 불가; 집계 성공 후 hash 삭제, 집계 실패 시 삭제하지 않고 다음 Cron에서 재시도 | Cloudflare Workers·D1 | 가능 | `analytics/src/index.ts`, `analytics/src/core.ts`, `analytics/migrations/0001_initial.sql`, 2026-08-31 원격 Worker QA | Production active |
 | 자체 Analytics DB | 정상 홈페이지 방문 | Lv.B, Cloudflare | 임시 `daily_visitors`: `visit_date`, `visitor_hash`, `created_at`; 장기 `daily_stats`: `visit_date`, `unique_visitors`, `finalized_at` | TODAY·최근 7일·누적·최근 30일 집계 | Cloudflare D1; 집계 저장과 hash 삭제를 날짜별 단일 transaction batch로 처리 | hash row는 해당 날짜의 수가 안전하게 저장된 직후 삭제; 실패 backlog는 다음 날 재시도. 장기 보관은 날짜·최종 수·집계 완료 시각이며 Analytics 운영 목적 동안 유지 | Cloudflare D1 | 가능 | `analytics/migrations/0001_initial.sql`, `analytics/migrations/0002_daily_stats.sql`, local rollback QA와 2026-08-31 원격 scheduled·멱등성 QA | Production active |
 | CMS | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | CMS 패키지·연결 설정 0건 | Not used |
@@ -40,7 +40,7 @@
 | Netlify Real User Monitoring | 운영 사이트 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | 저장소 코드 0건 및 사용자 운영 확인(2026-07-31): 비활성 | Not used |
 | Netlify Log Drains | 운영 사이트 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Netlify | 없음 | 저장소 설정 0건 및 사용자 운영 확인(2026-07-31): 비활성 | Not used |
 | Netlify 정적 호스팅 | 모든 홈페이지 방문 | Netlify | IP 주소, 요청 URL, 시각, 브라우저·기기·요청 헤더 등 일반적인 CDN 요청 정보 가능 | 정적 파일 제공, 운영·보안 | Netlify 인프라 | Netlify 정책·프로젝트 설정에 따름 | Netlify | 가능 | `netlify.toml`, `site/astro.config.mjs`, Netlify 공식 정책 | Confirmed |
-| 언어 preference cookie | 사용자가 언어 전환 링크를 직접 선택한 홈페이지 방문 | 이용자 브라우저와 Lv.B 홈페이지 | `lvb_locale` 및 `en`·`ko`·`ja`·`zh-cn` 중 선택값 | 이용자의 명시적 언어 선택을 Geo 자동 선택보다 우선 | 이용자 브라우저의 1st-party cookie | 선택 시점부터 1년(`Max-Age=31536000`) | 없음 | 없음 | `site/src/components/layout/LanguageSwitcher.astro`, `site/src/i18n/localePreference.ts`; 자동 Geo 이동은 cookie를 만들지 않음 | Confirmed in source; deployment pending |
+| 언어 preference cookie | 사용자가 언어 전환 링크를 직접 선택한 홈페이지 방문 | 이용자 브라우저와 Lv.B 홈페이지 | `lvb_locale` 및 `en`·`ko`·`ja`·`zh-cn` 중 선택값 | 이용자의 명시적 언어 선택을 Geo 자동 선택보다 우선 | 이용자 브라우저의 1st-party cookie | 선택 시점부터 1년(`Max-Age=31536000`) | 없음 | 없음 | `site/src/components/layout/LanguageSwitcher.astro`, `site/src/i18n/localePreference.ts`; 자동 Geo 이동은 cookie를 만들지 않음 | Production active |
 | localStorage | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | `localStorage` 검색 0건 | Not used |
 | sessionStorage | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | `sessionStorage` 검색 0건 | Not used |
 | IndexedDB | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | `IndexedDB` 검색 0건 | Not used |

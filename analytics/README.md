@@ -4,7 +4,7 @@ Lv.B 홈페이지의 단순 일간 순 방문자를 집계하는 독립 Cloudfla
 
 ## 수집 범위와 계산
 
-- `POST /hit`: 허용 Origin에서 온 일반 브라우저 요청만 받고 성공 여부와 관계없이 빈 `204`를 반환한다.
+- `POST /hit`: 허용 Origin에서 온 일반 브라우저 요청만 받고 정상 처리에는 빈 `204`, rate limit 초과에는 빈 `429`, limiter 장애에는 빈 `503`을 반환한다.
 - `GET /admin/`: Basic Authentication 뒤 TODAY, WEEK, TOTAL, RECENT 30 DAYS를 HTML로 표시한다.
 - `GET /api/stats`: 같은 인증 뒤 같은 집계를 JSON으로 반환한다.
 - KST 날짜와 Cloudflare의 `CF-Connecting-IP`를 `ANALYTICS_HASH_SECRET`으로 HMAC-SHA256 처리한다.
@@ -25,7 +25,7 @@ Lv.B 홈페이지의 단순 일간 순 방문자를 집계하는 독립 Cloudfla
 - D1 Free: 일 5,000,000 rows read, 일 100,000 rows written, 계정 전체 5 GB. 개별 Free DB 최대 크기는 500 MB이며 계정당 DB는 10개다. 일일 query 한도 초과 시 D1 query가 다음 초기화 시점까지 실패할 수 있다. [D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/), [D1 limits](https://developers.cloudflare.com/d1/platform/limits/)
 - Workers Free 계정은 Cron Trigger를 최대 5개 사용할 수 있으며 이 프로젝트는 `10 15 * * *` 한 개만 사용한다. Cron은 UTC 기준이므로 이 값은 매일 한국시간 00:10이다. [Workers limits](https://developers.cloudflare.com/workers/platform/limits/), [Cron Triggers](https://developers.cloudflare.com/workers/configuration/cron-triggers/)
 
-유료 기능, Durable Objects, 유료 Rate Limiting, 외부 Analytics 제품은 사용하지 않는다. 한도 초과 시 집계 누락을 허용하며 Paid plan으로 자동 전환하지 않는다. 사이트 client는 fire-and-forget 요청의 오류를 모두 흡수하므로 홈페이지 로딩·내비게이션·UI는 실패하지 않는다.
+유료 WAF Rate Limiting Rule, KV, Durable Objects, 외부 Analytics 제품은 사용하지 않는다. Worker 코드에는 Cloudflare Workers Rate Limiting binding을 사용하며 `/hit`은 actor당 60회/60초, `/admin/`과 `/api/stats`는 같은 actor 기준 합산 10회/60초다. binding key는 날짜·scope·client IP의 HMAC 값이며 D1과 application log에 원본 IP나 별도 rate-limit row를 저장하지 않는다. 이 제한은 Cloudflare location별 permissive/eventually consistent 보호이므로 정확한 전역 계수기가 아니다. Free 한도 초과 시 집계 누락을 허용하며 Paid plan으로 자동 전환하지 않는다. 사이트 client는 fire-and-forget 요청의 429·500·network 오류를 모두 흡수하므로 홈페이지 로딩·내비게이션·UI는 실패하지 않는다.
 
 ## 로컬 검증
 
@@ -38,7 +38,7 @@ npm test
 npm run qa:local
 ```
 
-`qa:local`은 고유한 `analytics/.wrangler/qa-*` 임시 위치에 local D1을 만들고 두 migration을 적용한다. 2026-08-27=3명, 08-28=5명, 08-29=2명 fixture로 집계 전후 TODAY·WEEK·TOTAL·최근 30일 표시가 같은지, 과거 두 날짜만 `daily_stats`에 3·5로 남는지, `daily_visitors`에는 오늘 2개 hash만 남는지 검사한다. 강제 삭제 실패의 전체 rollback, 재시도와 2회 실행의 멱등성, 중복 제거, bot 제외, CORS, Basic Auth와 raw IP 비노출도 확인한 뒤 임시 DB를 제거한다. 테스트 전용 IP·날짜·실패 헤더는 `ANALYTICS_ENV=development`와 `ANALYTICS_ALLOW_TEST_HEADERS=true`가 동시에 설정된 local QA에서만 읽는다.
+`qa:local`은 고유한 `analytics/.wrangler/qa-*` 임시 위치에 local D1을 만들고 두 migration을 적용한다. 2026-08-27=3명, 08-28=5명, 08-29=2명 fixture로 집계 전후 TODAY·WEEK·TOTAL·최근 30일 표시가 같은지, 과거 두 날짜만 `daily_stats`에 3·5로 남는지, `daily_visitors`에는 오늘 2개 hash만 남는지 검사한다. 강제 삭제 실패의 전체 rollback, 재시도와 2회 실행의 멱등성, 중복 제거, bot 제외, CORS, Basic Auth, raw IP 비노출, 축소 window에서 `/hit`과 관리자 limiter의 정상→429→재허용을 확인한 뒤 임시 DB와 QA config를 제거한다. 테스트 전용 IP·날짜·실패 헤더와 HTTP localhost 허용은 `ANALYTICS_ENV=development`와 `ANALYTICS_ALLOW_TEST_HEADERS=true`가 동시에 설정된 local QA에서만 사용한다.
 
 ## Cloudflare 운영 리소스
 
@@ -73,7 +73,8 @@ Cloudflare가 Worker에 제공하는 실제 client IP는 `CF-Connecting-IP`에�
 ## 운영 보안 확인
 
 - production 허용 Origin은 `https://lvb.kr` 하나다. CORS는 브라우저 호출 범위를 줄이는 장치이며 완전한 abuse 방지는 아니다.
-- `/admin/`과 `/api/stats`는 `private, no-store`, `X-Robots-Tag: noindex, nofollow`를 반환한다.
+- production HTTP는 Authorization 처리 전에 426으로 거부하며 `WWW-Authenticate`를 반환하지 않는다. HTTPS `/admin/`과 `/api/stats`는 `Strict-Transport-Security: max-age=31536000`, `private, no-store`, `X-Robots-Tag: noindex, nofollow`를 반환한다. `includeSubDomains`와 `preload`는 사용하지 않는다.
+- Rate Limiting binding 장애 시 `/hit`과 관리자 경로는 D1 또는 인증으로 우회하지 않고 503으로 fail closed한다. `/hit`의 429/503은 허용 Origin CORS와 빈 body를 유지한다.
 - 운영 전 관리자 비밀번호, secret, Worker URL, Free plan 상태와 D1 dashboard 사용량 경보를 수동 확인한다.
 - Worker log에 request header나 원본 IP를 추가하지 않는다.
 - 통계 시작일은 `daily_stats`와 아직 집계되지 않은 `daily_visitors`를 합친 첫 `visit_date`이며 과거 방문을 추정하거나 복원하지 않는다.

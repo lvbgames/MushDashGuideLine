@@ -5,12 +5,14 @@ import {
   buildDateRange,
   constantTimeEqual,
   deriveAdminPasswordHash,
+  deriveRateLimitKey,
   deriveVisitorHash,
   getKstDate,
   isCrawler,
   parseBasicAuthorization,
   shiftDate
 } from '../src/core.ts';
+import analyticsWorker from '../src/index.ts';
 
 test('KST date changes at 00:00 Asia/Seoul', () => {
   assert.equal(getKstDate(new Date('2026-08-28T14:59:59.999Z')), '2026-08-28');
@@ -28,6 +30,15 @@ test('daily visitor HMAC is stable only for the same date, IP and secret', async
   assert.notEqual(first, await deriveVisitorHash('2026-08-29', '203.0.113.10', 'test-secret'));
   assert.notEqual(first, await deriveVisitorHash('2026-08-28', '203.0.113.11', 'test-secret'));
   assert.match(first, /^[a-f0-9]{64}$/);
+});
+
+test('rate-limit actor keys are opaque and isolated by scope, date and IP', async () => {
+  const first = await deriveRateLimitKey('hit', '2026-08-31', '203.0.113.10', 'test-secret');
+  assert.match(first, /^[a-f0-9]{64}$/);
+  assert.equal(first.includes('203.0.113.10'), false);
+  assert.notEqual(first, await deriveRateLimitKey('admin', '2026-08-31', '203.0.113.10', 'test-secret'));
+  assert.notEqual(first, await deriveRateLimitKey('hit', '2026-09-01', '203.0.113.10', 'test-secret'));
+  assert.notEqual(first, await deriveRateLimitKey('hit', '2026-08-31', '203.0.113.11', 'test-secret'));
 });
 
 test('known and generic crawler user agents are excluded without rejecting browsers', () => {
@@ -63,4 +74,50 @@ test('Basic credentials and password hashes are parsed and compared safely', asy
   assert.equal(constantTimeEqual(hash, await deriveAdminPasswordHash('password', 'salt')), true);
   assert.equal(constantTimeEqual(hash, await deriveAdminPasswordHash('wrong', 'salt')), false);
   assert.equal(constantTimeEqual('short', 'longer'), false);
+});
+
+test('production HTTP is rejected before rate limiting or Basic Auth challenge', async () => {
+  let rateLimitCalls = 0;
+  const env = {
+    ANALYTICS_ENV: 'production',
+    ALLOWED_ORIGIN: 'https://lvb.kr',
+    ANALYTICS_HASH_SECRET: 'test-secret',
+    ANALYTICS_ADMIN_USER: 'owner',
+    ANALYTICS_ADMIN_PASSWORD_HASH: 'unused',
+    ANALYTICS_ADMIN_PASSWORD_SALT: 'unused',
+    ADMIN_RATE_LIMITER: {
+      async limit() {
+        rateLimitCalls += 1;
+        return { success: true };
+      }
+    },
+    HIT_RATE_LIMITER: {
+      async limit() {
+        rateLimitCalls += 1;
+        return { success: true };
+      }
+    }
+  };
+  const context = { waitUntil() {} };
+
+  for (const path of ['/admin/', '/api/stats']) {
+    const response = await analyticsWorker.fetch(new Request(`http://worker.example${path}`, {
+      headers: {
+        Authorization: 'Basic dXNlcjpwYXNzd29yZA==',
+        'CF-Connecting-IP': '203.0.113.10'
+      }
+    }), env, context);
+    assert.equal(response.status, 426);
+    assert.equal(response.headers.has('www-authenticate'), false);
+    assert.equal(response.headers.has('strict-transport-security'), false);
+  }
+  assert.equal(rateLimitCalls, 0);
+
+  const httpsResponse = await analyticsWorker.fetch(new Request('https://worker.example/admin/', {
+    headers: { 'CF-Connecting-IP': '203.0.113.10' }
+  }), env, context);
+  assert.equal(httpsResponse.status, 401);
+  assert.match(httpsResponse.headers.get('www-authenticate') ?? '', /^Basic /);
+  assert.equal(httpsResponse.headers.get('strict-transport-security'), 'max-age=31536000');
+  assert.equal(rateLimitCalls, 1);
 });

@@ -42,6 +42,10 @@ export function deriveVisitorHash(date: string, clientIp: string, secret: string
   return hmacSha256Hex(secret, `${date}\n${clientIp}`);
 }
 
+export function deriveRateLimitKey(scope: string, date: string, clientIp: string, secret: string): Promise<string> {
+  return hmacSha256Hex(secret, `rate-limit:${scope}\n${date}\n${clientIp}`);
+}
+
 export function deriveAdminPasswordHash(password: string, salt: string): Promise<string> {
   return hmacSha256Hex(salt, password);
 }

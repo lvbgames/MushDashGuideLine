@@ -17,9 +17,17 @@
 - `analytics/`는 Netlify와 독립된 Cloudflare Worker + D1 Free 프로젝트다. 2026-08-31 `lvb-analytics` D1과 Worker를 준비하고 `0001`·`0002` 원격 migration, 네 secret, `10 15 * * *` Cron과 원격 staging QA를 완료했다. Worker URL은 `https://lvb-analytics.lvb-analytics-worker.workers.dev`이며 secret 값은 저장소에 기록하지 않는다.
 - 원격 QA에서는 동일 IP 중복 제거, Googlebot·Yeti·Discordbot 제외, Basic Auth, 허용·비허용 Origin, raw IP 비저장, scheduled 집계와 hash 삭제 및 재실행 멱등성을 확인하고 QA 데이터를 삭제한다. 실패 rollback은 local D1의 의도적 오류 주입으로 검증한다.
 - Netlify Production build 환경은 `PUBLIC_ANALYTICS_ENDPOINT=https://lvb-analytics.lvb-analytics-worker.workers.dev/hit`를 사용한다. Preview·Development에는 별도 승인 없이 추가하지 않는다.
-- Worker·사이트 endpoint·공개 Privacy 네 언어는 2026-08-31을 실제 적용일로 같은 production 배포에서 활성화한다. 네 locale의 Last updated와 Effective date가 모두 `2026-08-31`인지 검증한다.
+- Worker·사이트 endpoint·공개 Privacy 네 언어는 2026-08-31 production에 활성화했으며, 네 locale의 Last updated와 Effective date는 모두 `2026-08-31`이다.
 - Worker deploy에는 매일 `10 15 * * *`(15:10 UTC, 00:10 KST) Cron Trigger 한 개가 포함되어야 한다. 배포 후 Trigger 등록, 다음 실행의 `daily_stats` 생성, 과거 `daily_visitors` hash 삭제와 실패 시 다음 날 재시도를 확인한다. Free 계정의 Cron Trigger 한도 5개 중 이 프로젝트는 한 개만 사용한다.
 - 배포 후 허용 Origin·bot 제외·중복 제거·KST 경계·Basic Auth·`no-store`·`noindex`·raw IP 비저장, 장기 visitor hash 0건과 D1 Free 사용량을 수동 재검증한다. CORS는 브라우저 호출 범위를 줄일 뿐 완전한 abuse 방지가 아니다.
+
+### Analytics 보안 hardening 배포 게이트
+
+- `wrangler.jsonc`의 Workers Rate Limiting binding은 `/hit` 60회/60초와 `/admin/`·`/api/stats` 공유 10회/60초로 분리한다. key는 날짜·scope·client IP를 `ANALYTICS_HASH_SECRET`으로 HMAC한 값이며 D1·application log에 원본 IP나 rate-limit row를 추가하지 않는다. binding은 Cloudflare location별 permissive/eventually consistent 보호이므로 정확한 전역 계수기로 간주하지 않는다.
+- 현재 Wrangler가 binding 설정을 dry-run으로 수락했으며 별도 WAF Rule·KV·Durable Object·유료 기능을 추가하지 않는다. Cloudflare dashboard의 실제 Free plan 표시는 운영자가 배포 전 다시 확인하고 결제수단이나 plan 변경을 요구하면 배포하지 않는다.
+- production HTTP 요청은 Authorization 해석과 Rate Limiting보다 먼저 426으로 거부하며 `WWW-Authenticate`를 반환하지 않는다. HTTPS `/admin/`·`/api/stats`는 인증 동작과 `Strict-Transport-Security: max-age=31536000`을 유지한다. `includeSubDomains`와 `preload`는 사용하지 않는다.
+- Netlify는 `nosniff`, `strict-origin-when-cross-origin`, camera·microphone·geolocation 제한, `X-Frame-Options: DENY`와 CSP Report-Only를 전역 적용한다. Netlify가 이미 제공하는 HSTS를 중복 설정하지 않는다. CSP는 현재 Astro inline script/style 때문에 1단계에서만 `'unsafe-inline'`을 허용하며 `unsafe-eval`과 wildcard는 허용하지 않는다.
+- 배포는 Worker를 먼저 반영해 HTTP·HTTPS·429를 확인한 뒤 사이트 헤더를 반영한다. CSP report와 Home·MushHero·News·Press·Contact·Privacy·Terms·About 기능을 확인하기 전 enforced CSP로 바꾸지 않는다.
 
 ## 루트 Geo locale
 
@@ -47,7 +55,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\deploy-production.ps1 `
 ```
 
 - `prepare-production.ps1`은 root·main·origin·divergence, 재현 빌드, legacy Privacy 보관 해시, 신규 Privacy 의미 구조, Naver meta, 필수 route·asset을 검사하며 Commit·Push하지 않는다.
-- `deploy-production.ps1`은 `-ConfirmProduction`이 있을 때만 준비 검사를 다시 실행하고, 생성물·로그·리뷰 캡처·비밀정보를 제외한 변경을 단일 Commit으로 만든 뒤 `origin/main`에 일반 Push한다.
+- `deploy-production.ps1`은 `-ConfirmProduction`이 있을 때만 준비 검사를 다시 실행하고, 빈 stage에서 시작해 생성물·로그·리뷰 캡처·비밀정보를 제외한 변경을 단일 Commit으로 만든 뒤 `origin/main`에 일반 Push한다. staging 이후 오류가 발생하면 공통 cleanup으로 stage를 비우고 working tree는 보존한다.
 - Pull·Merge·Rebase·Reset·Force Push·토큰 저장은 사용하지 않는다. Git 인증은 Windows Git Credential Manager에 맡긴다.
 - 배포 Commit SHA는 자기 자신을 포함하는 Commit 파일에 고정하지 않고 `git log -1 --format=%H`, 배포 스크립트 출력과 완료 보고를 기준 기록으로 사용한다.
 

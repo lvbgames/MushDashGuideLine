@@ -2,12 +2,13 @@ import {
   buildDateRange,
   constantTimeEqual,
   deriveAdminPasswordHash,
+  deriveRateLimitKey,
   deriveVisitorHash,
   getKstDate,
   isCrawler,
   parseBasicAuthorization,
   shiftDate
-} from './core';
+} from './core.ts';
 
 interface D1Result<T = Record<string, unknown>> {
   results?: T[];
@@ -31,8 +32,14 @@ interface ScheduledController {
   cron: string;
 }
 
+interface RateLimit {
+  limit(options: { key: string }): Promise<{ success: boolean }>;
+}
+
 interface Env {
   DB: D1Database;
+  HIT_RATE_LIMITER: RateLimit;
+  ADMIN_RATE_LIMITER: RateLimit;
   ANALYTICS_ENV: string;
   ALLOWED_ORIGIN: string;
   DEV_ALLOWED_ORIGINS?: string;
@@ -73,13 +80,37 @@ interface Stats {
   trackingSince: string | null;
 }
 
+const strictTransportSecurity = 'max-age=31536000';
+
 const adminHeaders = {
   'Cache-Control': 'private, no-store',
+  'Strict-Transport-Security': strictTransportSecurity,
   'X-Robots-Tag': 'noindex, nofollow',
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'no-referrer',
   'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"
 };
+
+function isSecureTransport(url: URL, env: Env): boolean {
+  if (url.protocol === 'https:') {
+    return true;
+  }
+
+  return isDevelopmentTestMode(env)
+    && (url.hostname === '127.0.0.1' || url.hostname === 'localhost' || url.hostname === '[::1]');
+}
+
+function httpsRequired(): Response {
+  return new Response('HTTPS required.', {
+    status: 426,
+    headers: {
+      'Cache-Control': 'no-store',
+      'Content-Type': 'text/plain; charset=UTF-8',
+      'Referrer-Policy': 'no-referrer',
+      'X-Content-Type-Options': 'nosniff'
+    }
+  });
+}
 
 function isDevelopmentTestMode(env: Env): boolean {
   return env.ANALYTICS_ENV === 'development' && env.ANALYTICS_ALLOW_TEST_HEADERS === 'true';
@@ -129,6 +160,7 @@ function hitHeaders(origin: string): Headers {
   return new Headers({
     'Access-Control-Allow-Origin': origin,
     'Cache-Control': 'no-store',
+    'Strict-Transport-Security': strictTransportSecurity,
     'Vary': 'Origin',
     'X-Content-Type-Options': 'nosniff'
   });
@@ -138,18 +170,39 @@ function emptyHitResponse(origin: string, status = 204): Response {
   return new Response(null, { status, headers: hitHeaders(origin) });
 }
 
-async function recordVisit(request: Request, env: Env, visitDate: string): Promise<void> {
-  const clientIp = getClientIp(request, env);
-  if (!clientIp || !env.ANALYTICS_HASH_SECRET) {
-    return;
-  }
-
-  const visitorHash = await deriveVisitorHash(visitDate, clientIp, env.ANALYTICS_HASH_SECRET);
+async function recordVisit(env: Env, visitDate: string, visitorHash: string): Promise<void> {
   await env.DB.batch([
     env.DB.prepare(
       'INSERT OR IGNORE INTO daily_visitors (visit_date, visitor_hash, created_at) VALUES (?1, ?2, ?3)'
     ).bind(visitDate, visitorHash, new Date().toISOString())
   ]);
+}
+
+async function rateLimitStatus(limiter: RateLimit, key: string): Promise<'allowed' | 'limited' | 'unavailable'> {
+  try {
+    return (await limiter.limit({ key })).success ? 'allowed' : 'limited';
+  } catch {
+    return 'unavailable';
+  }
+}
+
+function hitRateLimitResponse(origin: string, unavailable = false): Response {
+  const headers = hitHeaders(origin);
+  if (!unavailable) {
+    headers.set('Retry-After', '60');
+  }
+  return new Response(null, { status: unavailable ? 503 : 429, headers });
+}
+
+function adminRateLimitResponse(unavailable = false): Response {
+  return new Response(unavailable ? 'Analytics security service is temporarily unavailable.' : 'Too many requests.', {
+    status: unavailable ? 503 : 429,
+    headers: {
+      ...adminHeaders,
+      'Content-Type': 'text/plain; charset=UTF-8',
+      ...(!unavailable ? { 'Retry-After': '60' } : {})
+    }
+  });
 }
 
 async function finalizePastDates(
@@ -339,6 +392,10 @@ export default {
   async fetch(request: Request, env: Env, context: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
+    if (!isSecureTransport(url, env)) {
+      return httpsRequired();
+    }
+
     if (url.pathname === '/__test/finalize' && isDevelopmentTestMode(env)) {
       if (request.method !== 'POST') {
         return new Response(null, { status: 405, headers: { Allow: 'POST' } });
@@ -380,15 +437,45 @@ export default {
         return emptyHitResponse(origin);
       }
 
-      context.waitUntil(recordVisit(request, env, getRequestDate(request, env)).catch(() => undefined));
+      const visitDate = getRequestDate(request, env);
+      const clientIp = getClientIp(request, env);
+      if (!clientIp || !env.ANALYTICS_HASH_SECRET) {
+        return emptyHitResponse(origin);
+      }
+
+      const visitorHash = await deriveVisitorHash(visitDate, clientIp, env.ANALYTICS_HASH_SECRET);
+      const limitStatus = await rateLimitStatus(env.HIT_RATE_LIMITER, `hit:${visitorHash}`);
+      if (limitStatus !== 'allowed') {
+        return hitRateLimitResponse(origin, limitStatus === 'unavailable');
+      }
+
+      context.waitUntil(recordVisit(env, visitDate, visitorHash).catch(() => undefined));
       return emptyHitResponse(origin);
     }
 
     if ((url.pathname === '/admin' || url.pathname === '/admin/') && request.method === 'GET') {
+      const clientIp = getClientIp(request, env);
+      if (!clientIp || !env.ANALYTICS_HASH_SECRET) {
+        return adminRateLimitResponse(true);
+      }
+      const key = await deriveRateLimitKey('admin', getRequestDate(request, env), clientIp, env.ANALYTICS_HASH_SECRET);
+      const limitStatus = await rateLimitStatus(env.ADMIN_RATE_LIMITER, key);
+      if (limitStatus !== 'allowed') {
+        return adminRateLimitResponse(limitStatus === 'unavailable');
+      }
       return handleAdmin(request, env, false);
     }
 
     if (url.pathname === '/api/stats' && request.method === 'GET') {
+      const clientIp = getClientIp(request, env);
+      if (!clientIp || !env.ANALYTICS_HASH_SECRET) {
+        return adminRateLimitResponse(true);
+      }
+      const key = await deriveRateLimitKey('admin', getRequestDate(request, env), clientIp, env.ANALYTICS_HASH_SECRET);
+      const limitStatus = await rateLimitStatus(env.ADMIN_RATE_LIMITER, key);
+      if (limitStatus !== 'allowed') {
+        return adminRateLimitResponse(limitStatus === 'unavailable');
+      }
       return handleAdmin(request, env, true);
     }
 
