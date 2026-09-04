@@ -3,6 +3,20 @@ const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 const knownCrawlerPattern = /\b(?:Googlebot|bingbot|Yeti|DuckDuckBot|Applebot|facebookexternalhit|Twitterbot|Discordbot|Slackbot)\b/i;
 const genericCrawlerPattern = /(?:bot|crawler|spider)(?:[/;\s]|$)/i;
 
+export const downloadAssetKeys = ['brand', 'mushhero', 'mushdash'] as const;
+export type DownloadAssetKey = (typeof downloadAssetKeys)[number];
+
+export interface DownloadTarget {
+  assetKey: DownloadAssetKey;
+  url: string;
+}
+
+const downloadTargets: Readonly<Record<DownloadAssetKey, string>> = {
+  brand: 'https://lvb.kr/press/downloads/lvb-brand-assets.zip',
+  mushhero: 'https://lvb.kr/press/downloads/mushhero-press-kit.zip',
+  mushdash: 'https://lvb.kr/press/downloads/mushdash-press-kit.zip'
+};
+
 function bytesToHex(bytes: ArrayBuffer): string {
   return Array.from(new Uint8Array(bytes), (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
@@ -23,6 +37,16 @@ export function buildDateRange(endDate: string, days: number): string[] {
 export function isCrawler(userAgent: string | null): boolean {
   const value = userAgent ?? '';
   return knownCrawlerPattern.test(value) || genericCrawlerPattern.test(value);
+}
+
+export function getDownloadTarget(pathname: string): DownloadTarget | null {
+  const match = /^\/download\/(brand|mushhero|mushdash)$/.exec(pathname);
+  if (!match) {
+    return null;
+  }
+
+  const assetKey = match[1] as DownloadAssetKey;
+  return { assetKey, url: downloadTargets[assetKey] };
 }
 
 export async function hmacSha256Hex(secret: string, value: string): Promise<string> {

@@ -8,7 +8,7 @@ import {
   type PrivacySection
 } from '../types/privacy';
 
-const policyDate = '2026-08-31';
+const policyDate = '2026-09-04';
 
 const externalPolicies = {
   cloudflare: 'https://www.cloudflare.com/privacypolicy/',
@@ -44,7 +44,7 @@ const koSections: readonly PrivacySection[] = [
     `이 처리방침에서 Lv.B가 직접 받거나 관리하는 개인정보의 처리자는 Lv.B입니다. 주소는 ${company.address}이며, 개인정보 관련 문의는 ${contactPolicy.businessEmail}으로 접수합니다.`
   ]),
   section('purposes', '개인정보 처리 목적', [
-    `Lv.B는 문의 확인과 답변, 후속 연락, 기술 지원, 비즈니스 협의, 계약·거래 기록 관리 및 분쟁 대응을 위해 이용자가 이메일로 제공한 정보를 처리할 수 있습니다. 또한 웹사이트의 일간 순 방문 규모를 파악하기 위한 자체 방문자 통계를 운영합니다. 웹사이트 제공과 보안에 필요한 기술 정보는 호스팅 및 외부 콘텐츠 제공 과정에서 각 서비스 사업자가 처리할 수 있습니다.`
+    `Lv.B는 문의 확인과 답변, 후속 연락, 기술 지원, 비즈니스 협의, 계약·거래 기록 관리 및 분쟁 대응을 위해 이용자가 이메일로 제공한 정보를 처리할 수 있습니다. 또한 웹사이트의 일간 순 방문 규모와 Press Kit 다운로드 시작 횟수를 파악하기 위한 자체 통계를 운영합니다. 웹사이트 제공과 보안에 필요한 기술 정보는 호스팅 및 외부 콘텐츠 제공 과정에서 각 서비스 사업자가 처리할 수 있습니다.`
   ]),
   section('data-categories', '처리하는 개인정보 항목', [
     `웹사이트에는 회원가입, 로그인, 문의 폼 또는 회원 계정 데이터베이스가 없습니다. 페이지를 불러올 때 IP 주소, 브라우저·기기 정보, 요청 URL, 접속 시각과 같은 일반적인 요청 정보가 Netlify, Cloudflare, Google Maps 또는 Steam 이미지 서버에 전달될 수 있습니다.`,
@@ -98,7 +98,8 @@ const koSections: readonly PrivacySection[] = [
     `Cloudflare, Netlify, Google, Valve 및 Epic Games 같은 외부 사업자는 여러 국가의 인프라를 사용할 수 있어 방문자 통계 요청, 기술 요청 또는 플랫폼 정보가 대한민국 밖에서 처리될 가능성이 있습니다. 실제 처리 위치, 보유기간 및 이전의 법적 형태는 이용 서비스와 계약·계정 설정에 따라 달라지므로 각 사업자의 최신 정책을 함께 확인해 주세요.`
   ]),
   section('automatic-data', '자동 수집 정보, 쿠키 및 로컬 저장소', [
-    `Lv.B는 웹사이트 방문 규모를 측정하기 위해 일간 순 방문자 수만 집계하는 자체 Analytics를 운영합니다. IP 주소는 서버에서 당일용 암호화 hash를 만드는 데 일시 사용되고 원본은 Analytics 데이터베이스에 저장되지 않습니다. hash는 날짜별 방문자 수가 확정된 뒤 삭제하며, 장기 저장되는 Analytics 데이터는 날짜별 방문자 수 집계값입니다. 날짜별 hash로 여러 날짜의 같은 방문자를 연결하지 않습니다.`,
+    `Lv.B의 자체 Analytics는 웹사이트 방문 통계에서 일간 순 방문자 수만 집계합니다. IP 주소는 서버에서 당일용 암호화 hash를 만드는 데 일시 사용되고 원본은 Analytics 데이터베이스에 저장되지 않습니다. hash는 날짜별 방문자 수가 확정된 뒤 삭제하며, 장기 저장되는 방문 통계는 날짜별 방문자 수 집계값입니다. 날짜별 hash로 여러 날짜의 같은 방문자를 연결하지 않습니다.`,
+    `Press Kit 다운로드 링크를 실행하면 다운로드 시작 횟수를 날짜와 Press Kit 종류(Lv.B 브랜드, MushHero, MushDash)별 집계값으로 저장합니다. 다운로드 통계를 위해 원본 IP 주소, 장기 식별자, User-Agent, referrer 또는 국가 정보를 저장하지 않으며, 직접 ZIP 주소로 접근한 경우에는 집계되지 않을 수 있습니다.`,
     `이 통계는 광고, profiling 또는 개인별 행동 추적에 사용하지 않으며 자체 분석 쿠키를 만들지 않습니다. Netlify Web Analytics, Real User Monitoring, Log Drains, Google Analytics, Google Tag Manager와 광고 픽셀도 사용하지 않습니다.`,
     `Netlify는 정적 호스팅 제공 과정에서 일반적인 네트워크 요청 정보를 처리할 수 있으며 Netlify의 정책이 적용됩니다. Google Maps iframe과 외부 플랫폼도 자체 정책에 따라 쿠키 또는 유사 기술을 사용할 수 있습니다.`
   ]),
@@ -141,7 +142,7 @@ const enSections: readonly PrivacySection[] = [
     `Lv.B is responsible for personal information it receives or manages directly under this Policy. Lv.B is located at ${company.address}, and privacy inquiries may be sent to ${contactPolicy.businessEmail}.`
   ]),
   section('purposes', 'Why information may be processed', [
-    `Lv.B may use information submitted by email to review and answer inquiries, follow up, provide technical support, discuss business matters, maintain contract or transaction records and respond to disputes. Lv.B also operates first-party analytics to measure the website's daily unique visitor volume. Hosting and external-content providers may process technical request data to deliver and secure the website.`
+    `Lv.B may use information submitted by email to review and answer inquiries, follow up, provide technical support, discuss business matters, maintain contract or transaction records and respond to disputes. Lv.B also operates first-party analytics to measure the website's daily unique visitor volume and Press Kit download starts. Hosting and external-content providers may process technical request data to deliver and secure the website.`
   ]),
   section('data-categories', 'Information that may be processed', [
     `The website has no registration, login, contact form or member-account database. Loading a page may send ordinary request data—such as an IP address, browser or device information, requested URL and access time—to Netlify, Cloudflare, Google Maps or Steam image servers.`,
@@ -195,7 +196,8 @@ const enSections: readonly PrivacySection[] = [
     `Providers such as Cloudflare, Netlify, Google, Valve and Epic Games may use infrastructure in multiple countries, so analytics requests, technical requests or platform information may be processed outside South Korea. The location, retention period and legal form of any transfer depend on the service, contract and account settings; please review each provider’s current notice.`
   ]),
   section('automatic-data', 'Automatic data, cookies and local storage', [
-    `Lv.B operates first-party analytics that measures only daily unique visitor totals. An IP address is used temporarily on the server to create a daily cryptographic hash and is not stored in the Analytics database. The hash is deleted after that date's visitor count is finalized; the long-term Analytics data consists of per-date visitor counts. Date-specific hashes are not used to link the same visitor across different days.`,
+    `For website visitor measurement, Lv.B's first-party analytics records only daily unique visitor totals. An IP address is used temporarily on the server to create a daily cryptographic hash and is not stored in the Analytics database. The hash is deleted after that date's visitor count is finalized; the long-term visitor data consists of per-date counts. Date-specific hashes are not used to link the same visitor across different days.`,
+    `When a visitor activates a Press Kit download link, Lv.B stores the number of download starts as aggregate counts by date and Press Kit type (Lv.B Brand, MushHero or MushDash). Lv.B does not store raw IP addresses, persistent identifiers, User-Agent, referrer or country for download statistics. Downloads made through a direct ZIP URL may not be counted.`,
     `The analytics is not used for advertising, profiling or individual behavioral tracking and sets no analytics cookie. Lv.B does not use Netlify Web Analytics, Real User Monitoring, Log Drains, Google Analytics, Google Tag Manager or advertising pixels.`,
     `Netlify may process ordinary network-request information while providing static hosting, subject to Netlify’s policies. The Google Maps iframe and external platforms may also use cookies or similar technologies under their own policies.`
   ]),
@@ -238,7 +240,7 @@ const jaSections: readonly PrivacySection[] = [
     `本ポリシーに基づきLv.Bが直接受領または管理する個人情報は、Lv.Bが取り扱います。所在地は${company.address}、プライバシーに関する連絡先は${contactPolicy.businessEmail}です。`
   ]),
   section('purposes', '利用目的', [
-    `Lv.Bは、お問い合わせの確認・回答、追加連絡、技術サポート、事業上の協議、契約・取引記録の管理、紛争対応のため、メールで提供された情報を取り扱う場合があります。また、サイトの日別ユニーク訪問規模を把握するため、独自のアクセス解析を運用します。サイトの配信と安全な運用に必要な技術情報は、ホスティング事業者や外部コンテンツ提供者が処理する場合があります。`
+    `Lv.Bは、お問い合わせの確認・回答、追加連絡、技術サポート、事業上の協議、契約・取引記録の管理、紛争対応のため、メールで提供された情報を取り扱う場合があります。また、サイトの日別ユニーク訪問規模とPress Kitのダウンロード開始回数を把握するため、独自のアクセス解析を運用します。サイトの配信と安全な運用に必要な技術情報は、ホスティング事業者や外部コンテンツ提供者が処理する場合があります。`
   ]),
   section('data-categories', '取り扱う可能性のある情報', [
     `本サイトには会員登録、ログイン、お問い合わせフォーム、会員アカウントのデータベースはありません。ページの読み込み時に、IPアドレス、ブラウザ・端末情報、リクエストURL、アクセス日時などの一般的な通信情報がNetlify、Cloudflare、Google Maps、Steamの画像サーバーへ送信される場合があります。`,
@@ -292,7 +294,8 @@ const jaSections: readonly PrivacySection[] = [
     `Cloudflare、Netlify、Google、Valve、Epic Gamesなどは複数国のインフラを利用する場合があり、アクセス解析リクエスト、技術的なリクエスト、プラットフォーム情報が韓国外で処理される可能性があります。処理場所、保存期間、移転の法的な形態は、サービス、契約、アカウント設定によって異なるため、各事業者の最新ポリシーをご確認ください。`
   ]),
   section('automatic-data', '自動取得情報、Cookie、ローカルストレージ', [
-    `Lv.Bは、日別ユニーク訪問者数のみを集計する独自のアクセス解析を運用します。IPアドレスはサーバー上で当日限りの暗号学的ハッシュを作成するため一時的に使用され、Analyticsデータベースには保存されません。ハッシュはその日付の訪問者数確定後に削除し、長期保存するAnalyticsデータは日付別の訪問者数集計値です。日付別ハッシュから複数日にわたる同一訪問者を結び付けません。`,
+    `Lv.Bの独自アクセス解析は、サイトの訪問統計として日別ユニーク訪問者数のみを集計します。IPアドレスはサーバー上で当日限りの暗号学的ハッシュを作成するため一時的に使用され、Analyticsデータベースには保存されません。ハッシュはその日付の訪問者数確定後に削除し、長期保存する訪問統計は日付別の集計値です。日付別ハッシュから複数日にわたる同一訪問者を結び付けません。`,
+    `Press Kitのダウンロードリンクを選択すると、ダウンロード開始回数を日付およびPress Kitの種類（Lv.Bブランド、MushHero、MushDash）別の集計値として保存します。ダウンロード統計のために元のIPアドレス、長期識別子、User-Agent、リファラー、国情報を保存しません。ZIPの直接URLからダウンロードした場合は集計されないことがあります。`,
     `この解析を広告、プロファイリング、個人別の行動追跡には使用せず、解析Cookieも設定しません。Netlify Web Analytics、Real User Monitoring、Log Drains、Google Analytics、Google Tag Manager、広告ピクセルも使用しません。`,
     `Netlifyは静的ホスティングの提供に伴い一般的なネットワークリクエスト情報を処理する場合があり、Netlifyのポリシーが適用されます。Google Mapsのiframeや外部プラットフォームも、各自のポリシーに基づきCookieなどを使用する場合があります。`
   ]),
@@ -335,7 +338,7 @@ const zhSections: readonly PrivacySection[] = [
     `对于Lv.B依照本政策直接接收或管理的个人信息，处理方为Lv.B。地址为${company.address}，隐私相关咨询可发送至${contactPolicy.businessEmail}。`
   ]),
   section('purposes', '处理目的', [
-    `Lv.B可能会使用用户通过电子邮件提供的信息，以查看和回复咨询、进行后续联系、提供技术支持、开展商务沟通、管理合同与交易记录以及处理争议。Lv.B还会运营自有访问统计，以了解网站每日独立访客规模。为提供并保护网站，托管服务商和外部内容提供商可能会处理必要的技术请求信息。`
+    `Lv.B可能会使用用户通过电子邮件提供的信息，以查看和回复咨询、进行后续联系、提供技术支持、开展商务沟通、管理合同与交易记录以及处理争议。Lv.B还会运营自有Analytics，以了解网站每日独立访客规模和Press Kit下载开始次数。为提供并保护网站，托管服务商和外部内容提供商可能会处理必要的技术请求信息。`
   ]),
   section('data-categories', '可能处理的信息', [
     `本网站不提供注册、登录或在线咨询表单，也不运营会员账户数据库。加载页面时，IP地址、浏览器或设备信息、请求URL、访问时间等常规请求信息可能会发送至Netlify、Cloudflare、Google Maps或Steam图片服务器。`,
@@ -389,7 +392,8 @@ const zhSections: readonly PrivacySection[] = [
     `Cloudflare、Netlify、Google、Valve和Epic Games等服务商可能使用分布在多个国家或地区的基础设施，因此访问统计请求、技术请求或平台信息可能在韩国境外处理。实际处理地点、保存期限和传输的法律形式取决于具体服务、合同与账户设置，请同时查看各服务商的最新政策。`
   ]),
   section('automatic-data', '自动收集信息、Cookie与本地存储', [
-    `Lv.B运营自有访问统计，仅统计每日独立访客数量。IP地址只会在服务器端短暂用于生成当天的加密哈希，不会保存至Analytics数据库。哈希会在对应日期的访客数汇总完成后删除，长期保存的Analytics数据仅为按日期统计的访客数量。Lv.B不会通过按日期生成的哈希跨日期关联同一访客。`,
+    `Lv.B的自有Analytics在网站访问统计中仅记录每日独立访客数量。IP地址只会在服务器端短暂用于生成当天的加密哈希，不会保存至Analytics数据库。哈希会在对应日期的访客数汇总完成后删除，长期保存的访问统计仅为按日期汇总的数据。Lv.B不会通过按日期生成的哈希跨日期关联同一访客。`,
+    `当访客点击Press Kit下载链接时，Lv.B会按日期和Press Kit类型（Lv.B品牌、MushHero、MushDash）保存下载开始次数的汇总数据。下载统计不会保存原始IP地址、长期标识符、User-Agent、referrer或国家信息。通过ZIP直达地址下载时可能不会计入统计。`,
     `该统计不用于广告、用户画像或个人行为追踪，也不会设置分析Cookie。Lv.B不使用Netlify Web Analytics、Real User Monitoring、Log Drains、Google Analytics、Google Tag Manager或广告像素。`,
     `Netlify在提供静态托管时可能会处理常规网络请求信息，并适用Netlify的政策。Google Maps iframe和外部平台也可能依照各自政策使用Cookie或类似技术。`
   ]),

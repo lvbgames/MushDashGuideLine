@@ -4,6 +4,7 @@ import { contactPolicy } from '../../data/contact';
 import { games } from '../../data/games';
 import { pressAssets, pressDownloads, pressMedia, pressTranslations } from '../../data/press';
 import { getSocialImage } from '../../data/socialImages';
+import { getAnalyticsDownloadEndpoint } from '../../config/analytics';
 import { siteConfig } from '../../config/site';
 import type { Locale } from '../../i18n/config';
 import { getTranslation } from '../../i18n/translations';
@@ -34,6 +35,10 @@ const numberLocale = locale === 'zh-cn' ? 'zh-CN' : locale;
 const formatBytes = (bytes: number) => bytes >= 1024 * 1024
   ? `${new Intl.NumberFormat(numberLocale, { maximumFractionDigits: 1 }).format(bytes / (1024 * 1024))} MB`
   : `${new Intl.NumberFormat(numberLocale, { maximumFractionDigits: 0 }).format(bytes / 1024)} KB`;
+const downloads = pressDownloads.map((download) => ({
+  ...download,
+  href: getAnalyticsDownloadEndpoint(download.id) ?? download.path
+}));
 const galleryItems = pressMedia.map((asset) => {
   return {
     src: asset.path,
@@ -154,7 +159,7 @@ const galleryItems = pressMedia.map((asset) => {
           <h2 id="press-downloads-title">{press.downloadsTitle}</h2>
         </div>
         <div class="press-downloads__grid">
-          {pressDownloads.map((download) => (
+          {downloads.map((download) => (
             <article class="press-download-card" data-motion-item>
               <p>{download.contents}</p>
               <h3>{press.downloadLabels[download.id]}</h3>
@@ -163,7 +168,11 @@ const galleryItems = pressMedia.map((asset) => {
                 <span>{download.fileName}</span>
                 <span>{formatBytes(download.bytes)}</span>
               </div>
-              <a href={download.path} download={download.fileName}>{press.downloadZip}<span aria-hidden="true"> ↓</span></a>
+              <a
+                href={download.href}
+                download={download.href === download.path ? download.fileName : undefined}
+                data-press-download={download.id}
+              >{press.downloadZip}<span aria-hidden="true"> ↓</span></a>
             </article>
           ))}
         </div>

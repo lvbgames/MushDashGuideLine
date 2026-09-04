@@ -7,6 +7,7 @@ import {
   deriveAdminPasswordHash,
   deriveRateLimitKey,
   deriveVisitorHash,
+  getDownloadTarget,
   getKstDate,
   isCrawler,
   parseBasicAuthorization,
@@ -62,6 +63,32 @@ test('known and generic crawler user agents are excluded without rejecting brows
   assert.equal(isCrawler('Mozilla/5.0 Version/18.0 Safari/605.1.15'), false);
 });
 
+test('Press Kit download paths use an exact fixed allowlist', () => {
+  assert.deepEqual(getDownloadTarget('/download/brand'), {
+    assetKey: 'brand',
+    url: 'https://lvb.kr/press/downloads/lvb-brand-assets.zip'
+  });
+  assert.deepEqual(getDownloadTarget('/download/mushhero'), {
+    assetKey: 'mushhero',
+    url: 'https://lvb.kr/press/downloads/mushhero-press-kit.zip'
+  });
+  assert.deepEqual(getDownloadTarget('/download/mushdash'), {
+    assetKey: 'mushdash',
+    url: 'https://lvb.kr/press/downloads/mushdash-press-kit.zip'
+  });
+  for (const path of [
+    '/download',
+    '/download/',
+    '/download/unknown',
+    '/download/brand/',
+    '/download/http://evil.example',
+    '/download/%2e%2e/admin',
+    '/download/brand%2f..%2fadmin'
+  ]) {
+    assert.equal(getDownloadTarget(path), null, path);
+  }
+});
+
 test('Basic credentials and password hashes are parsed and compared safely', async () => {
   const authorization = `Basic ${Buffer.from('owner:pass:with:colon').toString('base64')}`;
   assert.deepEqual(parseBasicAuthorization(authorization), {
@@ -92,6 +119,12 @@ test('production HTTP is rejected before rate limiting or Basic Auth challenge',
       }
     },
     HIT_RATE_LIMITER: {
+      async limit() {
+        rateLimitCalls += 1;
+        return { success: true };
+      }
+    },
+    DOWNLOAD_RATE_LIMITER: {
       async limit() {
         rateLimitCalls += 1;
         return { success: true };

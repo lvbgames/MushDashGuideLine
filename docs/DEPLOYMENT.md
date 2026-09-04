@@ -17,7 +17,7 @@
 - `analytics/`는 Netlify와 독립된 Cloudflare Worker + D1 Free 프로젝트다. 2026-08-31 `lvb-analytics` D1과 Worker를 준비하고 `0001`·`0002` 원격 migration, 네 secret, `10 15 * * *` Cron과 원격 staging QA를 완료했다. Worker URL은 `https://lvb-analytics.lvb-analytics-worker.workers.dev`이며 secret 값은 저장소에 기록하지 않는다.
 - 원격 QA에서는 동일 IP 중복 제거, Googlebot·Yeti·Discordbot 제외, Basic Auth, 허용·비허용 Origin, raw IP 비저장, scheduled 집계와 hash 삭제 및 재실행 멱등성을 확인하고 QA 데이터를 삭제한다. 실패 rollback은 local D1의 의도적 오류 주입으로 검증한다.
 - Netlify Production build 환경은 `PUBLIC_ANALYTICS_ENDPOINT=https://lvb-analytics.lvb-analytics-worker.workers.dev/hit`를 사용한다. Preview·Development에는 별도 승인 없이 추가하지 않는다.
-- Worker·사이트 endpoint·공개 Privacy 네 언어는 2026-08-31 production에 활성화했으며, 네 locale의 Last updated와 Effective date는 모두 `2026-08-31`이다.
+- Visitor Analytics Worker·사이트 endpoint는 2026-08-31 production에 활성화했다. Download Analytics와 관련 공개 Privacy 변경은 2026-09-04 적용했으며, 네 locale의 Last updated와 Effective date는 모두 `2026-09-04`이다.
 - Worker deploy에는 매일 `10 15 * * *`(15:10 UTC, 00:10 KST) Cron Trigger 한 개가 포함되어야 한다. 배포 후 Trigger 등록, 다음 실행의 `daily_stats` 생성, 과거 `daily_visitors` hash 삭제와 실패 시 다음 날 재시도를 확인한다. Free 계정의 Cron Trigger 한도 5개 중 이 프로젝트는 한 개만 사용한다.
 - 배포 후 허용 Origin·bot 제외·중복 제거·KST 경계·Basic Auth·`no-store`·`noindex`·raw IP 비저장, 장기 visitor hash 0건과 D1 Free 사용량을 수동 재검증한다. CORS는 브라우저 호출 범위를 줄일 뿐 완전한 abuse 방지가 아니다.
 
@@ -78,7 +78,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\deploy-production.ps1 `
 - `docs/PRIVACY_DATA_INVENTORY.md`에 남은 UserCloud 제품별 처리 권한·본인 확인·공개 package provenance와 외부 사업자 법적 관계를 운영자와 필요 시 법률 전문가가 확인한다.
 - `docs/PRIVACY_REQUEST_RUNBOOK.md`에 따라 Steam·Epic별 계정 소유 확인, MushDash 범위의 열람·정정·삭제·처리정지 절차와 요청 처리 기록 보유기간을 확정한다. 조직 단위 `Delete User`는 제품별 영향 확인 없이 기본 절차로 사용하지 않는다.
 - 네 언어 본문을 사용자와 필요 시 법률 전문가가 검토한다.
-- 네 언어 Privacy는 자체 Analytics 운영 시작을 반영해 최종 수정일과 시행일을 `2026-08-31`로 갱신한다. 배포 전 check/build/prepare, 배포 후 네 route와 날짜를 다시 검사한다.
+- 네 언어 Privacy는 Download Analytics 운영 시작을 반영해 최종 수정일과 시행일을 `2026-09-04`로 갱신한다. 배포 전 check/build/prepare, 배포 후 네 route와 날짜를 다시 검사한다.
 - 영구 잠금이 필요하면 생성 HTML이 아닌 승인된 정책 source snapshot의 정규화 규칙과 해시를 별도 작업에서 확정한다.
 - 배포 후 `/privacy`, `/privacy/`, 세 locale route, `/privacy.html`, 네 locale `index.html` redirect를 실제 HTTP로 다시 검사한다.
 

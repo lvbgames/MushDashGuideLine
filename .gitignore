@@ -5,6 +5,7 @@ site/dist/
 /analytics/.wrangler/
 /analytics/.dev.vars
 /analytics/.dev.vars.*
+/AdminApp/
 /references/lvb/
 /references/LvbResult/
 .codex/**/*.log

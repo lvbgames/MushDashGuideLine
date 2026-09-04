@@ -328,6 +328,7 @@ $requiredPrivacyFacts = @{
     'transaction identifiers used to prevent duplicate purchase processing',
     'Graphics, audio, language and matchmaking-region settings',
     'does not trigger deletion when the game is uninstalled or an account is unlinked'
+    'When a visitor activates a Press Kit download link'
   )
   ko = @(
     (ConvertFrom-Utf8Base64 '7LWc7KKFIOyImOygleydvDo='),
@@ -349,6 +350,7 @@ $requiredPrivacyFacts = @{
     (ConvertFrom-Utf8Base64 '7KSR67O1IOq1rOunpCDsspjrpqzrpbwg67Cp7KeA7ZWY6riwIOychO2VnCDqsbDrnpgg7Iud67OE7J6Q'),
     (ConvertFrom-Utf8Base64 '6re4656Y7ZS9wrfsmKTrlJTsmKTCt+yWuOyWtMK366ek7LmtIOyngOyXrSDshKTsoJU='),
     (ConvertFrom-Utf8Base64 '6rKM7J6EIOyCreygnCDrmJDripQg6rOE7KCVIOyXsOuPmSDtlbTsoJzrp4zsnLzroZwg7J6Q64+ZIOyCreygnOuQmOuKlCDquLDriqXrj4Qg7JeG7Iq164uI64uk')
+    (ConvertFrom-Utf8Base64 'UHJlc3MgS2l0IOuLpOyatOuhnOuTnCDrp4Htgaw=')
   )
   ja = @(
     (ConvertFrom-Utf8Base64 '5pyA57WC5pu05paw5pel77ya'),
@@ -370,6 +372,7 @@ $requiredPrivacyFacts = @{
     (ConvertFrom-Utf8Base64 '6LO85YWl5Yem55CG44Gu6YeN6KSH44KS6Ziy5q2i44GZ44KL44Gf44KB44Gu5Y+W5byV6K2Y5Yil5a2Q'),
     (ConvertFrom-Utf8Base64 '44Kw44Op44OV44Kj44OD44Kv44CB44Kq44O844OH44Kj44Kq44CB6KiA6Kqe44CB44Oe44OD44OB44Oh44Kk44Kt44Oz44Kw5Zyw5Z+f44Gu6Kit5a6a'),
     (ConvertFrom-Utf8Base64 '56K66KqN44GX44Gf44Ky44O844Og44Kz44O844OJ44Gr44Gv6Ieq5YuV5pyJ5Yq55pyf6ZmQ44KE5a6a5pyf5YmK6Zmk5pyf6ZaT44GM44Gq44GP44CB44Ky44O844Og44Gu44Ki44Oz44Kk44Oz44K544OI44O844Or44KE44Ki44Kr44Km44Oz44OI6YCj5pC644Gu6Kej6Zmk44KS5aWR5qmf44Gr6Ieq5YuV5YmK6Zmk44GZ44KL5Yem55CG44KC44GC44KK44G+44Gb44KT44CC')
+    (ConvertFrom-Utf8Base64 'UHJlc3MgS2l044Gu44OA44Km44Oz44Ot44O844OJ44Oq44Oz44Kv')
   )
   'zh-cn' = @(
     (ConvertFrom-Utf8Base64 '5pyA5ZCO5pu05paw5pel5pyf77ya'),
@@ -391,6 +394,7 @@ $requiredPrivacyFacts = @{
     (ConvertFrom-Utf8Base64 '55So5LqO6Ziy5q2i6YeN5aSN5aSE55CG6LSt5Lmw5Lqk5piT55qE5Lqk5piT5qCH6K+G56ym'),
     (ConvertFrom-Utf8Base64 '55S76Z2i44CB6Z+z6aKR44CB6K+t6KiA5ZKM5Yy56YWN5Zyw5Yy66K6+572u'),
     (ConvertFrom-Utf8Base64 '57uP5qC45p+l77yM5ri45oiP5Luj56CB5pyq6K6+572u6Ieq5Yqo5Yiw5pyf5oiW5a6a5pyf5Yig6Zmk5pyf6ZmQ77yM5Lmf5LiN5YyF5ZCr5Lul5Y246L295ri45oiP5oiW6Kej6Zmk6LSm5oi35YWz6IGU5Li66Kem5Y+R5p2h5Lu255qE6Ieq5Yqo5Yig6Zmk5rWB56iL44CC')
+    (ConvertFrom-Utf8Base64 'UHJlc3MgS2l05LiL6L296ZO+5o6l')
   )
 }
 $supersededPrivacyCopy = @(
@@ -425,7 +429,7 @@ foreach ($route in $privacyRoutes) {
   Assert-Equal ([regex]::Matches($privacyHtml, 'hreflang="x-default" href="https://lvb\.kr/privacy/"').Count) 1 "Privacy x-default: $($route.Locale)"
   Assert-Equal ([regex]::Matches($privacyHtml, '<html lang="' + [regex]::Escape($route.Locale) + '">').Count) 1 "Privacy html lang: $($route.Locale)"
   Assert-Equal ([regex]::Matches($privacyHtml, 'application/ld\+json').Count) 0 "Privacy JSON-LD count: $($route.Locale)"
-  Assert-Equal ([regex]::Matches($privacyHtml, 'datetime="2026-08-31"').Count) 2 "Privacy policy date count: $($route.Locale)"
+  Assert-Equal ([regex]::Matches($privacyHtml, 'datetime="2026-09-04"').Count) 2 "Privacy policy date count: $($route.Locale)"
   Assert-Equal ([regex]::Matches($privacyHtml, 'youtube-nocookie\.com').Count) 1 "Privacy-enhanced YouTube disclosure: $($route.Locale)"
 
   foreach ($languagePath in $expectedLanguagePaths) {
@@ -1028,7 +1032,11 @@ foreach ($archiveSpec in $pressArchives) {
 foreach ($pressPath in @('dist\press\index.html', 'dist\ko\press\index.html', 'dist\ja\press\index.html', 'dist\zh-cn\press\index.html')) {
   $pressHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $pressPath)
   Assert-Equal ([regex]::Matches($pressHtml, 'class="press-download-card"').Count) 3 "Press download card count: $pressPath"
-  Assert-Equal ([regex]::Matches($pressHtml, 'href="/press/downloads/[^"]+\.zip" download="[^"]+\.zip"').Count) 3 "Press ZIP download links: $pressPath"
+  Assert-Equal ([regex]::Matches($pressHtml, 'href="https://lvb-analytics\.lvb-analytics-worker\.workers\.dev/download/(?:brand|mushhero|mushdash)"').Count) 3 "Tracked Press ZIP download links: $pressPath"
+  Assert-Equal ([regex]::Matches($pressHtml, 'href="/press/downloads/[^"]+\.zip"').Count) 0 "Direct Press ZIP CTA links: $pressPath"
+  foreach ($assetKey in @('brand', 'mushhero', 'mushdash')) {
+    Assert-Equal ([regex]::Matches($pressHtml, 'data-press-download="' + $assetKey + '"').Count) 1 "Tracked Press asset '$assetKey': $pressPath"
+  }
   Assert-Equal ([regex]::Matches($pressHtml, 'href="/press/assets/brand/[^"]+\.png" download="[^"]+\.png"').Count) 3 "Press brand downloads: $pressPath"
   Assert-Equal ([regex]::Matches($pressHtml, 'class="media-gallery__item"').Count) 10 "Press gallery item count: $pressPath"
   Assert-Equal ([regex]::Matches($pressHtml, 'src="/press/assets/(?:mushhero|mushdash)/[^"]+\.(?:jpg|png)"').Count) 12 "Press final game image count: $pressPath"

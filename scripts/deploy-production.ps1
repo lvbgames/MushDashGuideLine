@@ -91,13 +91,13 @@ try {
   }
   $stagedFiles = @($stagedFilesText -split "`r?`n" | Where-Object { $_ })
 
-  $forbiddenStagedPattern = '^(references/(?:lvb|LvbResult|reviews)/|site/(?:node_modules|dist)/|analytics/(?:node_modules|\.wrangler|\.dev\.vars(?:\.|$)|\.wrangler-qa-.+\.jsonc$)/|\.tmp-verification/|\.codex/.+\.log$|\.codex/.+qa-runtime(?:/|$)|(?:.+/)?(?:lighthouse[^/]*|temp|tmp)(?:/|$)|.+\.log$)'
+  $forbiddenStagedPattern = '^(references/(?:lvb|LvbResult|reviews)/|site/(?:node_modules|dist)/|analytics/(?:node_modules|\.wrangler|\.dev\.vars(?:\.|$)|\.wrangler-qa-.+\.jsonc$)/|AdminApp/|\.tmp-verification/|\.codex/.+\.log$|\.codex/.+qa-runtime(?:/|$)|(?:.+/)?(?:lighthouse[^/]*|temp|tmp)(?:/|$)|.+\.log$)'
   $forbiddenStaged = @($stagedFiles | Where-Object { $_ -match $forbiddenStagedPattern })
   if ($forbiddenStaged.Count -gt 0) {
     throw "Production staging contains forbidden reference or generated files. All staged changes will be removed; the working tree is preserved:`n$($forbiddenStaged -join "`n")"
   }
 
-  $secretFilePattern = '(^|/)\.env($|\.)|(^|/)\.npmrc$|(^|/)(id_rsa|id_ed25519)$|\.(pem|key|p12|pfx)$'
+  $secretFilePattern = '(^|/)\.env($|\.)|(^|/)\.npmrc$|(^|/)credentials\.dat$|(^|/)(id_rsa|id_ed25519)$|\.(pem|key|p12|pfx)$'
   $secretFiles = @($stagedFiles | Where-Object { $_ -match $secretFilePattern })
   if ($secretFiles.Count -gt 0) {
     throw "Potential secret files are staged: $($secretFiles -join ', ')"

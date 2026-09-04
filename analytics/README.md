@@ -1,12 +1,15 @@
 # Lv.B Analytics Worker
 
-Lv.B 홈페이지의 단순 일간 순 방문자를 집계하는 독립 Cloudflare Worker다. Astro 정적 사이트와 빌드·배포를 공유하지 않으며, Worker 또는 D1이 실패해도 홈페이지는 그대로 동작한다. Cloudflare Free의 Worker·D1과 Netlify Production의 `PUBLIC_ANALYTICS_ENDPOINT`를 2026-08-31 적용 기준으로 연결한다.
+Lv.B 홈페이지의 일간 순 방문자와 Press Kit 다운로드 시작 횟수를 집계하는 독립 Cloudflare Worker다. Astro 정적 사이트와 빌드·배포를 공유하지 않으며, Worker 또는 D1이 실패해도 홈페이지는 그대로 동작한다. 기존 방문자 Analytics는 production active이고 다운로드 확장은 로컬 구현·검증 상태다.
 
 ## 수집 범위와 계산
 
 - `POST /hit`: 허용 Origin에서 온 일반 브라우저 요청만 받고 정상 처리에는 빈 `204`, rate limit 초과에는 빈 `429`, limiter 장애에는 빈 `503`을 반환한다.
 - `GET /admin/`: Basic Authentication 뒤 TODAY, WEEK, TOTAL, RECENT 30 DAYS를 HTML로 표시한다.
 - `GET /api/stats`: 같은 인증 뒤 같은 집계를 JSON으로 반환한다.
+- `GET /download/brand|mushhero|mushdash`: 고정 allowlist의 기존 ZIP URL로 `302`를 반환한다. 정상 일반 사용자 요청은 redirect 직전에 날짜·asset별 다운로드 시작 횟수를 1 증가시키며 반복 클릭도 각각 센다. 전송 완료나 고유 다운로드 이용자를 측정하지 않는다.
+- 다운로드 D1 row는 `download_stats(download_date, asset_key, downloads, updated_at)` 집계값뿐이다. 다운로드용 IP·hash·User-Agent·URL·referrer·국가·세션은 저장하지 않는다.
+- download D1 write가 실패해도 고정 ZIP redirect는 계속하는 fail-open 정책이다. bot은 집계를 늘리지 않고 같은 고정 ZIP으로 redirect하며, 잘못된 key·query·encoded 우회는 404다.
 - KST 날짜와 Cloudflare의 `CF-Connecting-IP`를 `ANALYTICS_HASH_SECRET`으로 HMAC-SHA256 처리한다.
 - D1의 `daily_visitors`에는 `visit_date`, 당일 `visitor_hash`, `created_at`만 임시 저장한다. 원본 IP, User-Agent, URL, referrer, 국가, 세션은 저장하지 않는다.
 - `(visit_date, visitor_hash)` 복합 기본키와 `INSERT OR IGNORE`로 같은 날의 반복 방문을 한 번만 센다.
@@ -25,7 +28,7 @@ Lv.B 홈페이지의 단순 일간 순 방문자를 집계하는 독립 Cloudfla
 - D1 Free: 일 5,000,000 rows read, 일 100,000 rows written, 계정 전체 5 GB. 개별 Free DB 최대 크기는 500 MB이며 계정당 DB는 10개다. 일일 query 한도 초과 시 D1 query가 다음 초기화 시점까지 실패할 수 있다. [D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/), [D1 limits](https://developers.cloudflare.com/d1/platform/limits/)
 - Workers Free 계정은 Cron Trigger를 최대 5개 사용할 수 있으며 이 프로젝트는 `10 15 * * *` 한 개만 사용한다. Cron은 UTC 기준이므로 이 값은 매일 한국시간 00:10이다. [Workers limits](https://developers.cloudflare.com/workers/platform/limits/), [Cron Triggers](https://developers.cloudflare.com/workers/configuration/cron-triggers/)
 
-유료 WAF Rate Limiting Rule, KV, Durable Objects, 외부 Analytics 제품은 사용하지 않는다. Worker 코드에는 Cloudflare Workers Rate Limiting binding을 사용하며 `/hit`은 actor당 60회/60초, `/admin/`과 `/api/stats`는 같은 actor 기준 합산 10회/60초다. binding key는 날짜·scope·client IP의 HMAC 값이며 D1과 application log에 원본 IP나 별도 rate-limit row를 저장하지 않는다. 이 제한은 Cloudflare location별 permissive/eventually consistent 보호이므로 정확한 전역 계수기가 아니다. Free 한도 초과 시 집계 누락을 허용하며 Paid plan으로 자동 전환하지 않는다. 사이트 client는 fire-and-forget 요청의 429·500·network 오류를 모두 흡수하므로 홈페이지 로딩·내비게이션·UI는 실패하지 않는다.
+유료 WAF Rate Limiting Rule, KV, Durable Objects, 외부 Analytics 제품은 사용하지 않는다. Worker 코드에는 Cloudflare Workers Rate Limiting binding을 사용하며 `/hit`은 actor당 60회/60초, 다운로드는 actor당 30회/60초, `/admin/`과 `/api/stats`는 같은 actor 기준 합산 10회/60초다. binding key는 날짜·scope·client IP의 HMAC 값이며 D1과 application log에 원본 IP나 별도 rate-limit row를 저장하지 않는다. 이 제한은 Cloudflare location별 permissive/eventually consistent 보호이므로 정확한 전역 계수기가 아니다. 다운로드 limiter가 429를 반환한 경우에는 redirect하지 않으며, D1 장애만 fail-open한다. Free 한도 초과 시 집계 누락을 허용하며 Paid plan으로 자동 전환하지 않는다. 사이트 client는 fire-and-forget 요청의 429·500·network 오류를 모두 흡수하므로 홈페이지 로딩·내비게이션·UI는 실패하지 않는다.
 
 ## 로컬 검증
 
@@ -38,7 +41,7 @@ npm test
 npm run qa:local
 ```
 
-`qa:local`은 고유한 `analytics/.wrangler/qa-*` 임시 위치에 local D1을 만들고 두 migration을 적용한다. 2026-08-27=3명, 08-28=5명, 08-29=2명 fixture로 집계 전후 TODAY·WEEK·TOTAL·최근 30일 표시가 같은지, 과거 두 날짜만 `daily_stats`에 3·5로 남는지, `daily_visitors`에는 오늘 2개 hash만 남는지 검사한다. 강제 삭제 실패의 전체 rollback, 재시도와 2회 실행의 멱등성, 중복 제거, bot 제외, CORS, Basic Auth, raw IP 비노출, 축소 window에서 `/hit`과 관리자 limiter의 정상→429→재허용을 확인한 뒤 임시 DB와 QA config를 제거한다. 테스트 전용 IP·날짜·실패 헤더와 HTTP localhost 허용은 `ANALYTICS_ENV=development`와 `ANALYTICS_ALLOW_TEST_HEADERS=true`가 동시에 설정된 local QA에서만 사용한다.
+`qa:local`은 고유한 `analytics/.wrangler/qa-*` 임시 위치에 local D1을 만들고 세 migration을 적용한다. 기존 3·5·2 방문 fixture와 집계 rollback·재시도·멱등성·bot·CORS·Basic Auth·limiter를 그대로 검사하고, 다운로드 fixture 2/3/1, 반복 클릭, bot +0, D1 실패 redirect, allowlist·method·query·path traversal, 다운로드 limiter와 통합 최근 30일도 검증한다. 테스트 전용 IP·날짜·실패 헤더와 HTTP localhost 허용은 `ANALYTICS_ENV=development`와 `ANALYTICS_ALLOW_TEST_HEADERS=true`가 동시에 설정된 local QA에서만 사용한다.
 
 ## Cloudflare 운영 리소스
 
@@ -65,7 +68,7 @@ npm run qa:local
    ```
 
 6. 출력된 salt와 hash만 각각 `ANALYTICS_ADMIN_PASSWORD_SALT`, `ANALYTICS_ADMIN_PASSWORD_HASH` secret으로 저장한다. 평문 비밀번호는 repository, config, D1, HTML에 저장하지 않는다.
-7. `npx wrangler d1 migrations apply DB --remote`로 `0001_initial.sql`과 `0002_daily_stats.sql`을 적용하고, 별도 승인 뒤 `npx wrangler deploy`와 `npx wrangler triggers deploy`를 실행한다.
+7. 별도 production 승인과 기존 방문 데이터 백업·확인 뒤 `npx wrangler d1 migrations apply DB --remote`로 적용되지 않은 migration을 적용한다. 다운로드 확장에서는 `0003_download_stats.sql`만 새로 적용한 다음 Worker와 trigger 배포를 별도 승인 절차로 수행한다.
 8. 별도 production 승인에서만 Netlify build 환경의 `PUBLIC_ANALYTICS_ENDPOINT`에 위 HTTPS `/hit` URL을 설정한다. 공개 Privacy 네 언어의 실제 시행일도 같은 배포에서 확정한다.
 
 Cloudflare가 Worker에 제공하는 실제 client IP는 `CF-Connecting-IP`에서만 읽는다. request body나 query의 IP는 받지 않는다. 자세한 header 의미는 [Cloudflare HTTP headers](https://developers.cloudflare.com/fundamentals/reference/http-headers/)를 따른다. Secrets는 [Workers secrets](https://developers.cloudflare.com/workers/configuration/secrets/) 절차로만 저장한다.
@@ -78,3 +81,5 @@ Cloudflare가 Worker에 제공하는 실제 client IP는 `CF-Connecting-IP`에�
 - 운영 전 관리자 비밀번호, secret, Worker URL, Free plan 상태와 D1 dashboard 사용량 경보를 수동 확인한다.
 - Worker log에 request header나 원본 IP를 추가하지 않는다.
 - 통계 시작일은 `daily_stats`와 아직 집계되지 않은 `daily_visitors`를 합친 첫 `visit_date`이며 과거 방문을 추정하거나 복원하지 않는다.
+- 사이트 CTA를 거치지 않고 기존 `/press/downloads/*.zip` URL로 직접 접근한 요청은 집계되지 않을 수 있다. 기존 공개 ZIP URL은 호환성을 위해 계속 200으로 제공한다.
+- 첫 production 일일 Cron 결과는 2026-09-02 00:15 KST 이후 별도 읽기 전용 작업에서 확인한다. 그 전에는 다운로드 migration·Worker·사이트 변경을 production에 적용하지 않는다.

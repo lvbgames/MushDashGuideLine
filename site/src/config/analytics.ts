@@ -19,3 +19,13 @@ function isValidAnalyticsEndpoint(value: string): boolean {
 export const analyticsHitEndpoint = isValidAnalyticsEndpoint(configuredEndpoint)
   ? configuredEndpoint
   : null;
+
+export type AnalyticsDownloadAsset = 'brand' | 'mushhero' | 'mushdash';
+
+export function getAnalyticsDownloadEndpoint(asset: AnalyticsDownloadAsset): string | null {
+  if (!analyticsHitEndpoint) return null;
+
+  const endpoint = new URL(analyticsHitEndpoint);
+  endpoint.pathname = `/download/${asset}`;
+  return endpoint.toString();
+}

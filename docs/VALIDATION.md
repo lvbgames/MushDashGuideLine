@@ -12,7 +12,9 @@
 
 ## 자체 Analytics
 
-- `analytics/`에서 `npm ci`, `npm audit`, `npm run check`, `npm test`, `npm run qa:local`을 실행한다. local QA는 두 migration, 3·5·2 fixture의 집계 전후 TODAY·WEEK·TOTAL·최근 30일 불변, 과거 날짜의 `daily_stats` 3·5와 오늘 `daily_visitors` 2, 강제 실패 rollback, 재시도·2회 실행 멱등성, 같은 날짜·IP 중복 0, 다음 날짜 같은 IP +1, Googlebot·Yeti·Discordbot 제외, 일반 browser 포함, Origin 거부와 Basic Auth 401/200을 확인한다.
+- `analytics/`에서 `npm ci`, `npm audit`, `npm run check`, `npm test`, `npm run qa:local`을 실행한다. local QA는 세 migration, 기존 3·5·2 방문 fixture와 집계 rollback·재시도·멱등성·bot·Origin·Basic Auth를 유지하고, 다운로드 fixture brand 2·MushHero 3·MushDash 1, 반복 클릭 +1, bot +0, D1 실패 fail-open, 30회/분 limiter, 고정 ZIP 302, invalid/query/path traversal의 open redirect 0건을 확인한다.
+- `/api/stats`는 기존 top-level 방문자 `today`, `week`, `total`, `recent30`, `trackingSince`를 유지하고 `downloads.today/week/total/byAsset`을 추가한다. 최근 30일 각 row는 `visitors`와 `downloads`를 함께 가지며 값이 없는 날짜는 0이다. `/admin/`은 aggregate 숫자만 표시하고 IP·hash·User-Agent·referrer·국가를 표시하지 않는다.
+- `AdminApp/`에서 Debug·Release build, fake HTTP handler 기반 200/401/429/offline, DPAPI CurrentUser save/load/delete와 HTTPS 고정 endpoint를 검증한다. 운영 자격증명이나 운영 API write는 사용하지 않으며 self-contained `win-x64` publish 산출물은 Git에 포함하지 않는다.
 - production-mode HTTP `/admin/`·`/api/stats`는 인증과 rate limiter보다 먼저 426으로 거부하고 `WWW-Authenticate`와 HSTS를 반환하지 않아야 한다. HTTPS 무인증은 401과 Basic challenge, HTTPS 관리자 응답은 `Strict-Transport-Security: max-age=31536000`, `private, no-store`, `noindex, nofollow`를 반환해야 한다.
 - local QA의 축소 window에서 `/hit`과 관리자 limiter가 독립적으로 정상 요청→429→window 후 정상 순서인지 검사한다. production 설정은 각각 60/60초, 두 관리자 경로 공유 10/60초이며 raw IP 대신 scope·날짜·IP의 HMAC key를 사용한다. Rate Limiting binding 장애 시 D1 또는 인증으로 우회하지 않고 503으로 fail closed해야 한다.
 - production은 Cloudflare가 설정하는 `CF-Connecting-IP`만 사용하고 body/query의 IP를 받지 않아야 한다. 테스트 IP·날짜 header는 development와 명시적 QA flag가 동시에 켜진 local Worker에서만 허용한다.
@@ -21,7 +23,7 @@
 - TODAY는 오늘의 `daily_visitors`, WEEK·TOTAL·최근 30일은 확정 `daily_stats`와 아직 처리되지 않은 visitor row를 합쳐 계산한다. Tracking since는 두 table의 최소 날짜이며 빈 DB에서는 값이 없다고 표시해야 한다.
 - `/admin/`과 `/api/stats`는 인증 전 통계 데이터를 반환하지 않고 `Cache-Control: private, no-store`, `X-Robots-Tag: noindex, nofollow`를 사용한다.
 - production build는 `PUBLIC_ANALYTICS_ENDPOINT=https://lvb-analytics.lvb-analytics-worker.workers.dev/hit`를 사용한다. 60개 정상 HTML에는 endpoint와 initialization이 각각 한 번, 404에는 0번이어야 하며 fetch rejection이 처리되어야 한다. Admin username·password/hash/salt·HMAC secret·D1 ID는 HTML에 없어야 한다.
-- Worker·D1·사이트 endpoint와 공개 Privacy는 2026-08-31 production active이며, 네 언어 Last updated·Effective date는 실제 적용일 `2026-08-31`을 사용한다. 이후 Worker hardening은 별도 승인·배포 전후 검증 대상으로 구분한다.
+- Visitor Analytics Worker·D1·사이트 endpoint는 2026-08-31 production active이며, Download Analytics와 공개 Privacy 변경은 2026-09-04 적용했다. 네 언어 Last updated·Effective date는 `2026-09-04`를 사용한다. 이후 Worker hardening은 별도 승인·배포 전후 검증 대상으로 구분한다.
 
 ## 링크와 라우팅
 
@@ -60,9 +62,9 @@
 - Terms 4개 HTML에서 `noindex, follow`, 자기 canonical, en·ko·ja·zh-CN·x-default, H1·main 각 1개, JSON-LD 0개, 16개 section ID의 일치·순서, locale별 Footer와 LanguageSwitcher 경로를 검사한다. `Last updated`와 `Effective date`는 locale별 표기로 각각 한 번 표시하고 두 `<time>`의 `datetime` 값은 모두 `2026-08-12`여야 한다.
 - Privacy와 Terms의 locale별 상호 링크, Footer active 상태와 `/terms.html` → `/terms/` forced 301을 검사한다. Terms의 Nintendo, 고정 Steam 환불 시간, 미확인 DLC·시즌패스, 지속 업데이트 보장, 전면 면책, 전속 관할, 확인되지 않은 영구정지 문구는 0건이어야 한다.
 - Privacy 화면에서 `TODO`, `FIXME`, `placeholder`, `lvbgames.store`, raw GitHub logo, `Main Project: MushDash`, Epic brand requirement 문구가 0건인지 확인한다.
-- Privacy 네 언어에 첫 언급 `Epic Online Services(EOS)`와 이후 `EOS`, Lobby·Session·P2P·EOS UserCloud, 일반 문의 1년 보관, Netlify Web Analytics·RUM·Log Drains 미사용, 자체 서버·DB·텔레메트리·자동 크래시 전송 미사용, 담당부서 Lv.B가 동일한 의미로 포함되는지 확인한다.
+- Privacy 네 언어에 첫 언급 `Epic Online Services(EOS)`와 이후 `EOS`, Lobby·Session·P2P·EOS UserCloud, 일반 문의 1년 보관, Netlify Web Analytics·RUM·Log Drains 미사용, 자체 서버·DB·텔레메트리·자동 크래시 전송 미사용, 담당부서 Lv.B가 동일한 의미로 포함되는지 확인한다. Press Kit 다운로드 시작은 날짜·종류별 aggregate만 저장하고 원본 IP·장기 identifier·User-Agent·referrer·국가를 저장하지 않으며 광고·profiling 목적이 아님을 네 언어에서 확인한다.
 - 빌드된 Privacy 네 언어 HTML에서 대소문자 구분 없이 내부 구현 명칭 `EIK`가 0건인지 확인한다.
-- 네 언어 Privacy는 최종 수정일과 시행일을 각각 locale별 문구로 표시하고 두 `<time>`의 `datetime` 값이 모두 `2026-08-31`인지 확인한다. 19개 section 순서, `noindex, follow`, sitemap 제외와 youtube-nocookie click-to-load 고지를 함께 확인한다.
+- 네 언어 Privacy는 최종 수정일과 시행일을 각각 locale별 문구로 표시하고 두 `<time>`의 `datetime` 값이 모두 `2026-09-04`인지 확인한다. 19개 section 순서, `noindex, follow`, sitemap 제외와 youtube-nocookie click-to-load 고지를 함께 확인한다.
 - UserCloud 공개 범주는 네 언어 모두에서 튜토리얼 진행, 표시 이름, 선택한 아이콘·이름표·아바타, 재화 잔액, 보유 아이템·인벤토리, Infinity Tower 최고 기록, 주간 도전 ID·진행·완료·보상 수령, 중복 구매 처리를 방지하는 거래 식별자를 포함해야 한다.
 - 네 언어 모두 계정 식별자는 계정별 영역을 찾는 SDK 처리와 save JSON payload를 구분하고, 로컬 언어·매칭 지역·그래픽·오디오 설정은 UserCloud 업로드 범주에서 제외해야 한다.
 - UserCloud 자동 만료·정기 삭제·게임 제거·계정 연결 해제 시 자동 삭제 또는 이메일 요청의 즉시·무조건 삭제를 보장하는 문구는 없어야 한다. 요청 채널, Lv.B 담당부서, 본인·범위 및 플랫폼/EOS 절차 확인과 제한 안내는 있어야 한다.
@@ -87,7 +89,7 @@
 - About은 네 locale 모두 회사 철학 영역이 정확히 1개이고 같은 순서·의미의 원칙이 정확히 3개여야 한다. 제거한 중복 approach 영역과 전용 component·CSS·번역은 0건이어야 한다.
 - Legal 목차는 desktop nav와 mobile details가 DOM에 각각 하나씩 존재한다. 64rem 미만에서는 desktop aside, 64rem 이상에서는 mobile details가 `display:none`인 상위 subtree에 있어 접근성 트리와 탭 순서에서 제외되고, 보이는 목차만 anchor 대상으로 이동하는지 확인한다. 실제 screen reader를 실행하지 못한 경우 DOM·computed style·focusability·접근성 tree 검사 범위와 물리 키보드 미검증 항목을 구분해 보고한다.
 - 공통 MediaGallery는 native scroll-snap, 이전·다음 label과 경계 disabled, mobile touch scroll, dialog Close·화살표·Escape·backdrop·trigger focus 복귀를 확인한다.
-- Press는 승인된 브랜드 5개·MushHero 7개·MushDash 6개와 정적 ZIP 3개를 확인한다. 화면은 브랜드 다운로드 3개, 게임 이미지 10개, ZIP href 3개를 제공하고, public/dist SHA·ZIP bytes·entry integrity·중복·작업용 docs/previews 미포함을 검사한다. 기존 Home source용 Steam 스크린샷은 별도 보호하며 MushDash `promo-*`를 스크린샷으로 표기하지 않는다. Hero divider 아래 여백과 제목·설명 간격, Recent Press 관련 UI·번역·스타일 0건도 확인한다.
+- Press는 승인된 브랜드 5개·MushHero 7개·MushDash 6개와 정적 ZIP 3개를 확인한다. 화면은 브랜드 다운로드 3개, 게임 이미지 10개, 고정 Worker `/download/brand|mushhero|mushdash` CTA를 각각 한 번 제공하며 direct ZIP 3개는 호환 URL로 계속 200이어야 한다. public/dist SHA·ZIP bytes·entry integrity·중복·작업용 docs/previews 미포함을 검사한다. 기존 Home source용 Steam 스크린샷은 별도 보호하며 MushDash `promo-*`를 스크린샷으로 표기하지 않는다. Hero divider 아래 여백과 제목·설명 간격, Recent Press 관련 UI·번역·스타일 0건도 확인한다.
 - Home·MushHero·Press·About mobile Lighthouse는 각각 90·90·90·95 이상, 모든 대상 CLS 0.02 이하·TBT 100ms 이하를 유지하고 report JSON과 Chrome 임시 profile은 저장소에 추가하지 않는다.
 
 ## Naver SEO 운영 감사

@@ -69,6 +69,26 @@ async function hit({ date, ip, userAgent = browserUa, origin = allowedOrigin, me
   });
 }
 
+async function download({
+  path,
+  date,
+  ip,
+  userAgent = browserUa,
+  method = 'GET',
+  failIncrement = false
+}) {
+  return fetch(`${baseUrl}${path}`, {
+    method,
+    redirect: 'manual',
+    headers: {
+      'User-Agent': userAgent,
+      'X-LvB-Analytics-Test-Date': date,
+      'X-LvB-Analytics-Test-IP': ip,
+      ...(failIncrement ? { 'X-LvB-Analytics-Test-Fail-Download': 'true' } : {})
+    }
+  });
+}
+
 async function stats(date, authorization = basic, ip = `198.18.0.${++statsRequestId}`) {
   return fetch(`${baseUrl}/api/stats`, {
     headers: {
@@ -108,12 +128,22 @@ function assertFixtureStats(payload) {
   assert.equal(payload.total, 10);
   assert.equal(payload.trackingSince, '2026-08-27');
   assert.deepEqual(
-    payload.recent30.filter((entry) => entry.visitors > 0),
+    payload.recent30.filter((entry) => entry.visitors > 0).map(({ date, visitors }) => ({ date, visitors })),
     [
       { date: '2026-08-29', visitors: 2 },
       { date: '2026-08-28', visitors: 5 },
       { date: '2026-08-27', visitors: 3 }
     ]
+  );
+  assert.deepEqual(payload.downloads, {
+    today: 6,
+    week: 6,
+    total: 6,
+    byAsset: { brand: 2, mushhero: 3, mushdash: 1 }
+  });
+  assert.deepEqual(
+    payload.recent30.filter((entry) => entry.downloads > 0).map(({ date, downloads }) => ({ date, downloads })),
+    [{ date: '2026-08-29', downloads: 6 }]
   );
 }
 
@@ -130,6 +160,7 @@ try {
   await mkdir(qaRoot, { recursive: true });
   const schema = await readFile(path.resolve(analyticsRoot, 'migrations', '0001_initial.sql'), 'utf8');
   const statsSchema = await readFile(path.resolve(analyticsRoot, 'migrations', '0002_daily_stats.sql'), 'utf8');
+  const downloadSchema = await readFile(path.resolve(analyticsRoot, 'migrations', '0003_download_stats.sql'), 'utf8');
   assert.deepEqual(
     [...schema.matchAll(/^\s*([a-z_]+)\s+(?:TEXT|PRIMARY KEY)/gmi)].map((match) => match[1]),
     ['visit_date', 'visitor_hash', 'created_at']
@@ -140,12 +171,16 @@ try {
   assert.match(statsSchema, /unique_visitors INTEGER NOT NULL/);
   assert.match(statsSchema, /finalized_at TEXT NOT NULL/);
   assert.equal(/visitor_hash|\bip\b|user_agent|url|referrer|country|session/i.test(statsSchema), false);
+  assert.match(downloadSchema, /CREATE TABLE IF NOT EXISTS download_stats/);
+  assert.match(downloadSchema, /asset_key TEXT NOT NULL CHECK \(asset_key IN \('brand', 'mushhero', 'mushdash'\)\)/);
+  assert.match(downloadSchema, /downloads INTEGER NOT NULL CHECK \(downloads >= 0\)/);
+  assert.equal(/visitor_hash|\bip\b|user_agent|url|referrer|country|session/i.test(downloadSchema), false);
   const adminHash = await deriveAdminPasswordHash(adminPassword, adminSalt);
   const qaConfig = JSON.parse(await readFile(configPath, 'utf8'));
   qaConfig.ratelimits = qaConfig.ratelimits.map((binding) => ({
     ...binding,
     simple: {
-      limit: binding.name === 'HIT_RATE_LIMITER' ? 3 : 2,
+      limit: binding.name === 'HIT_RATE_LIMITER' ? 3 : binding.name === 'DOWNLOAD_RATE_LIMITER' ? 3 : 2,
       period: 10
     }
   }));
@@ -185,7 +220,14 @@ try {
 
   const emptyStatsResponse = await stats('2026-08-29');
   assert.equal(emptyStatsResponse.status, 200);
-  assert.equal((await emptyStatsResponse.json()).trackingSince, null);
+  const emptyStats = await emptyStatsResponse.json();
+  assert.equal(emptyStats.trackingSince, null);
+  assert.deepEqual(emptyStats.downloads, {
+    today: 0,
+    week: 0,
+    total: 0,
+    byAsset: { brand: 0, mushhero: 0, mushdash: 0 }
+  });
 
   for (const ip of ['203.0.113.11', '203.0.113.12', '203.0.113.13']) {
     assert.equal((await hit({ date: '2026-08-27', ip })).status, 204);
@@ -205,6 +247,70 @@ try {
 
   assert.equal((await hit({ date: '2026-08-29', ip: '203.0.113.40', origin: 'https://example.com' })).status, 403);
   assert.equal((await hit({ date: '2026-08-29', ip: '203.0.113.40', method: 'GET' })).status, 405);
+
+  const downloadFixtures = [
+    ['brand', '198.51.100.11'],
+    ['brand', '198.51.100.11'],
+    ['mushhero', '198.51.100.21'],
+    ['mushhero', '198.51.100.22'],
+    ['mushhero', '198.51.100.23'],
+    ['mushdash', '198.51.100.31']
+  ];
+  const downloadLocations = {
+    brand: 'https://lvb.kr/press/downloads/lvb-brand-assets.zip',
+    mushhero: 'https://lvb.kr/press/downloads/mushhero-press-kit.zip',
+    mushdash: 'https://lvb.kr/press/downloads/mushdash-press-kit.zip'
+  };
+  for (const [assetKey, ip] of downloadFixtures) {
+    const response = await download({ path: `/download/${assetKey}`, date: '2026-08-29', ip });
+    assert.equal(response.status, 302);
+    assert.equal(response.headers.get('location'), downloadLocations[assetKey]);
+  }
+
+  const botDownload = await download({
+    path: '/download/brand',
+    date: '2026-08-29',
+    ip: '198.51.100.41',
+    userAgent: 'Googlebot/2.1'
+  });
+  assert.equal(botDownload.status, 302);
+  assert.equal(botDownload.headers.get('location'), downloadLocations.brand);
+
+  const failedIncrement = await download({
+    path: '/download/mushdash',
+    date: '2026-08-29',
+    ip: '198.51.100.42',
+    failIncrement: true
+  });
+  assert.equal(failedIncrement.status, 302);
+  assert.equal(failedIncrement.headers.get('location'), downloadLocations.mushdash);
+
+  for (const path of [
+    '/download',
+    '/download/unknown',
+    '/download?url=https%3A%2F%2Fevil.example',
+    '/download/http%3A%2F%2Fevil.example',
+    '/download/brand%2F..%2Fadmin'
+  ]) {
+    const response = await download({ path, date: '2026-08-29', ip: '198.51.100.43' });
+    assert.equal(response.status, 404, path);
+    assert.equal(response.headers.has('location'), false, path);
+  }
+  const normalizedTraversal = await download({
+    path: '/download/../admin/',
+    date: '2026-08-29',
+    ip: '198.51.100.44'
+  });
+  assert.equal(normalizedTraversal.status, 401);
+  assert.equal(normalizedTraversal.headers.has('location'), false);
+  const wrongDownloadMethod = await download({
+    path: '/download/brand',
+    date: '2026-08-29',
+    ip: '198.51.100.45',
+    method: 'POST'
+  });
+  assert.equal(wrongDownloadMethod.status, 405);
+  assert.equal(wrongDownloadMethod.headers.get('allow'), 'GET');
 
   const anonymous = await stats('2026-08-29', '');
   assert.equal(anonymous.status, 401);
@@ -248,6 +354,10 @@ try {
   assert.equal(dashboard.headers.get('x-robots-tag'), 'noindex, nofollow');
   const dashboardBody = await dashboard.text();
   assert.match(dashboardBody, /Lv\.B Analytics/);
+  assert.match(dashboardBody, /PRESS KIT DOWNLOADS/);
+  assert.match(dashboardBody, /Lv\.B Brand/);
+  assert.match(dashboardBody, /MushHero/);
+  assert.match(dashboardBody, /MushDash/);
   assert.equal(dashboardBody.includes('visitor_hash'), false);
   assert.equal(dashboardBody.includes('203.0.113.'), false);
 
@@ -258,6 +368,22 @@ try {
   assert.equal(limitedHit.status, 429);
   assert.equal(limitedHit.headers.get('access-control-allow-origin'), allowedOrigin);
   assert.equal(await limitedHit.text(), '');
+
+  for (let requestIndex = 0; requestIndex < 3; requestIndex += 1) {
+    assert.equal((await download({
+      path: '/download/brand',
+      date: '2026-08-29',
+      ip: '198.51.100.210'
+    })).status, 302);
+  }
+  const limitedDownload = await download({
+    path: '/download/brand',
+    date: '2026-08-29',
+    ip: '198.51.100.210'
+  });
+  assert.equal(limitedDownload.status, 429);
+  assert.equal(limitedDownload.headers.get('retry-after'), '60');
+  assert.equal(limitedDownload.headers.has('location'), false);
 
   const sharedAdminLimit = await fetch(`${baseUrl}/admin/`, {
     headers: {
@@ -275,6 +401,11 @@ try {
 
   await new Promise((resolve) => setTimeout(resolve, 10_500));
   assert.equal((await hit({ date: '2026-08-29', ip: '203.0.113.31' })).status, 204);
+  assert.equal((await download({
+    path: '/download/brand',
+    date: '2026-08-29',
+    ip: '198.51.100.210'
+  })).status, 302);
   assert.equal((await stats('2026-08-29', basic, '198.51.100.200')).status, 200);
 
   worker.kill('SIGINT');
@@ -296,8 +427,18 @@ try {
       { visit_date: '2026-08-28', unique_visitors: 5 }
     ]
   );
+  assert.deepEqual(
+    await executeLocalSql(
+      'SELECT download_date, asset_key, downloads FROM download_stats ORDER BY download_date ASC, asset_key ASC'
+    ),
+    [
+      { download_date: '2026-08-29', asset_key: 'brand', downloads: 6 },
+      { download_date: '2026-08-29', asset_key: 'mushdash', downloads: 1 },
+      { download_date: '2026-08-29', asset_key: 'mushhero', downloads: 3 }
+    ]
+  );
 
-  console.log('Local Worker/D1 QA passed: HTTPS gate, rate limits, aggregation, rollback safety, idempotency, duplicates, KST dates, bots, auth, CORS, and raw-IP non-disclosure.');
+  console.log('Local Worker/D1 QA passed: visitor aggregation, Press Kit download starts, fixed redirects, rate limits, fail-open download counting, rollback safety, KST dates, bots, auth, CORS, and raw-IP non-disclosure.');
 } finally {
   if (worker && worker.exitCode === null) {
     worker.kill('SIGINT');

@@ -6,6 +6,7 @@
 
 - `Confirmed`: 현재 저장소의 소스·설정 또는 사용자 검증 데이터로 확인됨.
 - `Production active`: 운영 인프라와 홈페이지 endpoint가 연결되어 실제 서비스에 사용 중임.
+- `Local implementation`: 코드와 로컬 검증만 완료했으며 운영 인프라·공개 사이트에는 아직 적용하지 않음.
 - `Manual confirmation`: 저장소 밖의 계정 설정, 계약 또는 게임 런타임을 운영자가 확인해야 함.
 - `Not used`: 현재 홈페이지 소스와 배포 설정에서 사용하지 않음.
 
@@ -31,6 +32,7 @@
 | Netlify Edge locale redirect | 홈페이지 루트 `/` 일반 방문 | Netlify 및 locale 선택 기능을 제공하는 Lv.B | Netlify가 요청 시 제공하는 국가 코드, 사용자가 직접 선택한 언어 preference cookie | 최초 루트 방문의 언어 경로 선택과 명시적 언어 선택 유지 | Netlify Edge 실행 중 처리; 국가 코드는 Lv.B DB·analytics·cookie에 저장하지 않음 | 국가 코드는 요청 처리 중에만 사용; 언어 preference는 이용자 브라우저에 1년 | Netlify | 가능 | `netlify.toml`, `site/netlify/edge-functions/locale-redirect.ts`, `site/src/i18n/localePreference.ts` | Production active |
 | 자체 Analytics API | 정상 홈페이지 방문 | 방문 규모를 집계하는 Lv.B, 인프라 제공자 Cloudflare | Worker가 요청 중 일시 처리하는 원본 IP; KST 날짜·당일 HMAC-SHA256 hash·생성 시각 | 일간 중복을 제거한 순 방문자 수 집계 | 원본 IP는 Cloudflare Worker 실행 중에만 처리하고 저장하지 않음; D1 hash는 날짜별 집계 확정 전까지만 임시 저장 | 날짜가 HMAC 입력에 포함되어 날짜 간 연결 불가; 집계 성공 후 hash 삭제, 집계 실패 시 삭제하지 않고 다음 Cron에서 재시도 | Cloudflare Workers·D1 | 가능 | `analytics/src/index.ts`, `analytics/src/core.ts`, `analytics/migrations/0001_initial.sql`, 2026-08-31 원격 Worker QA | Production active |
 | 자체 Analytics DB | 정상 홈페이지 방문 | Lv.B, Cloudflare | 임시 `daily_visitors`: `visit_date`, `visitor_hash`, `created_at`; 장기 `daily_stats`: `visit_date`, `unique_visitors`, `finalized_at` | TODAY·최근 7일·누적·최근 30일 집계 | Cloudflare D1; 집계 저장과 hash 삭제를 날짜별 단일 transaction batch로 처리 | hash row는 해당 날짜의 수가 안전하게 저장된 직후 삭제; 실패 backlog는 다음 날 재시도. 장기 보관은 날짜·최종 수·집계 완료 시각이며 Analytics 운영 목적 동안 유지 | Cloudflare D1 | 가능 | `analytics/migrations/0001_initial.sql`, `analytics/migrations/0002_daily_stats.sql`, local rollback QA와 2026-08-31 원격 scheduled·멱등성 QA | Production active |
+| Press Kit 다운로드 시작 집계 | Press 페이지의 Brand·MushHero·MushDash ZIP CTA | Lv.B, Cloudflare | Worker가 요청 중 rate-limit actor hash를 만들기 위해 일시 처리하는 원본 IP; 영구 집계 `download_stats`: `download_date`, 허용된 `asset_key`, `downloads`, `updated_at`. 원본 IP, actor hash, User-Agent, referrer, 국가, 장기 identifier는 D1에 저장하지 않음 | 날짜·Press Kit 종류별 다운로드 시작 횟수와 TODAY·최근 7일·누적·최근 30일 통계, 통계 오염·quota abuse 완화 | Cloudflare D1; `/download/{asset}`의 고정 allowlist redirect 직전 aggregate count 증가. rate-limit key는 요청 중 HMAC으로 생성하고 별도 row로 저장하지 않음 | Analytics 운영 목적 동안 집계값 유지; 파일 전송 완료나 고유 다운로드 이용자는 측정하지 않음 | Cloudflare Workers·D1 | 가능 | `analytics/migrations/0003_download_stats.sql`, `analytics/src/index.ts`, `analytics/scripts/run-local-qa.mjs`, 2026-09-04 production migration·Worker QA; direct ZIP URL은 집계되지 않을 수 있음 | Production active |
 | CMS | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 없음 | 없음 | CMS 패키지·연결 설정 0건 | Not used |
 | Google Analytics | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Google | 없음 | `gtag`, GA measurement ID 전체 검색 0건 | Not used |
 | Google Tag Manager | 홈페이지 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 | Google | 없음 | `GTM-`, tag manager 전체 검색 0건 | Not used |
@@ -108,5 +110,6 @@ MushDash 실제 게임 프로젝트 `E:\MushDash`의 2026-07-31 현재 작업 �
 7. Steam·Epic에서 요청자와 UserCloud 계정의 소유 관계를 안전하게 확인할 절차를 확정한다. 현재 구현에는 검증된 절차가 없다.
 8. 개인정보 요청 처리 기록의 보유기간과 삭제 담당자를 확정한다.
 9. 자체 Analytics 운영 시작에 따라 개인정보 처리방침의 Last updated와 Effective date를 `2026-08-31`로 갱신했다.
+10. 다운로드 집계의 2026-09-04 production 적용에 따라 공개 정책의 Last updated와 Effective date를 `2026-09-04`로 갱신했다. 다운로드 시작 횟수, 날짜·종류별 aggregate, 원본 IP·장기 identifier 미저장과 광고·profiling 미사용 원칙을 유지한다.
 
 운영 확인 결과가 현재 코드 감사와 다르면 `site/src/data/privacy.ts`, `docs/PRIVACY_USERCLOUD_AUDIT.md`와 본 인벤토리를 함께 갱신하고 네 언어 의미 검증과 전체 빌드를 다시 수행한다.
