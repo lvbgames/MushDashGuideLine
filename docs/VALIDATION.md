@@ -54,7 +54,7 @@
 - 화면에 TODO·placeholder·개발 상태 문구가 노출되지 않는지 확인한다.
 - Contact의 수신 주소와 locale별 subject·body를 percent-decoding해 손상 여부를 확인하고, 사용하지 않는 form·success 코드가 없는지 검사한다.
 - 신규 Astro 페이지의 외부 새 탭 링크는 보안 속성을 검사한다.
-- News 데이터는 총 12건, source URL·slug 중복 0건, `publishedAt` 내림차순, locale별 제목·요약 존재를 검사한다. page size 6으로 네 locale page 1·2에 각각 6건을 정적 출력하고 page 3은 만들지 않으며, 개인 블로그는 `blog-review`로 분류한다.
+- News 데이터는 총 16건(외부 13·자체 3), source URL·slug 중복 0건, `publishedAt` 내림차순, locale별 제목·요약 존재를 검사한다. page size 6으로 네 locale page 1·2·3에 각각 6·6·4건을 정적 출력하고 page 4는 만들지 않으며, 개인 블로그는 `blog-review`로 분류한다. Deep Dive 게임잼은 브릿지경제 대표 기사 한 건만 포함한다.
 - News pagination은 첫 페이지에 `/page/1/`을 만들지 않고 page 2의 자기 canonical·같은 번호 hreflang·x-default·sitemap 포함, 이전·다음 링크와 현재 페이지 상태를 검사한다. 외부 카드 전체는 새 탭과 `noopener noreferrer`, 내부 카드 전체는 같은 탭을 사용하고 별도 원문 CTA·중첩 링크는 없어야 한다.
 - News 카드 metadata는 네 locale page 1·2 모두 첫 줄 category·publisher·author, 둘째 줄 date 구조여야 하며 desktop에서도 날짜가 첫 줄로 합쳐지지 않아야 한다.
 - 내부 News는 locale별 같은 slug 상세 route, 같은 탭 링크, Article OG·JSON-LD를 사용하고 외부 원문 표현·아이콘을 사용하지 않는지 검사한다. Press Kit은 네 locale canonical·hreflang·sitemap, 공개 브랜드 원본, lazy screenshot, Recent Press UI 0건과 기존 press mailto를 확인한다.

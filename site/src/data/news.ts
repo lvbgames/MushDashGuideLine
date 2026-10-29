@@ -12,6 +12,29 @@ if (!mushHeroArticleImage || !mushDashArticleImage || !mushHeroGame?.steamStoreU
 
 export const newsItems: readonly NewsItem[] = [
   {
+    type: 'external',
+    slug: 'deep-dive-game-jam-mentoring',
+    kind: 'press-coverage',
+    originalTitle: '동서대 RISE 사업단, 전국 대학 참여 게임 잼 ‘Deep Dive’ 성료',
+    localizedTitle: {
+      en: 'Lv.B Joins Industry Mentors at the Deep Dive Game Jam',
+      ko: 'Lv.B, 게임잼 ‘Deep Dive’에 기업 멘토로 참여',
+      ja: 'Lv.B、ゲームジャム「Deep Dive」に企業メンターとして参加',
+      'zh-cn': 'Lv.B 以企业导师身份参与 Deep Dive 游戏开发活动'
+    },
+    publisher: '브릿지경제',
+    author: '서진혁',
+    publishedAt: '2026-01-07',
+    sourceUrl: 'https://www.viva100.com/article/20260107500638',
+    lastVerifiedAt: '2026-10-29',
+    localizedSummary: {
+      en: 'Bridge Economy reported on the Deep Dive game jam organized by Dongseo University’s RISE project team. Lv.B was among the participating companies that mentored students with technical advice and development feedback.',
+      ko: '브릿지경제가 동서대학교 RISE 사업단의 게임잼 ‘Deep Dive’를 소개했습니다. Lv.B는 참여 기업들과 함께 학생들에게 기술 자문과 개발 피드백을 제공하는 멘토로 참여했습니다.',
+      ja: 'ブリッジ経済が東西大学RISE事業団のゲームジャム「Deep Dive」を紹介しました。Lv.Bは参加企業の一社としてメンターを務め、学生に技術的な助言や開発へのフィードバックを提供しました。',
+      'zh-cn': '《桥梁经济》报道了韩国东西大学 RISE 项目团队举办的 Deep Dive 游戏开发活动。Lv.B 与其他参与企业一起担任导师，为学生提供技术建议和开发反馈。'
+    }
+  },
+  {
     type: 'internal',
     slug: 'mushhero-warrior-vfx-rework',
     kind: 'development-update',

@@ -4,7 +4,7 @@ News는 실시간 scraping이나 기사 본문 복제 없이 `site/src/data/news
 
 ## 현재 상태
 
-- `site/src/types/news.ts`와 `site/src/data/news.ts`에 검증된 외부 자료 12건과 Lv.B 자체 글 3건을 정적으로 등록했다.
+- `site/src/types/news.ts`와 `site/src/data/news.ts`에 검증된 외부 자료 13건과 Lv.B 자체 글 3건을 정적으로 등록했다. Deep Dive 게임잼 멘토 참여는 브릿지경제의 2026-01-07 기사 한 건을 대표로 사용한다(2026-10-29 원문 확인). 동일 행사 재보도는 중복 등록하지 않는다.
 - `/news/`와 locale별 첫 페이지에 이어 page 2·3을 정적 생성한다. Header·Footer News 링크는 첫 페이지를 가리킨다.
 - 자체 글은 Studio Update·Development Update·Announcement를 지원하고 검증 근거 URL을 데이터에 보존한다. 외부 BGC 인터뷰는 원문이 직접 지원하는 MushDash·스튜디오 방향만 요약했다.
 - 모든 항목은 `publishedAt` 내림차순의 하나의 정렬 목록에서 같은 카드 위계로 한 번씩 표시하며 페이지당 6건으로 나눈다. 외부 카드 전체는 원문 새 탭, 내부 카드 전체는 같은 locale 상세 route로 연결한다.

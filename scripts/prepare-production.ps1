@@ -771,7 +771,7 @@ foreach ($route in $newsListRoutes) {
   foreach ($pageSpec in @(
       [PSCustomObject]@{ Name = $route.Page1; Html = $page1Html; Canonical = $route.Canonical1; Total = 6; External = 4; Internal = 2 },
       [PSCustomObject]@{ Name = $route.Page2; Html = $page2Html; Canonical = $route.Canonical2; Total = 6; External = 5; Internal = 1 },
-      [PSCustomObject]@{ Name = $route.Page3; Html = $page3Html; Canonical = $route.Canonical3; Total = 3; External = 3; Internal = 0 }
+      [PSCustomObject]@{ Name = $route.Page3; Html = $page3Html; Canonical = $route.Canonical3; Total = 4; External = 4; Internal = 0 }
     )) {
     $canonicalPattern = '<link rel="canonical" href="' + [regex]::Escape($pageSpec.Canonical) + '">'
     Assert-Equal ([regex]::Matches($pageSpec.Html, '<a class="news-card news-card--').Count) $pageSpec.Total "News page size: $($pageSpec.Name)"
@@ -801,13 +801,14 @@ foreach ($route in $newsListRoutes) {
     }
   }
 }
-Assert-Equal $englishNewsHrefs.Count 15 'News data count'
-Assert-Equal (@($englishNewsHrefs | Sort-Object -Unique).Count) 15 'Unique News destination count'
+Assert-Equal $englishNewsHrefs.Count 16 'News data count'
+Assert-Equal (@($englishNewsHrefs | Sort-Object -Unique).Count) 16 'Unique News destination count'
+Assert-Equal (@($englishNewsHrefs | Where-Object { $_ -eq 'https://www.viva100.com/article/20260107500638' }).Count) 1 'Deep Dive representative article count'
 Assert-Equal ($englishNewsDates -join '|') (($englishNewsDates | Sort-Object -Descending) -join '|') 'News published date order'
 Assert-Equal (Test-Path -LiteralPath (Join-Path $siteRoot 'dist\news\page\4\index.html')) $false 'Unexpected News page 4 route'
 $newsSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\news.ts')
 Assert-Equal ([regex]::Matches($newsSource, "type:\s*'internal'").Count) 3 'Internal News source count'
-Assert-Equal ([regex]::Matches($newsSource, "type:\s*'external'").Count) 12 'External News source count'
+Assert-Equal ([regex]::Matches($newsSource, "type:\s*'external'").Count) 13 'External News source count'
 Assert-Equal ([regex]::Matches($newsSource, "kind:\s*'blog-review'").Count) 5 'Blog review source count'
 foreach ($approvedBlogUrl in @(
     'https://blog.naver.com/kuromi01/223567525541',
