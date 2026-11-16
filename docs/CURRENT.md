@@ -6,3 +6,6 @@
 - 로컬 검증: site·analytics 설치 및 audit 0건, Astro 오류·경고·힌트 0, 정적 build와 prepare-production 통과. Analytics 타입 검사·단위 테스트 8개·로컬 Worker/D1 QA 통과. 운영 배포는 수행하지 않았다.
 - 배포 승인(2026-10-29): 사용자가 보안 업데이트와 대표 기사 한 건의 선별 Commit·Push·Netlify 배포를 승인했다. 실제 운영 반영 결과와 Commit SHA는 배포 완료 보고를 기준으로 확인한다. 기존 Discord 관련 미커밋 작업은 배포에서 제외하고 별도로 보존한다. 관리자 자격증명은 Windows DPAPI 로컬 저장만 사용하며, 다운로드 수는 시작 횟수로 해석한다.
 - 다음 권장 작업: 실제 운영 사용량과 첫 정기 집계 이후의 다운로드 통계 연속성을 읽기 전용으로 점검하고, Secret·관리자 자격증명은 정기 운영 절차에 따라 교체한다.
+- 로컬 보안 업데이트(2026-11-16): Astro 7.3.3→7.4.7로 GHSA-mh32-jxcr-mh9f·GHSA-r3h5-4585-7x3w를 해소했다. Astro 요구 전이 의존성을 함께 갱신했으며 다른 직접 의존성·Analytics는 변경하지 않았다. Node 요구사항과 다음 Netlify 빌드 버전은 `DEPLOYMENT.md`를 따른다.
+- 이번 검증: npm ci·audit(0건)·check(오류/경고/힌트 0)·build·prepare-production 통과. HTML 61·sitemap 52·News 16과 Legal/SEO/공개 자산 보호 검사를 유지했다. 전후 산출물 118개 중 102개는 byte 동일하고, 16개 HTML의 차이는 inline JavaScript 압축이며 script 이외 마크업은 61개 모두 동일하다. 네 언어 Home·게임 상세 2종·Press의 390/1440px 32조합에서 overflow·로드된 이미지 오류·콘솔 오류/경고 0, Hero·메뉴·갤러리·영상 iframe 생성·reduced-motion 확인. 외부 영상/Analytics 요청은 테스트에서 mock해 운영 집계를 쓰지 않았다. 실제 YouTube 재생·Netlify 반영은 미검증이다.
+- 배포 승인(2026-11-16): 사용자가 이번 보안 업데이트의 Commit·Push·Netlify 배포를 승인했다. package/lockfile·Node 빌드 설정·관련 문서 5개만 선별하며, 기존 Discord 미커밋 파일 10개는 제외하고 보존한다. 실제 Commit SHA·운영 반영 결과는 배포 완료 보고를 기준으로 확인한다.

@@ -3,6 +3,9 @@
   command = "npm run build"
   publish = "dist"
 
+[build.environment]
+  NODE_VERSION = "24.15.0"
+
 [context.production.environment]
   PUBLIC_ANALYTICS_ENDPOINT = "https://lvb-analytics.lvb-analytics-worker.workers.dev/hit"
 
