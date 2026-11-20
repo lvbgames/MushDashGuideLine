@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "publications": [
+    {
+      "contentId": "news:busan-game-companies-bic-2024-busan-ilbo",
+      "channel": "media",
+      "messageId": "1545346718479024180",
+      "contentHash": "eb87552100ba63cdb41edd1299699200019def60ec82ffa3a24c14f20aea6d13",
+      "publishedAt": "2026-09-04T08:16:11.365Z"
+    },
+    {
+      "contentId": "news:busan-indie-studios-bic-2024-gamemeca",
+      "channel": "media",
+      "messageId": "1545346730067763204",
+      "contentHash": "a33dcad46cf9213254a8fbc2a4727bd719e424396cf3f95665d740897ab175f3",
+      "publishedAt": "2026-09-04T08:16:12.355Z"
+    },
+    {
+      "contentId": "news:bic-2024-mushdash-friends-and-difficulty-tunacanzorim",
+      "channel": "media",
+      "messageId": "1545346734417383425",
+      "contentHash": "594c1ce50f49514c1b3569ef0251680bf7303418f533db03afc77cc8b2b8eb3f",
+      "publishedAt": "2026-09-04T08:16:13.297Z"
+    },
+    {
+      "contentId": "news:bic-2024-mushdash-play-review-kuromi01",
+      "channel": "media",
+      "messageId": "1545346738234331197",
+      "contentHash": "12cdd17f672f4de45b852cadbf319f13ed85ab6c973542846a62290184983b28",
+      "publishedAt": "2026-09-04T08:16:14.128Z"
+    },
+    {
+      "contentId": "news:bgc-2025-mushdash-memorable-game-ko-castle",
+      "channel": "media",
+      "messageId": "1545346741719666719",
+      "contentHash": "6745df8f80955b1324ac46016fc73645acb5f98daff008ecfd5701c0e91d28f3",
+      "publishedAt": "2026-09-04T08:16:14.954Z"
+    },
+    {
+      "contentId": "news:bic-2025-mushdash-repeat-play-djaakek00",
+      "channel": "media",
+      "messageId": "1545346745444077681",
+      "contentHash": "6a15180199fbee87eda7f2a1908de0e4142e1ef834b78af151c1870d415c3a5d",
+      "publishedAt": "2026-09-04T08:16:15.876Z"
+    },
+    {
+      "contentId": "news:bgc-lvb-studio-interview-2025",
+      "channel": "media",
+      "messageId": "1545346748539605084",
+      "contentHash": "8a1417b353c54c75075b4d00870fa959562b9504a63f544e0fbd8bcef88370bd",
+      "publishedAt": "2026-09-04T08:16:16.899Z"
+    },
+    {
+      "contentId": "news:lvb-mushdash-mushhero-interview",
+      "channel": "media",
+      "messageId": "1545346753652596840",
+      "contentHash": "d615bfe308a7a4571a2f4fa7743a79d85455bef94165241c8f0ba6045396bf17",
+      "publishedAt": "2026-09-04T08:16:18.783Z"
+    },
+    {
+      "contentId": "news:bic-2026-new-steam-games-masa-kei",
+      "channel": "media",
+      "messageId": "1545346761303007303",
+      "contentHash": "c928cb0caa47e3f8b7b6360e75cea80af537b4e3dbc2aba08c53f5d8eff3ff36",
+      "publishedAt": "2026-09-04T08:16:20.004Z"
+    },
+    {
+      "contentId": "news:bic-2026-participating-studios-busan-global-game-center",
+      "channel": "media",
+      "messageId": "1545346766411538513",
+      "contentHash": "e93634c95199bb175c0842d53caf1c3e121e575c45f99900addd2f7193747fbf",
+      "publishedAt": "2026-09-04T08:16:20.901Z"
+    },
+    {
+      "contentId": "news:bic-2026-busan-global-game-center-gamefocus",
+      "channel": "media",
+      "messageId": "1545346770253512715",
+      "contentHash": "fe2bf6b4b53587ef0fbf14766c47b49adda7cfc0065bba40a1050fdd662a1ef4",
+      "publishedAt": "2026-09-04T08:16:21.793Z"
+    },
+    {
+      "contentId": "news:bic-2026-field-review-velog",
+      "channel": "media",
+      "messageId": "1545346774544162857",
+      "contentHash": "8c4217e7afa0051f9008791ec873d0792293f8054de5f2091d24842c10580cee",
+      "publishedAt": "2026-09-04T08:16:22.874Z"
+    },
+    {
+      "contentId": "news:deep-dive-game-jam-mentoring",
+      "channel": "media",
+      "messageId": "1573147392029761687",
+      "contentHash": "9160bb3f84cd809a82cb34a5a8a79d93779352229e15fa9422669fd8ae6acc99",
+      "publishedAt": "2026-11-20T01:26:10.034Z"
+    },
+    {
+      "contentId": "news:bic-2026-mushhero-booth-todaypedia365",
+      "channel": "media",
+      "messageId": "1573147401345302630",
+      "contentHash": "cfb9e6809656dee8e703fe4fa2df3cd635d54561b95d45eed44c218bc6a4d27e",
+      "publishedAt": "2026-11-20T01:26:11.406Z"
+    },
+    {
+      "contentId": "news:bic-2026-mushhero-hands-on-tihiss",
+      "channel": "media",
+      "messageId": "1573147407267405859",
+      "contentHash": "6872fa4d11de4e017fb85aa52b6fa95472a13746940aeb03e0d175c5bad80814",
+      "publishedAt": "2026-11-20T01:26:12.275Z"
+    },
+    {
+      "contentId": "news:bgc-studio-visit-mushdash-mushhero",
+      "channel": "media",
+      "messageId": "1573147410472108166",
+      "contentHash": "9d0321a16170b61091d57f3b0ad80201cd23460d236b0abdabeb37c425dae01a",
+      "publishedAt": "2026-11-20T01:26:13.139Z"
+    },
+    {
+      "contentId": "news:bgc-supporters-lvb-studio-interview-2026",
+      "channel": "media",
+      "messageId": "1573147414456434711",
+      "contentHash": "9b3e4b84d8b6e58cd3249d4c4be09f7ff8a3f42a079ae8dfa73e5b41b25b5edf",
+      "publishedAt": "2026-11-20T01:26:14.097Z"
+    }
+  ]
+}

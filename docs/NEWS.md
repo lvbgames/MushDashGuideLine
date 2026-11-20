@@ -4,8 +4,8 @@ News는 실시간 scraping이나 기사 본문 복제 없이 `site/src/data/news
 
 ## 현재 상태
 
-- `site/src/types/news.ts`와 `site/src/data/news.ts`에 검증된 외부 자료 13건과 Lv.B 자체 글 3건을 정적으로 등록했다. Deep Dive 게임잼 멘토 참여는 브릿지경제의 2026-01-07 기사 한 건을 대표로 사용한다(2026-10-29 원문 확인). 동일 행사 재보도는 중복 등록하지 않는다.
-- `/news/`와 locale별 첫 페이지에 이어 page 2·3을 정적 생성한다. Header·Footer News 링크는 첫 페이지를 가리킨다.
+- 총 26건: 외부 원문 23건(제3자 자료 17건·Lv.B 공식 네이버 블로그 6건), 사이트 내 자체 글 3건. BGC 서포터즈의 개별 인터뷰 2편과 BIC 현장 후기 2편은 서로 다른 작성자의 글이다. Deep Dive 게임잼 재보도는 브릿지경제의 2026-01-07 대표 기사 한 건만 사용한다.
+- 네 언어 모두 첫 페이지부터 5페이지까지 최신순 6·6·6·6·2건을 표시한다. Header·Footer News 링크는 첫 페이지를 가리킨다.
 - 자체 글은 Studio Update·Development Update·Announcement를 지원하고 검증 근거 URL을 데이터에 보존한다. 외부 BGC 인터뷰는 원문이 직접 지원하는 MushDash·스튜디오 방향만 요약했다.
 - 모든 항목은 `publishedAt` 내림차순의 하나의 정렬 목록에서 같은 카드 위계로 한 번씩 표시하며 페이지당 6건으로 나눈다. 외부 카드 전체는 원문 새 탭, 내부 카드 전체는 같은 locale 상세 route로 연결한다.
 - 카드 metadata는 첫 줄에 category·publisher·author 중 존재하는 값을, 둘째 줄에 날짜만 표시해 긴 출처명에서도 날짜 위치를 일정하게 유지한다.
@@ -13,8 +13,8 @@ News는 실시간 scraping이나 기사 본문 복제 없이 `site/src/data/news
 
 ## 항목 추가
 
-- 검증된 외부 기사만 수동 등록한다.
-- `slug`, `kind`(`interview`, `press-coverage`, `blog-review`, `feature`), `originalTitle`, 네 locale `localizedTitle`·`localizedSummary`, `publisher`, 선택적 `author`, `publishedAt`, `sourceUrl`, `lastVerifiedAt`을 입력한다.
+- 검증된 외부 기고·취재·후기와 Lv.B 공식 블로그의 개별 원문만 수동 등록한다.
+- `slug`, `kind`, `originalTitle`, 네 locale `localizedTitle`·`localizedSummary`, `publisher`, 선택적 `author`, `publishedAt`, `sourceUrl`, `lastVerifiedAt`을 입력한다. 제3자 글은 `interview`·`press-coverage`·`blog-review`·`feature`로, 공식 블로그는 발행처 `Lv.B`와 `studio-update` 또는 `development-update`로 구분한다. BIC 2026의 8월 현장 기사와 11월 공식 블로그 회고는 별도 원문이며 각각의 게시일을 사용한다.
 - 기사 이미지는 사용 권리와 안정적인 출처를 확인하지 못하면 사용하지 않는다.
 - 제목·언론사·날짜·원문 링크와 짧은 자체 요약만 사용하고 기사 전체 본문은 복제하지 않는다.
 - 개인 블로그는 작성자·게시일·본문의 직접 언급을 확인하고 실제 시연 후기는 `blog-review`, 개별 게임 소개는 `feature`로 분류한다. 개인 블로그를 언론 보도로 표시하지 않는다.

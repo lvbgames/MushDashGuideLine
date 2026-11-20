@@ -29,7 +29,7 @@ Node 기준은 `.nvmrc`, 패키지 고정은 `package-lock.json`을 따른다.
 - Branded 404: `/404.html` (영어 기본 안내, 네 locale Home 링크, `noindex`)
 - Robots: `public/robots.txt`를 루트 `/robots.txt`로 정적 제공하며 wildcard와 Yeti를 허용하고 `https://lvb.kr/sitemap-index.xml`을 안내한다. public·dist byte 일치와 BOM 없는 UTF-8은 `../scripts/prepare-production.ps1`이 검증한다.
 
-색인 Astro 페이지 52개, Privacy·Terms 각 4개와 별도 404를 빌드해 전체 HTML 61개를 생성한다. sitemap에는 색인 URL 52개만 포함한다.
+색인 페이지 60개, Privacy·Terms 각 4개와 별도 404를 빌드해 전체 HTML 69개를 생성한다. sitemap에는 색인 URL만 포함한다.
 
 ## Structure
 
@@ -70,7 +70,7 @@ Contact는 JavaScript·Functions·SMTP·외부 이메일 API 없이 locale별 �
 
 Contact 문의 범위는 비즈니스, 파트너십, 행사·전시, 크리에이터·Steam 큐레이터, 언론·인터뷰, 일반 회사 문의의 여섯 종류다. 게임 키 문의는 개별 검토하며 제공을 보장하지 않고, 언론 문의도 같은 비즈니스 이메일 CTA를 사용한다.
 
-News & Press는 네 locale route와 Header·Footer 링크를 제공한다. 외부 12건은 카드 전체로 원문 새 탭, 내부 글 3건은 카드 전체로 대응 locale 상세 route의 같은 탭에 연결한다. 총 15건은 최신순 6/6/3으로 정적 분리한다. 외부 기사 본문·이미지 복제·Featured 분리·자동 수집 기능은 포함하지 않는다. 추가 기준은 `../docs/NEWS.md`를 따른다.
+News & Press는 네 locale route와 Header·Footer 링크를 제공한다. 외부 원문(공식 블로그 포함)은 새 탭에서, 내부 글은 같은 언어의 상세 페이지에서 연다. 페이지당 최신순 6건으로 나눈다. 외부 기사 본문·이미지 복제·Featured 분리·자동 수집 기능은 포함하지 않는다. 추가 기준은 `../docs/NEWS.md`를 따른다.
 
 Press 다운로드는 `public/press/downloads/`의 정적 ZIP 3개와 `public/press/assets/`의 공식 게임 이미지를 사용한다. 사이트 CTA는 다운로드 시작 집계를 위한 Worker의 세 고정 route를 사용하지만 기존 direct ZIP URL과 파일은 호환성을 위해 유지하며 직접 URL 접근은 집계되지 않을 수 있다. `../scripts/build-press-kits.ps1`은 `siteFacts.json`의 공통 사실과 `../scripts/press-kit-content.json`의 Press 전용 문구를 결합해 Brand README/Guide와 두 게임의 4개 언어 Fact Sheet/README를 생성한다. source URL·SHA·archive 내용과 재생성 절차는 `../docs/PRESS_KIT.md`가 단일 운영 기록이다.
 

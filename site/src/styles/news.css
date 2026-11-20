@@ -303,4 +303,15 @@
     gap: var(--space-1);
     font-size: .8rem;
   }
+
+  .news-pagination:has(.news-pagination__pages > :nth-child(5)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .news-pagination:has(.news-pagination__pages > :nth-child(5)) .news-pagination__pages {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }

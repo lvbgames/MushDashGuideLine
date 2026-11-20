@@ -22,7 +22,7 @@
 - Cron은 `10 15 * * *` 한 개여야 한다. 현재 KST 날짜보다 이른 모든 미집계 날짜를 날짜별 D1 batch로 집계한 뒤 hash를 삭제하며, 저장·삭제 중 실패하면 전체 rollback되어야 한다. 실패 backlog는 다음 실행에서 처리하고 두 번 실행해도 수치가 변하지 않아야 한다.
 - TODAY는 오늘의 `daily_visitors`, WEEK·TOTAL·최근 30일은 확정 `daily_stats`와 아직 처리되지 않은 visitor row를 합쳐 계산한다. Tracking since는 두 table의 최소 날짜이며 빈 DB에서는 값이 없다고 표시해야 한다.
 - `/admin/`과 `/api/stats`는 인증 전 통계 데이터를 반환하지 않고 `Cache-Control: private, no-store`, `X-Robots-Tag: noindex, nofollow`를 사용한다.
-- production build는 `PUBLIC_ANALYTICS_ENDPOINT=https://lvb-analytics.lvb-analytics-worker.workers.dev/hit`를 사용한다. 60개 정상 HTML에는 endpoint와 initialization이 각각 한 번, 404에는 0번이어야 하며 fetch rejection이 처리되어야 한다. Admin username·password/hash/salt·HMAC secret·D1 ID는 HTML에 없어야 한다.
+- production build는 `PUBLIC_ANALYTICS_ENDPOINT=https://lvb-analytics.lvb-analytics-worker.workers.dev/hit`를 사용한다. 68개 정상 HTML에는 endpoint와 initialization이 각각 한 번, 404에는 0번이어야 하며 fetch rejection이 처리되어야 한다. Admin username·password/hash/salt·HMAC secret·D1 ID는 HTML에 없어야 한다.
 - Visitor Analytics Worker·D1·사이트 endpoint는 2026-08-31 production active이며, Download Analytics와 공개 Privacy 변경은 2026-09-04 적용했다. 네 언어 Last updated·Effective date는 `2026-09-04`를 사용한다. 이후 Worker hardening은 별도 승인·배포 전후 검증 대상으로 구분한다.
 
 ## 링크와 라우팅
@@ -54,7 +54,7 @@
 - 화면에 TODO·placeholder·개발 상태 문구가 노출되지 않는지 확인한다.
 - Contact의 수신 주소와 locale별 subject·body를 percent-decoding해 손상 여부를 확인하고, 사용하지 않는 form·success 코드가 없는지 검사한다.
 - 신규 Astro 페이지의 외부 새 탭 링크는 보안 속성을 검사한다.
-- News 데이터는 총 16건(외부 13·자체 3), source URL·slug 중복 0건, `publishedAt` 내림차순, locale별 제목·요약 존재를 검사한다. page size 6으로 네 locale page 1·2·3에 각각 6·6·4건을 정적 출력하고 page 4는 만들지 않으며, 개인 블로그는 `blog-review`로 분류한다. Deep Dive 게임잼은 브릿지경제 대표 기사 한 건만 포함한다.
+- News 26건(외부 원문 23·내부 글 3)의 URL·slug 중복, 최신순 정렬, 네 언어 제목·요약을 확인한다. 각 언어에서 1~5페이지에 6·6·6·6·2건을 출력하고 6페이지는 만들지 않는다. BGC 인터뷰·후기 4편, 공식 블로그 6편, Deep Dive 대표 기사 1편의 원문 링크가 각 언어에서 한 번씩만 나와야 한다.
 - News pagination은 첫 페이지에 `/page/1/`을 만들지 않고 page 2의 자기 canonical·같은 번호 hreflang·x-default·sitemap 포함, 이전·다음 링크와 현재 페이지 상태를 검사한다. 외부 카드 전체는 새 탭과 `noopener noreferrer`, 내부 카드 전체는 같은 탭을 사용하고 별도 원문 CTA·중첩 링크는 없어야 한다.
 - News 카드 metadata는 네 locale page 1·2 모두 첫 줄 category·publisher·author, 둘째 줄 date 구조여야 하며 desktop에서도 날짜가 첫 줄로 합쳐지지 않아야 한다.
 - 내부 News는 locale별 같은 slug 상세 route, 같은 탭 링크, Article OG·JSON-LD를 사용하고 외부 원문 표현·아이콘을 사용하지 않는지 검사한다. Press Kit은 네 locale canonical·hreflang·sitemap, 공개 브랜드 원본, lazy screenshot, Recent Press UI 0건과 기존 press mailto를 확인한다.
@@ -99,7 +99,7 @@
 - 운영 확인 명령은 `curl.exe -sS -D - https://lvb.kr/robots.txt`, `curl.exe -sS -D - -A "Mozilla/5.0 (compatible; Yeti/1.1; +https://naver.me/spd)" https://lvb.kr/robots.txt`, `curl.exe -sS -D - -o NUL http://lvb.kr/robots.txt`를 사용한다.
 - HTTP와 `www`는 대표 HTTPS 호스트로 301/308인지, 정규 페이지는 200인지, custom 404는 실제 404인지 확인한다.
 - 색인 페이지에 `noindex`·`nofollow`·X-Robots-Tag 제한이 없는지 확인하고 404의 `noindex, follow`는 허용한다.
-- sitemap의 모든 `loc`는 `https://lvb.kr/` 절대 URL이어야 하며 현재 News page 3과 자체 글을 포함한 52개 색인 route를 확인한다.
+- sitemap의 모든 `loc`는 `https://lvb.kr/` 절대 URL이어야 하며 현재 News 1~5페이지와 자체 글을 포함한 60개 색인 route를 확인한다.
 - `index.html` 직접 URL은 `netlify.toml`의 깊이별 forced 301 규칙이 대표 trailing-slash URL을 가리키는지 확인하고, 실제 동작은 배포 후 재검사한다.
 - title·description 중복, 자기 canonical, H1 하나, 정적 main/nav/footer, frame·meta refresh·JavaScript redirect, 빈·hash-only·javascript href, broken 내부 링크, 내부 nofollow, 이미지 alt·크기·asset을 전체 생성 HTML에서 기계적으로 수집한다.
 - News가 외부 기사 목록이고 자체 상세 본문이 없으면 RSS를 만들지 않으며, 자체 공지·개발일지 상세 route와 본문 발행이 생길 때 재검토한다.

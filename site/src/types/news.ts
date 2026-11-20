@@ -2,6 +2,7 @@ import type { Locale } from '../i18n/config';
 import type { GameImage, GameSlug } from './game';
 
 export type NewsKind = 'studio-update' | 'development-update' | 'announcement' | 'interview' | 'press-coverage' | 'blog-review' | 'feature';
+export type DiscordUpdateChannel = 'mushdash_updates' | 'mushhero_updates';
 
 interface NewsItemBase {
   slug: string;
@@ -46,6 +47,7 @@ export interface InternalNewsItem extends NewsItemBase {
   game: GameSlug;
   socialImage: GameSlug;
   sourceUrls?: readonly string[];
+  discordChannel?: DiscordUpdateChannel;
   localizedBody: Readonly<Record<Locale, NewsArticleBody>>;
 }
 

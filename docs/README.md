@@ -6,6 +6,7 @@
 - `PRODUCT.md`: 페이지 구성과 콘텐츠 우선순위.
 - `CONTENT.md`: 확정 데이터·외부 링크·에셋과 콘텐츠 상태.
 - `NEWS.md`: 정적 News 항목 추가·검증·공개 기준.
+- `DISCORD_PUBLISHING.md`: News 기반 Discord Webhook Dry Run·승인 게시·중복 방지와 secret 운영 규칙.
 - `STYLE.md`: 브랜드 디자인, 반응형, 접근성 기준.
 - `I18N.md`: 지원 언어, locale route, 번역 규칙.
 - `LOCKED.md`: Privacy 역사 보관본과 현재 정책의 변경·승인 규칙.

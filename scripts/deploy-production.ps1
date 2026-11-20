@@ -110,7 +110,7 @@ try {
       ForEach-Object { $_.Substring(1) }
   ) -join "`n"
   $placeholder = '(?:<[^>]+>|YOUR_[A-Z0-9_]+|example(?:[-_][A-Z0-9_-]+)?|redacted|placeholder|local-(?:qa-)?[A-Z0-9_-]+|test(?:[-_][A-Z0-9_-]+)?|\$\{[A-Z0-9_]+\})'
-  $secretAssignmentPattern = ('(?i)(?:ANALYTICS_HASH_SECRET|ANALYTICS_ADMIN_PASSWORD(?:_HASH|_SALT|_INPUT)?|CLOUDFLARE_API_TOKEN|CF_API_TOKEN|CF_API_KEY|NETLIFY_AUTH_TOKEN|NPM_TOKEN|NODE_AUTH_TOKEN|github_token|client_secret|private_key|api[_-]?secret)\s*[:=]\s*["'']?(?!{0})[A-Za-z0-9_./+=:-]{{12,}}' -f $placeholder)
+  $secretAssignmentPattern = ('(?i)(?:ANALYTICS_HASH_SECRET|ANALYTICS_ADMIN_PASSWORD(?:_HASH|_SALT|_INPUT)?|DISCORD_(?:MEDIA|MUSHDASH_UPDATES|MUSHHERO_UPDATES)_WEBHOOK_URL|CLOUDFLARE_API_TOKEN|CF_API_TOKEN|CF_API_KEY|NETLIFY_AUTH_TOKEN|NPM_TOKEN|NODE_AUTH_TOKEN|github_token|client_secret|private_key|api[_-]?secret)\s*[:=]\s*["'']?(?!{0})[A-Za-z0-9_./+=:-]{{12,}}' -f $placeholder)
   $npmAuthTokenPattern = ('(?i)(?:^|/):?_authToken\s*=\s*(?!{0})[^\s#;]{{8,}}' -f $placeholder)
   $bearerPattern = ('(?i)Authorization\s*:\s*Bearer\s+(?!{0})[A-Za-z0-9._~+/-]{{12,}}' -f $placeholder)
   $secretPatterns = @(
@@ -119,6 +119,7 @@ try {
     'ntl_[A-Za-z0-9]{20,}',
     'npm_[A-Za-z0-9]{30,}',
     '-----BEGIN (?:RSA |OPENSSH |EC |DSA )?PRIVATE KEY-----',
+    '(?i)https://(?:discord\.com|discordapp\.com)/api(?:/v[0-9]+)?/webhooks/',
     $secretAssignmentPattern,
     $npmAuthTokenPattern,
     $bearerPattern

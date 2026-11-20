@@ -1,6 +1,7 @@
 # Current
 
-- 전체 페이지 구현 상태: 52개 색인 route와 전체 HTML 61개를 유지한다. Visitor Analytics·매일 00:10 KST Cron·Netlify의 `PUBLIC_ANALYTICS_ENDPOINT`와 Press Kit 다운로드 집계 3종이 production active이며, 네 언어 Privacy 최종 수정일·시행일은 `2026-09-04`이다.
+- 2026-11-20 배포 대상: 작성자가 다른 인터뷰·후기 4편과 Lv.B 공식 블로그 6편을 네 언어로 등록했다. 총 26건, 언어별 5페이지(6·6·6·6·2), HTML 69개·색인 URL 60개다. Discord 게시 도구를 함께 배포하되 사이트 빌드나 배포가 메시지를 자동 전송하지는 않는다.
+- 기존 운영 기준: 52개 색인 route와 전체 HTML 61개다. Visitor Analytics·매일 00:10 KST Cron·Netlify의 `PUBLIC_ANALYTICS_ENDPOINT`와 Press Kit 다운로드 집계 3종이 production active이며, 네 언어 Privacy 최종 수정일·시행일은 `2026-09-04`이다.
 - QA 결과: Visitor Analytics는 `2026-09-01`부터 운영 중이고 일일 Cron의 backlog recovery와 과거 일일 visitor hash 삭제를 검증했다. Download Analytics는 기존 방문 집계를 바꾸지 않고 production D1 `0003`, 고정 ZIP redirect, bot 제외, 30회/분 limiter, D1 실패 fail-open과 aggregate-only schema를 검증했다. 통합 Web Admin과 조회 전용 .NET 8 WPF Admin App은 같은 통계 API를 사용한다.
 - 로컬 변경(2026-10-29): Astro 7.3.3·Vite 8.1.6, Wrangler 4.153.0 및 취약 전이 의존성 보안 업데이트. 기존 주요 버전 계열과 정적 배포 구조를 유지하고 영구 overrides는 추가하지 않았다. Deep Dive 멘토 참여는 기존 목록에 없어 브릿지경제 2026-01-07 기사 한 건을 네 언어로 추가했다. News 총 16건, 페이지별 6·6·4건이며 HTML 61·sitemap 52 구조는 유지한다.
 - 로컬 검증: site·analytics 설치 및 audit 0건, Astro 오류·경고·힌트 0, 정적 build와 prepare-production 통과. Analytics 타입 검사·단위 테스트 8개·로컬 Worker/D1 QA 통과. 운영 배포는 수행하지 않았다.

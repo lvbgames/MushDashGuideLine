@@ -13,6 +13,230 @@ if (!mushHeroArticleImage || !mushDashArticleImage || !mushHeroGame?.steamStoreU
 export const newsItems: readonly NewsItem[] = [
   {
     type: 'external',
+    slug: 'mush-character-from-sketch-to-game',
+    kind: 'development-update',
+    originalTitle: '작은 버섯 하나가 게임 캐릭터가 되기까지',
+    localizedTitle: {
+      en: 'From a Mushroom Sketch to Mush in 3D',
+      ko: '작은 버섯이 게임 캐릭터 ‘머쉬’가 되기까지',
+      ja: '小さなキノコがゲームキャラクターになるまで',
+      'zh-cn': '一朵小蘑菇如何变成游戏角色'
+    },
+    localizedSummary: {
+      en: 'Lv.B shows how the team turns front, side and back sketches of Mush into a 3D character, from shaping the silhouette to dressing it and bringing it to life in motion.',
+      ko: 'Lv.B가 머쉬의 정면·측면·후면 설정화를 공개했습니다. 그림 속 실루엣을 3D로 옮기고 옷과 움직임을 더해 게임 속 캐릭터로 완성하는 과정을 소개합니다.',
+      ja: 'Lv.Bがキノコのキャラクターの三面図を公開しました。輪郭を3Dで形にし、衣装や動きを加えていく過程を紹介します。',
+      'zh-cn': 'Lv.B 展示了蘑菇角色的三视图，分享团队如何还原它的轮廓，再为 3D 模型穿上服装、加上动作。'
+    },
+    publisher: 'Lv.B',
+    publishedAt: '2026-11-18',
+    sourceUrl: 'https://blog.naver.com/lv_b_games/224481914411',
+    lastVerifiedAt: '2026-11-20'
+  },
+  {
+    type: 'external',
+    slug: 'inside-lvb-busan-studio',
+    kind: 'studio-update',
+    originalTitle: '버섯들의 모험은 이 작업실에서 만들어집니다',
+    localizedTitle: {
+      en: 'Inside Lv.B’s Busan Studio',
+      ko: '머쉬의 모험이 시작되는 부산 작업실',
+      ja: 'キノコたちの冒険が生まれる釜山の仕事場',
+      'zh-cn': '走进 Lv.B 在釜山的工作室'
+    },
+    localizedSummary: {
+      en: 'Lv.B opens the door to its Busan workspace. The team shows where it works each day, from the desks by the window to the MushDash banner.',
+      ko: 'Lv.B가 부산 작업실을 소개합니다. 창가에 놓인 책상부터 MushDash 배너까지, 팀이 매일 게임을 만드는 공간을 둘러볼 수 있습니다.',
+      ja: 'Lv.Bが釜山の仕事場を案内します。窓辺のデスクや『MushDash』のバナーなど、チームが日々ゲームを作る場所を紹介しています。',
+      'zh-cn': 'Lv.B 带大家参观釜山的工作室。从窗边的办公桌到 MushDash 的展示横幅，都能看到团队日常开发的痕迹。'
+    },
+    publisher: 'Lv.B',
+    publishedAt: '2026-11-16',
+    sourceUrl: 'https://blog.naver.com/lv_b_games/224478767994',
+    lastVerifiedAt: '2026-11-20'
+  },
+  {
+    type: 'external',
+    slug: 'why-lvb-made-mushdash',
+    kind: 'development-update',
+    originalTitle: '친구들과 웃으며 할 게임을 직접 만들기로 했습니다',
+    localizedTitle: {
+      en: 'Why We Made MushDash',
+      ko: '친구들과 웃으며 즐길 게임, MushDash의 출발점',
+      ja: '友だちと笑って遊べる『MushDash』を作った理由',
+      'zh-cn': '为什么想做一款能和朋友笑着玩的 MushDash'
+    },
+    localizedSummary: {
+      en: 'The team looks back at the idea that sparked MushDash: making a multiplayer game they could laugh over with friends.',
+      ko: 'Lv.B가 MushDash를 만들기로 한 계기를 들려줍니다. 출발점은 친구들과 한바탕 웃으며 즐길 멀티플레이 게임을 직접 만들고 싶다는 마음이었습니다.',
+      ja: '『MushDash』を作るきっかけは、友だちと一緒に笑って遊べるマルチプレイゲームが欲しかったこと。Lv.Bが開発の原点を振り返ります。',
+      'zh-cn': 'MushDash 的起点很简单：做一款能和朋友一起开怀大笑的多人游戏。Lv.B 在这篇开发手记中回顾了当初的想法。'
+    },
+    publisher: 'Lv.B',
+    publishedAt: '2026-11-13',
+    sourceUrl: 'https://blog.naver.com/lv_b_games/224475501923',
+    lastVerifiedAt: '2026-11-20'
+  },
+  {
+    type: 'external',
+    slug: 'mushdash-mushhero-two-adventures',
+    kind: 'development-update',
+    originalTitle: '머쉬의 두 가지 모험｜MushDash와 MushHero 세계관',
+    localizedTitle: {
+      en: 'Two Mushroom Adventures: MushDash and MushHero',
+      ko: '레이스와 협동 디펜스: 머쉬가 떠나는 두 가지 모험',
+      ja: 'レースと協力ディフェンス、キノコたちの二つの冒険',
+      'zh-cn': '从竞速到合作防守：蘑菇们的两场冒险'
+    },
+    localizedSummary: {
+      en: 'Lv.B introduces the worlds of its two games through their mushroom characters: a party race in MushDash and a fight to hold the line together in MushHero.',
+      ko: 'Lv.B가 버섯 캐릭터를 중심으로 두 게임의 세계를 소개합니다. MushDash에서는 신나는 파티 레이스가, MushHero에서는 힘을 모아 전선을 지키는 협동 디펜스가 펼쳐집니다.',
+      ja: 'Lv.Bがキノコたちを通して二つのゲームの世界を紹介します。『MushDash』の舞台はパーティーレース、『MushHero』では仲間と力を合わせて敵を迎え撃ちます。',
+      'zh-cn': 'Lv.B 从蘑菇角色说起，介绍两款游戏的世界：在 MushDash 中参加派对竞速，在 MushHero 中与队友并肩守住防线。'
+    },
+    publisher: 'Lv.B',
+    publishedAt: '2026-11-12',
+    sourceUrl: 'https://blog.naver.com/lv_b_games/224474085861',
+    lastVerifiedAt: '2026-11-20'
+  },
+  {
+    type: 'external',
+    slug: 'lvb-blog-bic-2026-playtest-retrospective',
+    kind: 'studio-update',
+    originalTitle: 'BIC 2026 참가 회고｜MushHero의 첫 공개 플레이 테스트',
+    localizedTitle: {
+      en: 'Looking Back at MushHero’s First Public Playtest',
+      ko: '공식 블로그에서 돌아본 MushHero의 BIC 첫 공개 시연',
+      ja: '開発チームが振り返る『MushHero』初の一般試遊',
+      'zh-cn': '开发团队回顾 MushHero 首次公开试玩'
+    },
+    localizedSummary: {
+      en: 'In a November post, Lv.B looks back on taking MushHero to BIC 2026 in August and seeing visitors play the game in public for the first time.',
+      ko: 'Lv.B가 11월 공식 블로그에서 지난 8월 BIC 2026 현장을 돌아봤습니다. MushHero를 처음 공개 시연하고 관람객들이 직접 플레이하는 모습을 지켜본 팀의 회고입니다.',
+      ja: 'Lv.Bが11月の公式ブログで、8月に参加したBIC 2026を振り返りました。『MushHero』を初めて一般に公開し、来場者に遊んでもらったときの様子をつづっています。',
+      'zh-cn': '在 11 月的官方博客中，Lv.B 回顾了 8 月的 BIC 2026：团队首次向公众开放 MushHero 试玩，在现场看到玩家亲手体验这款游戏。'
+    },
+    publisher: 'Lv.B',
+    publishedAt: '2026-11-11',
+    sourceUrl: 'https://blog.naver.com/lv_b_games/224472667751',
+    lastVerifiedAt: '2026-11-20'
+  },
+  {
+    type: 'external',
+    slug: 'lvb-official-blog-welcome',
+    kind: 'studio-update',
+    originalTitle: '안녕하세요, 함께 즐기는 게임을 만드는 Lv.B입니다',
+    localizedTitle: {
+      en: 'Meet Lv.B on the Studio’s New Blog',
+      ko: '함께 즐기는 게임을 만드는 Lv.B의 첫 블로그 인사',
+      ja: '一緒に遊べるゲームを作るLv.B、公式ブログでごあいさつ',
+      'zh-cn': '从这里认识 Lv.B：工作室官方博客的第一篇文章'
+    },
+    localizedSummary: {
+      en: 'In its first blog post, Lv.B introduces the independent team in Busan and the multiplayer games it makes: MushDash and MushHero.',
+      ko: '공식 블로그 첫 글에서 부산의 인디 개발팀 Lv.B가 인사를 전합니다. 팀이 만드는 멀티플레이 게임 MushDash와 MushHero도 함께 소개합니다.',
+      ja: '公式ブログの初投稿で、釜山のインディー開発チームLv.Bが自己紹介。チームが手がけるマルチプレイゲーム『MushDash』と『MushHero』も取り上げています。',
+      'zh-cn': '在官方博客的第一篇文章中，来自釜山的独立开发团队 Lv.B 介绍了自己，以及旗下的两款多人游戏 MushDash 和 MushHero。'
+    },
+    publisher: 'Lv.B',
+    publishedAt: '2026-11-10',
+    sourceUrl: 'https://blog.naver.com/lv_b_games/224471959037',
+    lastVerifiedAt: '2026-11-20'
+  },
+  {
+    type: 'external',
+    slug: 'bgc-studio-visit-mushdash-mushhero',
+    kind: 'interview',
+    originalTitle: '[부산글로벌센터(BGC) 서포터즈 10기] BGC 입주 기업 \'레벨비(Lv.B)\' 직접 찾아가 봤습니다 🍄',
+    localizedTitle: {
+      en: 'A BGC Supporter Asks Lv.B About the Leap from MushDash to MushHero',
+      ko: 'BGC 서포터즈가 물었습니다: MushDash에서 MushHero로',
+      ja: 'BGCサポーターが聞く、『MushDash』から『MushHero』へ',
+      'zh-cn': 'BGC 探访 Lv.B：从 MushDash 聊到 MushHero'
+    },
+    localizedSummary: {
+      en: 'After trying MushDash, the writer asks Lv.B what carried over into MushHero’s solo and co-op design, and why the team chose mushrooms for its characters.',
+      ko: 'MushDash를 플레이한 서포터즈가 Lv.B를 찾아가 전작의 경험을 MushHero의 싱글·협동 플레이에 어떻게 살렸는지 물었습니다. 버섯을 주인공으로 고른 이유도 인터뷰에서 들을 수 있습니다.',
+      ja: '『MushDash』を遊んだサポーターがLv.Bを訪問。前作の経験を『MushHero』のソロ・協力プレイにどう生かしたのか、なぜ主役にキノコを選んだのかを尋ねています。',
+      'zh-cn': '试玩 MushDash 后，这位 BGC 支持者拜访了 Lv.B，聊到前作的经验如何影响 MushHero 的单人和合作玩法，以及团队为什么选蘑菇当主角。'
+    },
+    publisher: 'Naver Blog',
+    author: 'we_will_go_to_space',
+    publishedAt: '2026-11-01',
+    sourceUrl: 'https://blog.naver.com/we_will_go_to_space/224461391742',
+    lastVerifiedAt: '2026-11-20'
+  },
+  {
+    type: 'external',
+    slug: 'bic-2026-mushhero-hands-on-tihiss',
+    kind: 'blog-review',
+    originalTitle: '[BGC 서포터즈 10기] BIC(부산인디커넥트페스티벌) 2026 행사 후기&게임 리뷰',
+    localizedTitle: {
+      en: 'Trying the Sword in MushHero at BIC 2026',
+      ko: 'BIC 2026에서 검을 들고 플레이한 MushHero',
+      ja: 'BIC 2026試遊記：『MushHero』で剣を手に',
+      'zh-cn': 'BIC 2026 试玩手记：在 MushHero 里试试用剑'
+    },
+    localizedSummary: {
+      en: 'In a BIC 2026 show-floor diary, tihiss describes getting used to the sword controls in MushHero and shares what stood out about the movement and visuals.',
+      ko: 'tihiss가 BIC 2026 행사 후기에서 MushHero의 검 조작에 익숙해지는 과정과 직접 플레이하며 인상 깊었던 움직임과 그래픽을 전합니다.',
+      ja: 'tihissさんがBIC 2026の会場で『MushHero』を試遊。剣の操作に慣れるまでの様子や、動きの滑らかさ、グラフィックの印象をつづっています。',
+      'zh-cn': 'tihiss 在 BIC 2026 的现场手记中写下了试玩 MushHero 的感受，从逐渐熟悉用剑的操作，到令自己印象深刻的动作表现和画面。'
+    },
+    publisher: 'Naver Blog',
+    author: 'tihiss',
+    publishedAt: '2026-08-27',
+    sourceUrl: 'https://blog.naver.com/tihiss/224391904819',
+    lastVerifiedAt: '2026-11-20'
+  },
+  {
+    type: 'external',
+    slug: 'bic-2026-mushhero-booth-todaypedia365',
+    kind: 'blog-review',
+    originalTitle: '🎮[BGC 서포터즈 10기] BIC, 가볼 만할까?',
+    localizedTitle: {
+      en: 'Playing MushHero and Meeting Its Developers at BIC 2026',
+      ko: 'BIC 2026 부스에서 만난 MushHero와 개발팀',
+      ja: 'BIC 2026で『MushHero』を試遊、開発チームにもインタビュー',
+      'zh-cn': 'BIC 2026 展台手记：试玩 MushHero，对话开发团队'
+    },
+    localizedSummary: {
+      en: 'At the BGC booth, todaypedia365 plays MushHero and talks with its developers about the ideas behind the game. The post pairs hands-on impressions with a short interview.',
+      ko: 'todaypedia365가 BIC 2026 부산글로벌게임센터 부스에서 MushHero를 플레이했습니다. 현장 시연 소감과 함께 게임을 구상한 계기를 담은 개발팀 미니 인터뷰를 전합니다.',
+      ja: 'todaypedia365さんがBIC 2026の釜山グローバルゲームセンターのブースで『MushHero』を試遊。プレイした感想とともに、ゲームの着想を開発チームに聞いたミニインタビューを掲載しています。',
+      'zh-cn': 'todaypedia365 在 BIC 2026 的釜山全球游戏中心展台试玩了 MushHero。除了现场体验，文章还收录了一段开发团队短访，聊到游戏的创作灵感。'
+    },
+    publisher: 'Naver Blog',
+    author: 'todaypedia365',
+    publishedAt: '2026-08-23',
+    sourceUrl: 'https://blog.naver.com/todaypedia365/224387007222',
+    lastVerifiedAt: '2026-11-20'
+  },
+  {
+    type: 'external',
+    slug: 'bgc-supporters-lvb-studio-interview-2026',
+    kind: 'interview',
+    originalTitle: '[부산글로벌게임센터 서포터즈 10기] 게임을 만든 사람들의 이야기를 듣다 — 레벨비 방문 후기',
+    localizedTitle: {
+      en: 'A BGC Supporter Visits Lv.B: Meet the Team Behind MushDash',
+      ko: 'BGC 서포터즈, MushDash를 만든 Lv.B를 만나다',
+      ja: 'BGCサポーターが『MushDash』の開発元Lv.Bを訪問',
+      'zh-cn': 'BGC 探访手记：对话 MushDash 开发团队 Lv.B'
+    },
+    localizedSummary: {
+      en: 'After playing MushDash, a Busan Global Game Center supporter spoke with Lv.B about developing games in Busan. The studio visit also introduces MushHero, the team’s cooperative defense game in development.',
+      ko: '부산글로벌게임센터 서포터즈가 MushDash를 직접 플레이한 뒤 Lv.B를 만나 부산에서 게임을 만드는 이야기를 들었습니다. 방문기에는 팀이 개발 중인 협동 디펜스 게임 MushHero도 소개됩니다.',
+      ja: '釜山グローバルゲームセンターのサポーターが『MushDash』を試遊し、釜山でのゲーム開発についてLv.Bに話を聞きました。訪問記では、開発中の協力型ディフェンスゲーム『MushHero』も紹介しています。',
+      'zh-cn': '釜山全球游戏中心的一名支持者试玩了 MushDash，随后与 Lv.B 团队聊起在釜山做游戏的经历。这篇探访手记也介绍了团队正在开发的合作防守游戏 MushHero。'
+    },
+    publisher: 'Naver Blog',
+    author: 'juniorcargo',
+    publishedAt: '2026-11-07',
+    sourceUrl: 'https://blog.naver.com/juniorcargo/224468267712',
+    lastVerifiedAt: '2026-11-20'
+  },
+  {
+    type: 'external',
     slug: 'deep-dive-game-jam-mentoring',
     kind: 'press-coverage',
     originalTitle: '동서대 RISE 사업단, 전국 대학 참여 게임 잼 ‘Deep Dive’ 성료',

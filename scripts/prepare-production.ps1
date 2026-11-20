@@ -646,8 +646,8 @@ foreach ($relativePath in $requiredFiles) {
 
 $htmlFiles = @(Get-ChildItem -LiteralPath (Join-Path $siteRoot 'dist') -Recurse -File -Filter '*.html')
 $regularHtml = @($htmlFiles | Where-Object { $_.Name -ne '404.html' })
-Assert-Equal $htmlFiles.Count 61 'Total production HTML count'
-Assert-Equal $regularHtml.Count 60 'Analytics-enabled production HTML count'
+Assert-Equal $htmlFiles.Count 69 'Total production HTML count'
+Assert-Equal $regularHtml.Count 68 'Analytics-enabled production HTML count'
 foreach ($htmlFile in $regularHtml) {
   $html = Get-Content -Raw -Encoding utf8 $htmlFile.FullName
   Assert-Equal ([regex]::Matches($html, [regex]::Escape($expectedAnalyticsEndpoint)).Count) 1 "Analytics endpoint count: $($htmlFile.FullName)"
@@ -659,11 +659,11 @@ foreach ($htmlFile in $regularHtml) {
 $notFoundHtml = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'dist\404.html')
 Assert-Equal ([regex]::Matches($notFoundHtml, [regex]::Escape($expectedAnalyticsEndpoint)).Count) 0 '404 Analytics endpoint count'
 Assert-Equal ([regex]::Matches($notFoundHtml, 'fetch\(analyticsHitEndpoint,').Count) 0 '404 Analytics initialization count'
-Assert-Equal $regularHtml.Count 60 'Regular production HTML count'
+Assert-Equal $regularHtml.Count 68 'Regular production HTML count'
 
 $sitemap = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'dist\sitemap-0.xml')
 $sitemapCount = ([regex]::Matches($sitemap, '<url>')).Count
-Assert-Equal $sitemapCount 52 'Sitemap URL count'
+Assert-Equal $sitemapCount 60 'Sitemap URL count'
 if ($sitemap -match '/privacy/') { throw 'Privacy routes must be excluded from the sitemap.' }
 if ($sitemap -match '/terms/') { throw 'Terms routes must be excluded from the sitemap.' }
 foreach ($requiredSitemapPath in @('/press/', '/ko/press/', '/ja/press/', '/zh-cn/press/', '/news/page/2/', '/ko/news/page/2/', '/ja/news/page/2/', '/zh-cn/news/page/2/', '/news/page/3/', '/ko/news/page/3/', '/ja/news/page/3/', '/zh-cn/news/page/3/', '/news/bic-2026-mushhero-first-public-playtest/', '/ko/news/bic-2026-mushhero-first-public-playtest/', '/ja/news/bic-2026-mushhero-first-public-playtest/', '/zh-cn/news/bic-2026-mushhero-first-public-playtest/', '/news/mushhero-warrior-vfx-rework/', '/news/mushdash-early-access-launch/')) {
@@ -756,60 +756,74 @@ foreach ($route in $ogRouteSpecs) {
   Assert-Equal ([regex]::Matches($html, '<meta name="twitter:image:alt" content="[^"]+">').Count) 1 "Twitter image alt: $($route.Path)"
 }
 
-$newsListRoutes = @(
-  [PSCustomObject]@{ Locale = 'en'; Page1 = 'dist\news\index.html'; Page2 = 'dist\news\page\2\index.html'; Page3 = 'dist\news\page\3\index.html'; Canonical1 = 'https://lvb.kr/news/'; Canonical2 = 'https://lvb.kr/news/page/2/'; Canonical3 = 'https://lvb.kr/news/page/3/'; Page2Path = '/news/page/2/'; Page3Path = '/news/page/3/'; RootPath = '/news/' },
-  [PSCustomObject]@{ Locale = 'ko'; Page1 = 'dist\ko\news\index.html'; Page2 = 'dist\ko\news\page\2\index.html'; Page3 = 'dist\ko\news\page\3\index.html'; Canonical1 = 'https://lvb.kr/ko/news/'; Canonical2 = 'https://lvb.kr/ko/news/page/2/'; Canonical3 = 'https://lvb.kr/ko/news/page/3/'; Page2Path = '/ko/news/page/2/'; Page3Path = '/ko/news/page/3/'; RootPath = '/ko/news/' },
-  [PSCustomObject]@{ Locale = 'ja'; Page1 = 'dist\ja\news\index.html'; Page2 = 'dist\ja\news\page\2\index.html'; Page3 = 'dist\ja\news\page\3\index.html'; Canonical1 = 'https://lvb.kr/ja/news/'; Canonical2 = 'https://lvb.kr/ja/news/page/2/'; Canonical3 = 'https://lvb.kr/ja/news/page/3/'; Page2Path = '/ja/news/page/2/'; Page3Path = '/ja/news/page/3/'; RootPath = '/ja/news/' },
-  [PSCustomObject]@{ Locale = 'zh-cn'; Page1 = 'dist\zh-cn\news\index.html'; Page2 = 'dist\zh-cn\news\page\2\index.html'; Page3 = 'dist\zh-cn\news\page\3\index.html'; Canonical1 = 'https://lvb.kr/zh-cn/news/'; Canonical2 = 'https://lvb.kr/zh-cn/news/page/2/'; Canonical3 = 'https://lvb.kr/zh-cn/news/page/3/'; Page2Path = '/zh-cn/news/page/2/'; Page3Path = '/zh-cn/news/page/3/'; RootPath = '/zh-cn/news/' }
+$newsPageSizes = @(6, 6, 6, 6, 2)
+$newsInternalCounts = @(0, 2, 0, 1, 0)
+$requiredNewsUrls = @(
+  'https://blog.naver.com/lv_b_games/224481914411',
+  'https://blog.naver.com/lv_b_games/224478767994',
+  'https://blog.naver.com/lv_b_games/224475501923',
+  'https://blog.naver.com/lv_b_games/224474085861',
+  'https://blog.naver.com/lv_b_games/224472667751',
+  'https://blog.naver.com/lv_b_games/224471959037',
+  'https://blog.naver.com/we_will_go_to_space/224461391742',
+  'https://blog.naver.com/tihiss/224391904819',
+  'https://blog.naver.com/todaypedia365/224387007222',
+  'https://blog.naver.com/juniorcargo/224468267712',
+  'https://www.viva100.com/article/20260107500638'
 )
-$englishNewsHrefs = @()
-$englishNewsDates = @()
-foreach ($route in $newsListRoutes) {
-  $page1Html = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $route.Page1)
-  $page2Html = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $route.Page2)
-  $page3Html = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot $route.Page3)
-  foreach ($pageSpec in @(
-      [PSCustomObject]@{ Name = $route.Page1; Html = $page1Html; Canonical = $route.Canonical1; Total = 6; External = 4; Internal = 2 },
-      [PSCustomObject]@{ Name = $route.Page2; Html = $page2Html; Canonical = $route.Canonical2; Total = 6; External = 5; Internal = 1 },
-      [PSCustomObject]@{ Name = $route.Page3; Html = $page3Html; Canonical = $route.Canonical3; Total = 4; External = 4; Internal = 0 }
-    )) {
-    $canonicalPattern = '<link rel="canonical" href="' + [regex]::Escape($pageSpec.Canonical) + '">'
-    Assert-Equal ([regex]::Matches($pageSpec.Html, '<a class="news-card news-card--').Count) $pageSpec.Total "News page size: $($pageSpec.Name)"
-    Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card news-card--external"').Count) $pageSpec.External "External News card count: $($pageSpec.Name)"
-    Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card news-card--internal"').Count) $pageSpec.Internal "Internal News card count: $($pageSpec.Name)"
-    Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card news-card--external" href="https?://[^\"]+" target="_blank" rel="noopener noreferrer"').Count) $pageSpec.External "External News link security: $($pageSpec.Name)"
-    Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card news-card--internal" href="/[^"]+"').Count) $pageSpec.Internal "Internal News same-tab link: $($pageSpec.Name)"
-    Assert-Equal ([regex]::Matches($pageSpec.Html, '<nav class="news-pagination"').Count) 1 "News pagination count: $($pageSpec.Name)"
-    Assert-Equal ([regex]::Matches($pageSpec.Html, $canonicalPattern).Count) 1 "News canonical: $($pageSpec.Name)"
-    Assert-Equal ([regex]::Matches($pageSpec.Html, 'rel="alternate" hreflang=').Count) 5 "News hreflang count: $($pageSpec.Name)"
-    Assert-Equal ([regex]::Matches($pageSpec.Html, 'class="news-card__byline"').Count) $pageSpec.Total "News metadata first row: $($pageSpec.Name)"
-    Assert-Equal ([regex]::Matches($pageSpec.Html, '<time class="news-card__date" datetime="').Count) $pageSpec.Total "News date second row: $($pageSpec.Name)"
-    Assert-Equal ([regex]::Matches($pageSpec.Html, 'news-card__cta|news-card__internal-cta').Count) 0 "Removed News text CTA: $($pageSpec.Name)"
-  }
-  Assert-Equal ([regex]::Matches($page1Html, 'href="' + [regex]::Escape($route.Page2Path) + '" rel="next"').Count) 1 "News page 1 next link: $($route.Locale)"
-  Assert-Equal ([regex]::Matches($page2Html, 'href="' + [regex]::Escape($route.RootPath) + '" rel="prev"').Count) 1 "News page 2 previous link: $($route.Locale)"
-  Assert-Equal ([regex]::Matches($page2Html, 'href="' + [regex]::Escape($route.Page3Path) + '" rel="next"').Count) 1 "News page 2 next link: $($route.Locale)"
-  Assert-Equal ([regex]::Matches($page3Html, 'href="' + [regex]::Escape($route.Page2Path) + '" rel="prev"').Count) 1 "News page 3 previous link: $($route.Locale)"
-  Assert-Equal ([regex]::Matches($page1Html, 'class="news-pagination__page" aria-current="page"').Count) 1 "News page 1 current state: $($route.Locale)"
-  Assert-Equal ([regex]::Matches($page2Html, 'class="news-pagination__page" aria-current="page"').Count) 1 "News page 2 current state: $($route.Locale)"
-  Assert-Equal ([regex]::Matches($page3Html, 'class="news-pagination__page" aria-current="page"').Count) 1 "News page 3 current state: $($route.Locale)"
-  if ($route.Locale -eq 'en') {
-    $newsHrefPattern = '<a class="news-card news-card--[^"]+" href="([^"]+)"'
-    foreach ($html in @($page1Html, $page2Html, $page3Html)) {
-      $englishNewsHrefs += [regex]::Matches($html, $newsHrefPattern) | ForEach-Object { $_.Groups[1].Value }
-      $englishNewsDates += [regex]::Matches($html, '<time class="news-card__date" datetime="([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
+foreach ($locale in @('en', 'ko', 'ja', 'zh-cn')) {
+  $rootPath = if ($locale -eq 'en') { '/news/' } else { "/$locale/news/" }
+  $pagePaths = @(foreach ($number in 1..$newsPageSizes.Count) {
+    if ($number -eq 1) { $rootPath } else { "${rootPath}page/$number/" }
+  })
+  $hrefs = @()
+  $dates = @()
+  for ($i = 0; $i -lt $pagePaths.Count; $i++) {
+    $pagePath = $pagePaths[$i]
+    $canonical = "https://lvb.kr$pagePath"
+    $html = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot "dist${pagePath}index.html")
+    $total = $newsPageSizes[$i]
+    $internal = $newsInternalCounts[$i]
+    $external = $total - $internal
+    $canonicalPattern = '<link rel="canonical" href="' + [regex]::Escape($canonical) + '">'
+    Assert-Equal ([regex]::Matches($html, '<a class="news-card news-card--').Count) $total "News page size: $pagePath"
+    Assert-Equal ([regex]::Matches($html, 'class="news-card news-card--external"').Count) $external "External News card count: $pagePath"
+    Assert-Equal ([regex]::Matches($html, 'class="news-card news-card--internal"').Count) $internal "Internal News card count: $pagePath"
+    Assert-Equal ([regex]::Matches($html, 'class="news-card news-card--external" href="https?://[^\"]+" target="_blank" rel="noopener noreferrer"').Count) $external "External News link security: $pagePath"
+    Assert-Equal ([regex]::Matches($html, 'class="news-card news-card--internal" href="/[^"]+"').Count) $internal "Internal News same-tab link: $pagePath"
+    Assert-Equal ([regex]::Matches($html, '<nav class="news-pagination"').Count) 1 "News pagination count: $pagePath"
+    Assert-Equal ([regex]::Matches($html, $canonicalPattern).Count) 1 "News canonical: $pagePath"
+    Assert-Equal ([regex]::Matches($html, 'rel="alternate" hreflang=').Count) 5 "News hreflang count: $pagePath"
+    Assert-Equal ([regex]::Matches($html, 'class="news-card__byline"').Count) $total "News metadata first row: $pagePath"
+    Assert-Equal ([regex]::Matches($html, '<time class="news-card__date" datetime="').Count) $total "News date second row: $pagePath"
+    Assert-Equal ([regex]::Matches($html, 'news-card__cta|news-card__internal-cta').Count) 0 "Removed News text CTA: $pagePath"
+    Assert-Equal ($sitemap.Contains("<loc>$canonical</loc>")) $true "News sitemap: $pagePath"
+    Assert-Equal ([regex]::Matches($html, 'class="news-pagination__page" aria-current="page"').Count) 1 "News current page: $pagePath"
+    foreach ($direction in @('prev', 'next')) {
+      $neighbor = if ($direction -eq 'prev') { $i - 1 } else { $i + 1 }
+      $links = [regex]::Matches($html, ('<a href="([^"]+)" rel="' + $direction + '"'))
+      if ($neighbor -ge 0 -and $neighbor -lt $pagePaths.Count) {
+        Assert-Equal $links.Count 1 "News $direction link count: $pagePath"
+        Assert-Equal $links[0].Groups[1].Value $pagePaths[$neighbor] "News $direction destination: $pagePath"
+      } else {
+        Assert-Equal $links.Count 0 "News boundary $direction link: $pagePath"
+      }
     }
+    $hrefs += [regex]::Matches($html, '<a class="news-card news-card--[^"]+" href="([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
+    $dates += [regex]::Matches($html, '<time class="news-card__date" datetime="([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
   }
+  Assert-Equal $hrefs.Count 26 "News data count: $locale"
+  Assert-Equal (@($hrefs | Sort-Object -Unique).Count) 26 "Unique News destination count: $locale"
+  foreach ($url in $requiredNewsUrls) {
+    Assert-Equal (@($hrefs | Where-Object { $_ -eq $url }).Count) 1 "News source in ${locale}: $url"
+  }
+  Assert-Equal ($dates -join '|') (($dates | Sort-Object -Descending) -join '|') "News published date order: $locale"
+  Assert-Equal (Test-Path -LiteralPath (Join-Path $siteRoot "dist${rootPath}page/6/index.html")) $false "Unexpected News page 6: $locale"
 }
-Assert-Equal $englishNewsHrefs.Count 16 'News data count'
-Assert-Equal (@($englishNewsHrefs | Sort-Object -Unique).Count) 16 'Unique News destination count'
-Assert-Equal (@($englishNewsHrefs | Where-Object { $_ -eq 'https://www.viva100.com/article/20260107500638' }).Count) 1 'Deep Dive representative article count'
-Assert-Equal ($englishNewsDates -join '|') (($englishNewsDates | Sort-Object -Descending) -join '|') 'News published date order'
-Assert-Equal (Test-Path -LiteralPath (Join-Path $siteRoot 'dist\news\page\4\index.html')) $false 'Unexpected News page 4 route'
 $newsSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\news.ts')
 Assert-Equal ([regex]::Matches($newsSource, "type:\s*'internal'").Count) 3 'Internal News source count'
-Assert-Equal ([regex]::Matches($newsSource, "type:\s*'external'").Count) 13 'External News source count'
-Assert-Equal ([regex]::Matches($newsSource, "kind:\s*'blog-review'").Count) 5 'Blog review source count'
+Assert-Equal ([regex]::Matches($newsSource, "type:\s*'external'").Count) 23 'External News source count'
+Assert-Equal ([regex]::Matches($newsSource, "kind:\s*'blog-review'").Count) 7 'Blog review source count'
 foreach ($approvedBlogUrl in @(
     'https://blog.naver.com/kuromi01/223567525541',
     'https://blog.naver.com/ko_castle/223969678143',
