@@ -54,7 +54,7 @@
 - 화면에 TODO·placeholder·개발 상태 문구가 노출되지 않는지 확인한다.
 - Contact의 수신 주소와 locale별 subject·body를 percent-decoding해 손상 여부를 확인하고, 사용하지 않는 form·success 코드가 없는지 검사한다.
 - 신규 Astro 페이지의 외부 새 탭 링크는 보안 속성을 검사한다.
-- News 26건(외부 원문 23·내부 글 3)의 URL·slug 중복, 최신순 정렬, 네 언어 제목·요약을 확인한다. 각 언어에서 1~5페이지에 6·6·6·6·2건을 출력하고 6페이지는 만들지 않는다. BGC 인터뷰·후기 4편, 공식 블로그 6편, Deep Dive 대표 기사 1편의 원문 링크가 각 언어에서 한 번씩만 나와야 한다.
+- News 28건(외부 원문 25·내부 글 3)의 URL·slug 중복, 최신순 정렬, 네 언어 제목·요약을 확인한다. 각 언어에서 1~5페이지에 6·6·6·6·4건을 출력하고 6페이지는 만들지 않는다. BGC 인터뷰·후기 4편, 11월 22일 부산 게임 결산, 2025년 8월 20일 MushDash 후기, 공식 블로그 6편, Deep Dive 대표 기사 1편의 원문 링크가 각 언어에서 한 번씩만 나와야 한다.
 - News pagination은 첫 페이지에 `/page/1/`을 만들지 않고 page 2의 자기 canonical·같은 번호 hreflang·x-default·sitemap 포함, 이전·다음 링크와 현재 페이지 상태를 검사한다. 외부 카드 전체는 새 탭과 `noopener noreferrer`, 내부 카드 전체는 같은 탭을 사용하고 별도 원문 CTA·중첩 링크는 없어야 한다.
 - News 카드 metadata는 네 locale page 1·2 모두 첫 줄 category·publisher·author, 둘째 줄 date 구조여야 하며 desktop에서도 날짜가 첫 줄로 합쳐지지 않아야 한다.
 - 내부 News는 locale별 같은 slug 상세 route, 같은 탭 링크, Article OG·JSON-LD를 사용하고 외부 원문 표현·아이콘을 사용하지 않는지 검사한다. Press Kit은 네 locale canonical·hreflang·sitemap, 공개 브랜드 원본, lazy screenshot, Recent Press UI 0건과 기존 press mailto를 확인한다.

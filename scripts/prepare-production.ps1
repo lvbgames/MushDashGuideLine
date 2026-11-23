@@ -756,9 +756,11 @@ foreach ($route in $ogRouteSpecs) {
   Assert-Equal ([regex]::Matches($html, '<meta name="twitter:image:alt" content="[^"]+">').Count) 1 "Twitter image alt: $($route.Path)"
 }
 
-$newsPageSizes = @(6, 6, 6, 6, 2)
-$newsInternalCounts = @(0, 2, 0, 1, 0)
+$newsPageSizes = @(6, 6, 6, 6, 4)
+$newsInternalCounts = @(0, 1, 1, 1, 0)
 $requiredNewsUrls = @(
+  'https://blog.naver.com/we_will_go_to_space/224486991536',
+  'https://blog.naver.com/hzbexza/223976481162',
   'https://blog.naver.com/lv_b_games/224481914411',
   'https://blog.naver.com/lv_b_games/224478767994',
   'https://blog.naver.com/lv_b_games/224475501923',
@@ -812,8 +814,8 @@ foreach ($locale in @('en', 'ko', 'ja', 'zh-cn')) {
     $hrefs += [regex]::Matches($html, '<a class="news-card news-card--[^"]+" href="([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
     $dates += [regex]::Matches($html, '<time class="news-card__date" datetime="([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
   }
-  Assert-Equal $hrefs.Count 26 "News data count: $locale"
-  Assert-Equal (@($hrefs | Sort-Object -Unique).Count) 26 "Unique News destination count: $locale"
+  Assert-Equal $hrefs.Count 28 "News data count: $locale"
+  Assert-Equal (@($hrefs | Sort-Object -Unique).Count) 28 "Unique News destination count: $locale"
   foreach ($url in $requiredNewsUrls) {
     Assert-Equal (@($hrefs | Where-Object { $_ -eq $url }).Count) 1 "News source in ${locale}: $url"
   }
@@ -822,8 +824,8 @@ foreach ($locale in @('en', 'ko', 'ja', 'zh-cn')) {
 }
 $newsSource = Get-Content -Raw -Encoding utf8 (Join-Path $siteRoot 'src\data\news.ts')
 Assert-Equal ([regex]::Matches($newsSource, "type:\s*'internal'").Count) 3 'Internal News source count'
-Assert-Equal ([regex]::Matches($newsSource, "type:\s*'external'").Count) 23 'External News source count'
-Assert-Equal ([regex]::Matches($newsSource, "kind:\s*'blog-review'").Count) 7 'Blog review source count'
+Assert-Equal ([regex]::Matches($newsSource, "type:\s*'external'").Count) 25 'External News source count'
+Assert-Equal ([regex]::Matches($newsSource, "kind:\s*'blog-review'").Count) 8 'Blog review source count'
 foreach ($approvedBlogUrl in @(
     'https://blog.naver.com/kuromi01/223567525541',
     'https://blog.naver.com/ko_castle/223969678143',

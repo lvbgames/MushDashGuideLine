@@ -1,5 +1,6 @@
 # Current
 
+- 2026-11-23 배포 대상: BGC 부산 게임 결산과 BIC 2025 MushDash 시연기를 네 언어로 추가한다. 총 28건(6·6·6·6·4), HTML 69개·색인 URL 60개다. 두 글은 Discord의 외부 자료 채널에 각각 영어 한 편으로 게시한다.
 - 2026-11-20 배포 대상: 작성자가 다른 인터뷰·후기 4편과 Lv.B 공식 블로그 6편을 네 언어로 등록했다. 총 26건, 언어별 5페이지(6·6·6·6·2), HTML 69개·색인 URL 60개다. Discord 게시 도구를 함께 배포하되 사이트 빌드나 배포가 메시지를 자동 전송하지는 않는다.
 - 기존 운영 기준: 52개 색인 route와 전체 HTML 61개다. Visitor Analytics·매일 00:10 KST Cron·Netlify의 `PUBLIC_ANALYTICS_ENDPOINT`와 Press Kit 다운로드 집계 3종이 production active이며, 네 언어 Privacy 최종 수정일·시행일은 `2026-09-04`이다.
 - QA 결과: Visitor Analytics는 `2026-09-01`부터 운영 중이고 일일 Cron의 backlog recovery와 과거 일일 visitor hash 삭제를 검증했다. Download Analytics는 기존 방문 집계를 바꾸지 않고 production D1 `0003`, 고정 ZIP redirect, bot 제외, 30회/분 limiter, D1 실패 fail-open과 aggregate-only schema를 검증했다. 통합 Web Admin과 조회 전용 .NET 8 WPF Admin App은 같은 통계 API를 사용한다.

@@ -13,6 +13,52 @@ if (!mushHeroArticleImage || !mushDashArticleImage || !mushHeroGame?.steamStoreU
 export const newsItems: readonly NewsItem[] = [
   {
     type: 'external',
+    slug: 'bgc-2026-year-in-review-lvb-visit',
+    kind: 'feature',
+    originalTitle: '[부산글로벌센터(BGC) 서포터즈 10기] 게임도시 부산 2026 결산, 올해 부산 게임에는 무슨 일이 있었을까?',
+    localizedTitle: {
+      en: 'A Year in Busan Games: A BGC Supporter Recalls Visiting Lv.B',
+      ko: '부산 게임의 한 해를 돌아보며 다시 꺼낸 Lv.B 방문 이야기',
+      ja: '釜山のゲームシーンの一年を振り返る、BGCサポーターのLv.B訪問の思い出',
+      'zh-cn': '回望釜山游戏圈这一年：BGC 成员忆探访 Lv.B'
+    },
+    localizedSummary: {
+      en: 'In a year-end roundup of Busan’s game scene, the writer recalls an earlier visit to Lv.B, where they played a game and heard how the team turns ideas into a playable build.',
+      ko: 'BGC 서포터즈가 부산 게임계의 한 해를 돌아보며 앞서 Lv.B 작업실을 찾았던 날을 떠올립니다. 직접 게임을 해 보고, 아이디어가 실제 게임이 되기까지 개발팀이 어떤 고민을 하는지 들었던 경험을 담았습니다.',
+      ja: '釜山のゲームシーンの一年を振り返る記事で、BGCサポーターが以前Lv.Bを訪ねた日のことをつづっています。ゲームを試遊し、アイデアを形にするまでの工夫や悩みを開発チームに聞いた思い出です。',
+      'zh-cn': '在这篇釜山游戏圈的年终回顾中，一位 BGC 成员也写到了此前探访 Lv.B 的经历：在工作室试玩游戏，听团队聊起把点子做成游戏的过程。'
+    },
+    publisher: 'Naver Blog',
+    author: 'we_will_go_to_space',
+    publishedAt: '2026-11-22',
+    sourceUrl: 'https://blog.naver.com/we_will_go_to_space/224486991536',
+    lastVerifiedAt: '2026-11-23'
+  },
+  {
+    type: 'external',
+    slug: 'bic-2025-mushdash-hands-on-hzbexza',
+    kind: 'blog-review',
+    originalTitle: '부산인디커넥트페스티벌 BIC 후기',
+    localizedTitle: {
+      en: 'Hands-On with MushDash at BIC 2025: Camera, Movement and Jumps',
+      ko: 'BIC 2025에서 체험한 MushDash: 시점을 돌리고 점프하기',
+      ja: 'BIC 2025で『MushDash』を試遊：視点を動かし、走ってジャンプ',
+      'zh-cn': 'BIC 2025 试玩手记：在 MushDash 里转动视角、奔跑和跳跃'
+    },
+    localizedSummary: {
+      en: 'MushDash was one of four games hzbexza tried at BIC 2025. The writer describes using the mouse to look around while moving and jumping through the 3D stages.',
+      ko: 'hzbexza가 BIC 2025에서 체험한 네 작품 중 하나로 MushDash를 소개합니다. 마우스로 시점을 바꾸면서 3D 스테이지를 달리고 점프한 조작 소감을 전합니다.',
+      ja: 'hzbexzaさんがBIC 2025で遊んだ4作品の一つ、『MushDash』を紹介。マウスで視点を動かしながら3Dのステージを走り、ジャンプした感触をつづっています。',
+      'zh-cn': 'hzbexza 在 BIC 2025 试玩了四款游戏，其中一款就是 MushDash。作者写下了用鼠标转动视角、在 3D 关卡里边跑边跳的操作体验。'
+    },
+    publisher: 'Naver Blog',
+    author: 'hzbexza',
+    publishedAt: '2025-08-20',
+    sourceUrl: 'https://blog.naver.com/hzbexza/223976481162',
+    lastVerifiedAt: '2026-11-23'
+  },
+  {
+    type: 'external',
     slug: 'mush-character-from-sketch-to-game',
     kind: 'development-update',
     originalTitle: '작은 버섯 하나가 게임 캐릭터가 되기까지',
